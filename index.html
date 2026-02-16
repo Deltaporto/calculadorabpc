@@ -1102,6 +1102,216 @@
       color: var(--text3)
     }
 
+    /* JUDICIAL CONTROL */
+    .judicial-control {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin-bottom: 20px
+    }
+
+    .judicial-control h3 {
+      font-size: .98rem;
+      margin-bottom: 8px;
+      text-align: center;
+      color: var(--text2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px
+    }
+
+    .judicial-control .helper {
+      text-align: center;
+      font-size: .75rem;
+      color: var(--text3);
+      margin-bottom: 12px
+    }
+
+    .jc-lock {
+      border: 1.5px solid #F59E0B;
+      background: #FEF3C7;
+      color: #92400E;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: .82rem;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    [data-theme="dark"] .jc-lock {
+      background: #451A03;
+      color: #FCD34D;
+      border-color: #F59E0B
+    }
+
+    .jc-body {
+      display: flex;
+      flex-direction: column;
+      gap: 12px
+    }
+
+    .jc-admin {
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--blue) 6%, var(--surface));
+      border-radius: 10px;
+      padding: 12px;
+      font-size: .8rem;
+      color: var(--text2)
+    }
+
+    .jc-admin strong {
+      color: var(--text)
+    }
+
+    .jc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px
+    }
+
+    @media(max-width:900px) {
+      .jc-grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .jc-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      background: var(--bg)
+    }
+
+    .jc-field-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: .82rem;
+      font-weight: 700;
+      color: var(--text2);
+      margin-bottom: 8px
+    }
+
+    .jc-q-buttons {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 8px
+    }
+
+    .jc-q-btn {
+      min-width: 42px;
+      height: 34px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--text3);
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .15s
+    }
+
+    .jc-q-btn:hover {
+      border-color: var(--text3)
+    }
+
+    .jc-q-btn.active[data-value="0"] {
+      background: var(--qN);
+      color: #fff;
+      border-color: var(--qN)
+    }
+
+    .jc-q-btn.active[data-value="1"] {
+      background: var(--qL);
+      color: #fff;
+      border-color: var(--qL)
+    }
+
+    .jc-q-btn.active[data-value="2"] {
+      background: var(--qM);
+      color: #1a1a1a;
+      border-color: var(--qM)
+    }
+
+    .jc-q-btn.active[data-value="3"] {
+      background: var(--qG);
+      color: #fff;
+      border-color: var(--qG)
+    }
+
+    .jc-q-btn.active[data-value="4"] {
+      background: var(--qC);
+      color: #fff;
+      border-color: var(--qC)
+    }
+
+    .jc-rec {
+      border-radius: 10px;
+      padding: 10px 12px;
+      border: 1.5px solid transparent;
+      font-size: .82rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 8px
+    }
+
+    .jc-rec.dispensa {
+      background: #D1FAE5;
+      border-color: #10B981;
+      color: #065F46
+    }
+
+    .jc-rec.necessaria {
+      background: #FEE2E2;
+      border-color: #EF4444;
+      color: #991B1B
+    }
+
+    [data-theme="dark"] .jc-rec.dispensa {
+      background: #064E3B;
+      border-color: #10B981;
+      color: #6EE7B7
+    }
+
+    [data-theme="dark"] .jc-rec.necessaria {
+      background: #450A0A;
+      border-color: #F87171;
+      color: #FCA5A5
+    }
+
+    .jc-rec-title {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 2px
+    }
+
+    .jc-detail {
+      font-size: .78rem;
+      color: var(--text2);
+      line-height: 1.45
+    }
+
+    .jc-detail strong {
+      color: var(--text)
+    }
+
+    .jc-textarea {
+      width: 100%;
+      min-height: 185px;
+      resize: vertical;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      font-size: .8rem;
+      line-height: 1.45;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      background: var(--bg2);
+      color: var(--text)
+    }
+
     .comp-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -1488,6 +1698,42 @@
       </div>
       <div class="comp-change" id="compChange"></div>
     </div>
+    <div class="judicial-control" id="judicialControlSection">
+      <h3><svg class="ui-icon sm" aria-hidden="true"><use href="#i-balance"></use></svg>Modo Controle Judicial</h3>
+      <p class="helper">Triagem para definir se, na fase judicial, basta perícia médica ou se é necessária também avaliação social.</p>
+      <div class="jc-lock" id="jcLock"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-alert"></use></svg>Para habilitar este modo, salve primeiro a avaliação administrativa em <strong>Avaliação INSS</strong>.</div>
+      <div class="jc-body hidden" id="jcBody">
+        <div class="jc-admin" id="jcAdminSummary"></div>
+        <div class="jc-grid">
+          <div class="jc-card">
+            <div class="jc-field-title">Perícia Médica Judicial (controle)</div>
+            <div class="jc-q-buttons" id="jcCorpoButtons">
+              <button class="jc-q-btn" data-value="0">N</button>
+              <button class="jc-q-btn" data-value="1">L</button>
+              <button class="jc-q-btn" data-value="2">M</button>
+              <button class="jc-q-btn" data-value="3">G</button>
+              <button class="jc-q-btn" data-value="4">C</button>
+            </div>
+            <label class="toggle-label">
+              <input type="checkbox" id="jcImpedimentoLongo"><span class="toggle-switch"></span><svg class="ui-icon sm" aria-hidden="true"><use href="#i-alert"></use></svg>
+              Constatado impedimento de longo prazo
+            </label>
+          </div>
+          <div class="jc-card">
+            <div class="jc-rec" id="jcRecommendation"></div>
+            <div class="jc-detail" id="jcDetail"></div>
+          </div>
+        </div>
+        <div>
+          <div class="standard-text-actions">
+            <span class="copy-feedback" id="copyFeedbackControle"></span>
+            <button class="btn btn-outline" id="btnGerarControleTexto"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-document"></use></svg>Gerar texto do Controle Judicial</button>
+            <button class="btn btn-outline" id="btnCopiarControleTexto"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-clipboard"></use></svg>Copiar texto do Controle</button>
+          </div>
+          <textarea id="textoControleJudicial" class="jc-textarea" readonly></textarea>
+        </div>
+      </div>
+    </div>
 
     <footer>
       <p>Base normativa: Portaria Conjunta MDS/INSS nº 2/2015 (Anexo IV) · Portaria MDS/INSS nº 34/2025 (Art. 13, §7º)
@@ -1535,6 +1781,7 @@
     const CHILD_AGE_LIMIT_MONTHS = 192;
     let progDesfav = false, estrMaior = false, impedimento = false, crianca = false, idadeMeses = CHILD_AGE_LIMIT_MONTHS, idadeValor = 15, idadeUnidade = 'anos';
     let savedINSS = null;
+    const judicialControl = { corpoJud: null, impedimentoLongoPrazo: false };
     let currentAmbTab = 0;
     const childDomainBackup = {};
     const userFilledDomains = new Set();
@@ -1891,11 +2138,15 @@
       document.getElementById('compSection').classList.remove('hidden');
       document.getElementById('btnClearComp').classList.remove('hidden');
       updateComparison(amb, ativ, corpo);
+      resetJudicialControlFromSavedINSS();
+      renderJudicialControl();
     });
     document.getElementById('btnClearComp').addEventListener('click', () => {
       savedINSS = null;
       document.getElementById('compSection').classList.add('hidden');
       document.getElementById('btnClearComp').classList.add('hidden');
+      resetJudicialControlFromSavedINSS();
+      renderJudicialControl();
     });
 
     function updateComparison(amb, ativ, corpo) {
@@ -1915,6 +2166,127 @@
       if (!s.result && curResult) changes.push(`${iconMarkup('swap', 'ui-icon sm')} Resultado REVERTIDO: Indeferido → Deferido`);
       else if (s.result && !curResult) changes.push(`${iconMarkup('swap', 'ui-icon sm')} Resultado REVERTIDO: Deferido → Indeferido`);
       document.getElementById('compChange').innerHTML = changes.length ? changes.join(' · ') : 'Sem alteração no resultado';
+    }
+
+    function resetJudicialControlFromSavedINSS() {
+      judicialControl.corpoJud = savedINSS ? savedINSS.corpo : null;
+      judicialControl.impedimentoLongoPrazo = false;
+      document.getElementById('jcImpedimentoLongo').checked = false;
+      document.getElementById('textoControleJudicial').value = '';
+      document.getElementById('copyFeedbackControle').textContent = '';
+    }
+
+    function computeJudicialControl() {
+      if (!savedINSS || judicialControl.corpoJud == null) return null;
+      const resultadoCorpoSuficiente = tabelaConclusiva(savedINSS.amb, savedINSS.ativ, judicialControl.corpoJud);
+      const dispensaSocial = !judicialControl.impedimentoLongoPrazo || resultadoCorpoSuficiente;
+      return { resultadoCorpoSuficiente, dispensaSocial };
+    }
+
+    function renderJudicialControl() {
+      const lock = document.getElementById('jcLock');
+      const body = document.getElementById('jcBody');
+      const admin = document.getElementById('jcAdminSummary');
+      const rec = document.getElementById('jcRecommendation');
+      const detail = document.getElementById('jcDetail');
+
+      if (!savedINSS) {
+        lock.classList.remove('hidden');
+        body.classList.add('hidden');
+        rec.className = 'jc-rec';
+        rec.textContent = '';
+        detail.textContent = '';
+        return;
+      }
+
+      lock.classList.add('hidden');
+      body.classList.remove('hidden');
+      admin.innerHTML = [
+        '<strong>Avaliação administrativa (INSS) mantida como referência:</strong>',
+        `Fatores Ambientais = <strong>${Q_LABELS[savedINSS.amb]}</strong> (${Q_NAMES[savedINSS.amb]}),`,
+        `Atividades e Participação = <strong>${Q_LABELS[savedINSS.ativ]}</strong> (${Q_NAMES[savedINSS.ativ]}),`,
+        `Funções do Corpo = <strong>${Q_LABELS[savedINSS.corpo]}</strong> (${Q_NAMES[savedINSS.corpo]}).`
+      ].join(' ');
+
+      document.querySelectorAll('#jcCorpoButtons .jc-q-btn').forEach(btn => {
+        btn.classList.toggle('active', +btn.dataset.value === judicialControl.corpoJud);
+      });
+
+      const computed = computeJudicialControl();
+      if (!computed) {
+        rec.className = 'jc-rec';
+        rec.innerHTML = `<div class="jc-rec-title">${iconMarkup('alert', 'ui-icon sm')} Informe os parâmetros para análise.</div>`;
+        detail.textContent = '';
+        return;
+      }
+
+      const { resultadoCorpoSuficiente, dispensaSocial } = computed;
+      rec.className = 'jc-rec ' + (dispensaSocial ? 'dispensa' : 'necessaria');
+      rec.innerHTML = dispensaSocial
+        ? `<div class="jc-rec-title">${iconMarkup('check-circle', 'ui-icon sm')} Avaliação social judicial dispensável</div><div>Basta perícia médica judicial no cenário atual.</div>`
+        : `<div class="jc-rec-title">${iconMarkup('alert', 'ui-icon sm')} Avaliação social judicial necessária</div><div>Perícia médica isolada não é suficiente no cenário atual.</div>`;
+
+      const resultadoTabela = resultadoCorpoSuficiente ? 'SIM' : 'NÃO';
+      const regraImpedimento = judicialControl.impedimentoLongoPrazo
+        ? 'A perícia médica judicial constatou impedimento de longo prazo.'
+        : 'A perícia médica judicial não constatou impedimento de longo prazo; sem esse requisito, dispensa-se avaliação social judicial para esta triagem.';
+      const regraCorpo = `Mantidos Ambiente (${Q_LABELS[savedINSS.amb]}) e Atividades (${Q_LABELS[savedINSS.ativ]}) da fase administrativa, a requalificação judicial em Funções do Corpo = ${Q_LABELS[judicialControl.corpoJud]} resulta em ${resultadoTabela} na Tabela Conclusiva.`;
+      detail.innerHTML = `${regraImpedimento}<br>${regraCorpo}`;
+    }
+
+    function renderJudicialControlText() {
+      const output = document.getElementById('textoControleJudicial');
+      if (!savedINSS) {
+        output.value = 'Salve a avaliação INSS para habilitar o modo Controle Judicial.';
+        return;
+      }
+
+      const computed = computeJudicialControl();
+      if (!computed) {
+        output.value = 'Informe a requalificação judicial em Funções do Corpo.';
+        return;
+      }
+
+      const { resultadoCorpoSuficiente, dispensaSocial } = computed;
+      const item = getItemNumber(savedINSS.amb, savedINSS.ativ, judicialControl.corpoJud);
+      const resultadoTabela = resultadoCorpoSuficiente ? 'Sim' : 'Não';
+      const recomendacao = dispensaSocial
+        ? 'Na fase judicial, é suficiente a realização de perícia médica, com dispensa de avaliação social.'
+        : 'Na fase judicial, recomenda-se a realização de perícia médica e avaliação social.';
+      const conclusao = !judicialControl.impedimentoLongoPrazo
+        ? 'Ausente impedimento de longo prazo na perícia médica judicial, não há enquadramento como pessoa com deficiência para fins de BPC/LOAS.'
+        : resultadoCorpoSuficiente
+          ? 'Com impedimento de longo prazo e requalificação judicial das funções do corpo, a combinação atinge resultado positivo na Tabela Conclusiva, suficiente para enquadramento no conceito de pessoa com deficiência.'
+          : 'Embora constatado impedimento de longo prazo, a requalificação isolada das funções do corpo não alcança resultado positivo na Tabela Conclusiva, impondo avaliação social judicial para reexame global dos qualificadores.';
+
+      const linhas = [
+        'No modo de controle judicial, adota-se como base a avaliação biopsicossocial administrativa já produzida, mantendo-se os qualificadores de Fatores Ambientais e de Atividades e Participação, com requalificação judicial apenas das Funções do Corpo.',
+        `Base administrativa mantida: Fatores Ambientais = ${Q_LABELS[savedINSS.amb]} (${Q_NAMES[savedINSS.amb]}), Atividades e Participação = ${Q_LABELS[savedINSS.ativ]} (${Q_NAMES[savedINSS.ativ]}).`,
+        `Perícia médica judicial: Funções do Corpo = ${Q_LABELS[judicialControl.corpoJud]} (${Q_NAMES[judicialControl.corpoJud]}); impedimento de longo prazo = ${judicialControl.impedimentoLongoPrazo ? 'sim' : 'não'}.`,
+        `Aplicando a Tabela Conclusiva do Anexo IV da Portaria Conjunta MDS/INSS nº 2/2015 à combinação (Ambiente ${Q_LABELS[savedINSS.amb]}, Atividades ${Q_LABELS[savedINSS.ativ]}, Funções ${Q_LABELS[judicialControl.corpoJud]}), item ${item}, o resultado técnico é ${resultadoTabela}.`,
+        'Nos termos do art. 20, §§ 2º e 10, da Lei nº 8.742/1993, o impedimento de longo prazo é requisito para caracterização da pessoa com deficiência para fins de BPC/LOAS.',
+        recomendacao,
+        conclusao
+      ];
+      output.value = linhas.join('\n\n');
+    }
+
+    async function copyJudicialControlText() {
+      const feedback = document.getElementById('copyFeedbackControle');
+      const area = document.getElementById('textoControleJudicial');
+      if (!area.value.trim()) {
+        feedback.textContent = 'Gere o texto antes de copiar.';
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(area.value);
+        feedback.textContent = 'Texto copiado para a área de transferência.';
+      } catch (err) {
+        area.focus();
+        area.select();
+        document.execCommand('copy');
+        feedback.textContent = 'Texto copiado.';
+      }
     }
 
     function getAutoQualifiedChildDomains() {
@@ -1975,6 +2347,21 @@
       document.getElementById('copyFeedback').textContent = '';
     });
     document.getElementById('btnCopiarTexto').addEventListener('click', copyStandardText);
+    document.getElementById('jcCorpoButtons').addEventListener('click', e => {
+      const btn = e.target.closest('.jc-q-btn');
+      if (!btn) return;
+      judicialControl.corpoJud = +btn.dataset.value;
+      renderJudicialControl();
+    });
+    document.getElementById('jcImpedimentoLongo').addEventListener('change', e => {
+      judicialControl.impedimentoLongoPrazo = e.target.checked;
+      renderJudicialControl();
+    });
+    document.getElementById('btnGerarControleTexto').addEventListener('click', () => {
+      renderJudicialControlText();
+      document.getElementById('copyFeedbackControle').textContent = '';
+    });
+    document.getElementById('btnCopiarControleTexto').addEventListener('click', copyJudicialControlText);
 
     // ============ INIT ============
     buildDomainRows(document.getElementById('domAmb'), DOM_AMB);
@@ -1983,6 +2370,8 @@
     buildDomainRows(document.getElementById('domAtivS'), DOM_ATIV_S);
     syncChildModeByControls();
     applyChildRules();
+    resetJudicialControlFromSavedINSS();
+    renderJudicialControl();
     buildTabelaGrid();
     update();
   </script>
