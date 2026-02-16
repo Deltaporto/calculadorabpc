@@ -192,10 +192,11 @@
       align-items: center;
       gap: 6px;
       font-size: .85rem;
-      color: var(--text2)
+      color: rgba(255, 255, 255, .82)
     }
 
-    .idade-input input {
+    .idade-input input,
+    .idade-input select {
       width: 60px;
       padding: 6px 8px;
       border: 1.5px solid var(--border);
@@ -204,6 +205,17 @@
       background: var(--surface);
       color: var(--text);
       text-align: center
+    }
+
+    .idade-input select {
+      width: auto;
+      text-align: left;
+      cursor: pointer
+    }
+
+    .idade-status {
+      font-size: .78rem;
+      color: rgba(255, 255, 255, .64)
     }
 
     .hidden {
@@ -1128,8 +1140,15 @@
       <p>Portaria Conjunta MDS/INSS nº 2/2015 · Tabela Conclusiva (Anexo IV)</p>
       <div class="header-row">
         <label><input type="checkbox" id="toggleDark"> 🌙 Modo escuro</label>
-        <span class="idade-input" id="idadeWrap">Idade: <input type="number" id="inputIdade" min="0" max="216"
-            value="24"> meses · <strong id="faixaEtaria">Menor de 16 anos</strong></span>
+        <label><input type="checkbox" id="toggleMenor16"> 👶 Idade inferior a 16 anos</label>
+        <span class="idade-input hidden" id="idadeWrap">Idade:
+          <input type="number" id="inputIdade" min="0" max="15" step="1" value="15" inputmode="numeric">
+          <select id="inputIdadeUnidade">
+            <option value="anos" selected>anos</option>
+            <option value="meses">meses</option>
+          </select>
+          <strong id="faixaEtaria" class="idade-status"></strong>
+        </span>
       </div>
     </header>
 
@@ -1323,7 +1342,7 @@
     const state = {};
     [...DOM_AMB, ...DOM_CORPO, ...DOM_ATIV_M, ...DOM_ATIV_S].forEach(d => state[d.id] = 0);
     const CHILD_AGE_LIMIT_MONTHS = 192;
-    let progDesfav = false, estrMaior = false, impedimento = false, crianca = true, idadeMeses = 24;
+    let progDesfav = false, estrMaior = false, impedimento = false, crianca = false, idadeMeses = CHILD_AGE_LIMIT_MONTHS, idadeValor = 15, idadeUnidade = 'anos';
     let savedINSS = null;
     let currentAmbTab = 0;
     const childDomainBackup = {};
@@ -1504,18 +1523,58 @@
       document.documentElement.dataset.theme = e.target.checked ? 'dark' : '';
     });
 
-    // Children mode by age (<16 years)
-    document.getElementById('inputIdade').addEventListener('input', e => {
-      idadeMeses = Math.max(0, Math.min(216, +e.target.value || 0));
-      e.target.value = idadeMeses;
-      syncChildModeByAge();
-      applyChildRules(); update();
-    });
-    function syncChildModeByAge() {
-      crianca = idadeMeses < CHILD_AGE_LIMIT_MONTHS;
-      const faixa = document.getElementById('faixaEtaria');
-      faixa.textContent = crianca ? 'Menor de 16 anos' : '16 anos ou mais';
+    // Children mode by explicit selection
+    function getAgeBounds(unit) {
+      return unit === 'anos' ? { min: 0, max: 15 } : { min: 0, max: 191 };
     }
+    function valueToMonths(value, unit) {
+      return unit === 'anos' ? value * 12 : value;
+    }
+    function syncChildModeByControls() {
+      const wrap = document.getElementById('idadeWrap');
+      const input = document.getElementById('inputIdade');
+      const unitSel = document.getElementById('inputIdadeUnidade');
+      const faixa = document.getElementById('faixaEtaria');
+
+      wrap.classList.toggle('hidden', !crianca);
+      idadeUnidade = unitSel.value;
+      const bounds = getAgeBounds(idadeUnidade);
+      input.min = bounds.min;
+      input.max = bounds.max;
+      input.step = 1;
+
+      if (!crianca) {
+        idadeMeses = CHILD_AGE_LIMIT_MONTHS;
+        faixa.textContent = 'Padrão: 16 anos ou mais';
+        return;
+      }
+
+      idadeValor = Math.max(bounds.min, Math.min(bounds.max, Math.floor(+input.value || 0)));
+      input.value = idadeValor;
+      idadeMeses = valueToMonths(idadeValor, idadeUnidade);
+      faixa.textContent = `${idadeMeses} meses`;
+    }
+    document.getElementById('toggleMenor16').addEventListener('change', e => {
+      crianca = e.target.checked;
+      syncChildModeByControls();
+      applyChildRules();
+      update();
+    });
+    document.getElementById('inputIdade').addEventListener('input', () => {
+      syncChildModeByControls();
+      applyChildRules();
+      update();
+    });
+    document.getElementById('inputIdadeUnidade').addEventListener('change', e => {
+      const input = document.getElementById('inputIdade');
+      const currentValue = Math.max(0, Math.floor(+input.value || 0));
+      const currentMonths = valueToMonths(currentValue, idadeUnidade);
+      const nextUnit = e.target.value;
+      input.value = nextUnit === 'anos' ? Math.floor(currentMonths / 12) : currentMonths;
+      syncChildModeByControls();
+      applyChildRules();
+      update();
+    });
     function applyChildRules() {
       [...DOM_ATIV_M, ...DOM_ATIV_S].forEach(d => {
         const btns = document.querySelectorAll(`[data-domain="${d.id}"] .note-btn`);
@@ -1571,9 +1630,14 @@
       Object.keys(state).forEach(k => state[k] = 0);
       Object.keys(childDomainBackup).forEach(k => delete childDomainBackup[k]);
       progDesfav = false; estrMaior = false; impedimento = false;
+      crianca = false; idadeValor = 15; idadeUnidade = 'anos'; idadeMeses = CHILD_AGE_LIMIT_MONTHS;
       document.getElementById('toggleProg').checked = false;
       document.getElementById('toggleEstr').checked = false;
       document.getElementById('toggleImpedimento').checked = false;
+      document.getElementById('toggleMenor16').checked = false;
+      document.getElementById('inputIdade').value = idadeValor;
+      document.getElementById('inputIdadeUnidade').value = idadeUnidade;
+      syncChildModeByControls();
       document.querySelectorAll('.note-btn').forEach(b => { b.classList.remove('active', 'locked'); if (+b.dataset.value === 0) b.classList.add('active') });
       applyChildRules();
       update();
@@ -1632,8 +1696,8 @@
         ? `Nos domínios de Atividades e Participação abaixo do ponto de corte etário, foi aplicado automaticamente o qualificador 4 (dificuldade completa), conforme Portaria Conjunta MDS/INSS nº 2/2015: ${forced.map(d => `${d.id.toUpperCase()} (${d.name}, corte ${d.cut} meses)`).join('; ')}.`
         : '';
       const idadeTexto = crianca
-        ? `A parte autora possui ${idadeMeses} meses de idade (menor de 16 anos).`
-        : `A parte autora possui ${idadeMeses} meses de idade (16 anos ou mais).`;
+        ? `Foi assinalada idade inferior a 16 anos, com idade informada de ${idadeValor} ${idadeUnidade} (${idadeMeses} meses).`
+        : 'Não foi assinalada idade inferior a 16 anos, de modo que se considerou a faixa etária de 16 anos ou mais.';
       const linhas = [
         'Com base no art. 20, § 2º, da Lei nº 8.742/1993 (LOAS) e na Portaria Conjunta MDS/INSS nº 2/2015 (Anexo IV), procede-se à análise do enquadramento da parte autora no conceito de pessoa com deficiência para fins de BPC.',
         idadeTexto,
@@ -1680,7 +1744,7 @@
     buildDomainRows(document.getElementById('domCorpo'), DOM_CORPO);
     buildDomainRows(document.getElementById('domAtivM'), DOM_ATIV_M);
     buildDomainRows(document.getElementById('domAtivS'), DOM_ATIV_S);
-    syncChildModeByAge();
+    syncChildModeByControls();
     applyChildRules();
     buildTabelaGrid();
     update();
