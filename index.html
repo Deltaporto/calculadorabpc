@@ -3329,10 +3329,11 @@
       el.textContent = Q_LABELS[q]; el.dataset.q = Q_LABELS[q];
     }
     function highlightActiveCell(ativQ, corpoQ) {
-      document.querySelectorAll('.tc.active-cell').forEach(c => c.classList.remove('active-cell'));
-      document.querySelectorAll('.tc[data-c]').forEach(c => {
-        if (+c.dataset.c === corpoQ && +c.dataset.a === ativQ) c.classList.add('active-cell');
-      });
+      const active = document.querySelector('.tc.active-cell');
+      if (active) active.classList.remove('active-cell');
+
+      const target = document.querySelector(`.tc[data-c="${corpoQ}"][data-a="${ativQ}"]`);
+      if (target) target.classList.add('active-cell');
     }
 
     // ============ EVENT HANDLERS ============
