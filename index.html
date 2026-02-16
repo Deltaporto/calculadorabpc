@@ -3731,7 +3731,11 @@
       if (m.ativMode === 'simples') {
         const raw = m.ativMedJustification.trim();
         const preview = raw.length > 160 ? `${raw.slice(0, 157)}...` : raw;
-        return `<div class="jc-trace-line"><strong>Origem da reclassificação médica de Atividades e Participação</strong>: modo simples, qualificador final de Atividades e Participação em <strong>${Q_LABELS[ativMedResolved]}</strong>; justificativa médica: "${escapeHtml(preview)}".</div>`;
+        const line = document.createElement('div');
+        line.className = 'jc-trace-line';
+        line.innerHTML = `<strong>Origem da reclassificação médica de Atividades e Participação</strong>: modo simples, qualificador final de Atividades e Participação em <strong>${Q_LABELS[ativMedResolved]}</strong>; justificativa médica: `;
+        line.appendChild(document.createTextNode(`"${preview}".`));
+        return line.outerHTML;
       }
 
       if (m.ativMode === 'completa') {
