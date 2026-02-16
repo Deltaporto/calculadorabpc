@@ -982,9 +982,8 @@
       <p>Portaria Conjunta MDS/INSS nº 2/2015 · Tabela Conclusiva (Anexo IV)</p>
       <div class="header-row">
         <label><input type="checkbox" id="toggleDark"> 🌙 Modo escuro</label>
-        <label><input type="checkbox" id="toggleCrianca"> 👶 Criança</label>
-        <span class="idade-input hidden" id="idadeWrap">Idade: <input type="number" id="inputIdade" min="0" max="216"
-            value="24"> meses</span>
+        <span class="idade-input" id="idadeWrap">Idade: <input type="number" id="inputIdade" min="0" max="216"
+            value="24"> meses · <strong id="faixaEtaria">Menor de 16 anos</strong></span>
       </div>
     </header>
 
@@ -1167,9 +1166,11 @@
     // ============ STATE ============
     const state = {};
     [...DOM_AMB, ...DOM_CORPO, ...DOM_ATIV_M, ...DOM_ATIV_S].forEach(d => state[d.id] = 0);
-    let progDesfav = false, estrMaior = false, impedimento = false, crianca = false, idadeMeses = 24;
+    const CHILD_AGE_LIMIT_MONTHS = 192;
+    let progDesfav = false, estrMaior = false, impedimento = false, crianca = true, idadeMeses = 24;
     let savedINSS = null;
     let currentAmbTab = 0;
+    const childDomainBackup = {};
 
     // ============ CALCULATION ============
     function pctToQ(pct) {
@@ -1340,27 +1341,37 @@
       document.documentElement.dataset.theme = e.target.checked ? 'dark' : '';
     });
 
-    // Children mode
-    document.getElementById('toggleCrianca').addEventListener('change', e => {
-      crianca = e.target.checked;
-      document.getElementById('idadeWrap').classList.toggle('hidden', !crianca);
-      applyChildRules(); update();
-    });
+    // Children mode by age (<16 years)
     document.getElementById('inputIdade').addEventListener('input', e => {
-      idadeMeses = Math.max(0, +e.target.value || 0);
+      idadeMeses = Math.max(0, Math.min(216, +e.target.value || 0));
+      e.target.value = idadeMeses;
+      syncChildModeByAge();
       applyChildRules(); update();
     });
+    function syncChildModeByAge() {
+      crianca = idadeMeses < CHILD_AGE_LIMIT_MONTHS;
+      const faixa = document.getElementById('faixaEtaria');
+      faixa.textContent = crianca ? 'Menor de 16 anos' : '16 anos ou mais';
+    }
     function applyChildRules() {
       [...DOM_ATIV_M, ...DOM_ATIV_S].forEach(d => {
         const btns = document.querySelectorAll(`[data-domain="${d.id}"] .note-btn`);
         if (crianca && idadeMeses < d.cut) {
+          if (!(d.id in childDomainBackup)) childDomainBackup[d.id] = state[d.id];
           state[d.id] = 4;
           btns.forEach(b => {
-            b.classList.remove('active'); b.classList.add('locked');
-            if (+b.dataset.value === 4) { b.classList.add('active'); b.classList.remove('locked') }
+            b.classList.toggle('active', +b.dataset.value === 4);
+            b.classList.add('locked');
           });
         } else {
-          btns.forEach(b => b.classList.remove('locked'));
+          if (d.id in childDomainBackup) {
+            state[d.id] = childDomainBackup[d.id];
+            delete childDomainBackup[d.id];
+          }
+          btns.forEach(b => {
+            b.classList.remove('locked');
+            b.classList.toggle('active', +b.dataset.value === state[d.id]);
+          });
         }
       });
     }
@@ -1395,12 +1406,13 @@
     // Clear
     document.getElementById('btnLimpar').addEventListener('click', () => {
       Object.keys(state).forEach(k => state[k] = 0);
+      Object.keys(childDomainBackup).forEach(k => delete childDomainBackup[k]);
       progDesfav = false; estrMaior = false; impedimento = false;
       document.getElementById('toggleProg').checked = false;
       document.getElementById('toggleEstr').checked = false;
       document.getElementById('toggleImpedimento').checked = false;
       document.querySelectorAll('.note-btn').forEach(b => { b.classList.remove('active', 'locked'); if (+b.dataset.value === 0) b.classList.add('active') });
-      if (crianca) applyChildRules();
+      applyChildRules();
       update();
     });
 
@@ -1446,6 +1458,8 @@
     buildDomainRows(document.getElementById('domCorpo'), DOM_CORPO);
     buildDomainRows(document.getElementById('domAtivM'), DOM_ATIV_M);
     buildDomainRows(document.getElementById('domAtivS'), DOM_ATIV_S);
+    syncChildModeByAge();
+    applyChildRules();
     buildTabelaGrid();
     update();
   </script>
