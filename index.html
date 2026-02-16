@@ -25,7 +25,7 @@
       --surface: #FFF;
       --text: #0F1B2D;
       --text2: #4B5563;
-      --text3: #9CA3AF;
+      --text3: #6B7280;
       --border: #E5E7EB;
       --navy: #0F1B2D;
       --gold: #C5A55A;
@@ -47,7 +47,7 @@
       --surface: #141B2D;
       --text: #F1F5F9;
       --text2: #94A3B8;
-      --text3: #64748B;
+      --text3: #94A3B8;
       --border: #1E293B;
       --shadow: 0 1px 3px rgba(0, 0, 0, .3);
       --shadow-lg: 0 10px 25px rgba(0, 0, 0, .4);
@@ -148,6 +148,37 @@
     header p {
       color: rgba(255, 255, 255, .65);
       font-size: .85rem
+    }
+
+    .app-mode-switch {
+      margin: 14px auto 0;
+      display: inline-flex;
+      align-items: center;
+      border: 1.5px solid rgba(255, 255, 255, .22);
+      border-radius: 10px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, .06)
+    }
+
+    .mode-btn {
+      min-width: 154px;
+      border: none;
+      background: transparent;
+      color: rgba(255, 255, 255, .75);
+      font-weight: 700;
+      font-size: .8rem;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: background .18s, color .18s
+    }
+
+    .mode-btn + .mode-btn {
+      border-left: 1px solid rgba(255, 255, 255, .18)
+    }
+
+    .mode-btn.active {
+      background: #fff;
+      color: var(--navy)
     }
 
     .header-row {
@@ -265,6 +296,62 @@
       display: none !important
     }
 
+    .simulador-details {
+      margin-bottom: 16px
+    }
+
+    .simulador-summary {
+      list-style: none;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--text2);
+      padding: 10px 12px;
+      font-size: .8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none
+    }
+
+    .simulador-summary::-webkit-details-marker {
+      display: none
+    }
+
+    .simulador-summary::after {
+      content: '+';
+      font-size: .95rem;
+      color: var(--text3)
+    }
+
+    .simulador-details[open] .simulador-summary::after {
+      content: '−'
+    }
+
+    .simulador-body {
+      margin-top: 10px
+    }
+
+    .mode-simulador .simulador-summary {
+      display: none
+    }
+
+    .mode-simulador .simulador-body {
+      margin-top: 0
+    }
+
+    .mode-simulador #judicialControlSection,
+    .mode-simulador #compSection {
+      display: none
+    }
+
+    .mode-controle .footer-actions,
+    .mode-controle #textoSection {
+      display: none
+    }
+
     /* PANELS */
     .calculator {
       display: grid;
@@ -276,6 +363,10 @@
     @media(max-width:1024px) {
       .calculator {
         grid-template-columns: 1fr
+      }
+
+      .mode-btn {
+        min-width: 132px
       }
     }
 
@@ -1129,80 +1220,196 @@
       margin-bottom: 12px
     }
 
-    .jc-lock {
-      border: 1.5px solid #F59E0B;
-      background: #FEF3C7;
-      color: #92400E;
-      border-radius: 10px;
-      padding: 12px;
-      font-size: .82rem;
-      display: flex;
-      align-items: center;
-      gap: 8px
-    }
-
-    [data-theme="dark"] .jc-lock {
-      background: #451A03;
-      color: #FCD34D;
-      border-color: #F59E0B
-    }
-
-    .jc-body {
+    .jc-workflow {
       display: flex;
       flex-direction: column;
       gap: 12px
     }
 
-    .jc-admin {
+    .jc-progress-wrap {
       border: 1px solid var(--border);
-      background: color-mix(in srgb, var(--blue) 6%, var(--surface));
       border-radius: 10px;
-      padding: 12px;
-      font-size: .8rem;
+      background: var(--surface);
+      padding: 8px 10px;
+      margin-bottom: 8px
+    }
+
+    .jc-progress-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      font-size: .74rem;
+      color: var(--text2);
+      font-weight: 700
+    }
+
+    .jc-progress-track {
+      height: 6px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--border) 70%, var(--surface));
+      overflow: hidden
+    }
+
+    .jc-progress-bar {
+      height: 100%;
+      width: 25%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, color-mix(in srgb, var(--blue) 70%, #fff), var(--blue));
+      transition: width .28s ease
+    }
+
+    .jc-why-blocked {
+      border: 1px solid #F59E0B;
+      background: #FEF3C7;
+      color: #92400E;
+      border-radius: 9px;
+      padding: 8px 10px;
+      font-size: .76rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      margin-bottom: 8px
+    }
+
+    [data-theme="dark"] .jc-why-blocked {
+      background: #451A03;
+      color: #FCD34D;
+      border-color: #F59E0B
+    }
+
+    .jc-step {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg);
+      padding: 12px
+    }
+
+    .jc-step.active-step {
+      border-color: color-mix(in srgb, var(--blue) 45%, var(--border));
+      box-shadow: 0 0 0 1px color-mix(in srgb, var(--blue) 18%, transparent);
+      background: color-mix(in srgb, var(--blue) 4%, var(--bg))
+    }
+
+    .jc-step-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px
+    }
+
+    .jc-step-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: .82rem;
       color: var(--text2)
     }
 
-    .jc-admin strong {
-      color: var(--text)
+    .jc-step-index {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--blue) 16%, var(--surface));
+      border: 1px solid color-mix(in srgb, var(--blue) 32%, transparent);
+      color: var(--blue);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .72rem;
+      font-weight: 700
     }
 
-    .jc-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px
-    }
-
-    @media(max-width:900px) {
-      .jc-grid {
-        grid-template-columns: 1fr
-      }
-    }
-
-    .jc-card {
+    .jc-step-state {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: .7rem;
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px;
-      background: var(--bg)
+      border-radius: 999px;
+      padding: 3px 8px;
+      color: var(--text3);
+      background: var(--surface)
+    }
+
+    .jc-step-state.done {
+      border-color: #10B981;
+      color: #065F46;
+      background: #D1FAE5
+    }
+
+    .jc-step-state.pending {
+      border-color: #F59E0B;
+      color: #92400E;
+      background: #FEF3C7
+    }
+
+    .jc-step-state.blocked {
+      border-color: var(--border);
+      color: var(--text3);
+      background: var(--surface)
+    }
+
+    [data-theme="dark"] .jc-step-state.done {
+      border-color: #10B981;
+      color: #6EE7B7;
+      background: #064E3B
+    }
+
+    [data-theme="dark"] .jc-step-state.pending {
+      border-color: #F59E0B;
+      color: #FCD34D;
+      background: #451A03
+    }
+
+    .jc-step-helper {
+      font-size: .76rem;
+      color: var(--text3);
+      margin-bottom: 10px
+    }
+
+    .jc-step-note {
+      font-size: .75rem;
+      color: var(--text2);
+      margin: -2px 0 10px;
+      line-height: 1.35
+    }
+
+    .jc-qual-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(170px, 1fr));
+      gap: 10px;
+      margin-bottom: 10px
+    }
+
+    .jc-qual-item {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px;
+      background: var(--surface)
     }
 
     .jc-field-title {
-      font-family: 'DM Sans', sans-serif;
-      font-size: .82rem;
+      font-size: .74rem;
       font-weight: 700;
       color: var(--text2);
-      margin-bottom: 8px
+      margin-bottom: 6px;
+      line-height: 1.2
     }
 
     .jc-q-buttons {
       display: flex;
       gap: 6px;
-      flex-wrap: wrap;
-      margin-bottom: 8px
+      flex-wrap: wrap
     }
 
     .jc-q-btn {
-      min-width: 42px;
-      height: 34px;
+      min-width: 36px;
+      height: 30px;
       border-radius: 8px;
       border: 1.5px solid var(--border);
       background: var(--surface);
@@ -1246,61 +1453,275 @@
       border-color: var(--qC)
     }
 
-    .jc-rec {
-      border-radius: 10px;
-      padding: 10px 12px;
-      border: 1.5px solid transparent;
-      font-size: .82rem;
+    .jc-inline-note {
+      font-size: .77rem;
+      color: var(--text2);
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      padding: 8px;
+      margin-top: 8px;
+      background: var(--surface)
+    }
+
+    .jc-actions-main {
+      margin-top: 8px;
       display: flex;
-      align-items: flex-start;
       gap: 8px;
-      margin-bottom: 8px
+      flex-wrap: wrap;
+      align-items: center
     }
 
-    .jc-rec.dispensa {
-      background: #D1FAE5;
-      border-color: #10B981;
-      color: #065F46
+    .jc-actions-main .btn {
+      padding: 8px 12px;
+      font-size: .78rem
     }
 
-    .jc-rec.necessaria {
-      background: #FEE2E2;
-      border-color: #EF4444;
-      color: #991B1B
+    .jc-primary-btn {
+      box-shadow: 0 2px 8px rgba(197, 165, 90, .28)
     }
 
-    [data-theme="dark"] .jc-rec.dispensa {
-      background: #064E3B;
-      border-color: #10B981;
-      color: #6EE7B7
+    .jc-autofill-details {
+      margin-top: 8px;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 8px
     }
 
-    [data-theme="dark"] .jc-rec.necessaria {
-      background: #450A0A;
-      border-color: #F87171;
-      color: #FCA5A5
+    .jc-autofill-details summary {
+      cursor: pointer;
+      font-size: .75rem;
+      color: var(--text2);
+      font-weight: 700
     }
 
-    .jc-rec-title {
-      font-family: 'DM Sans', sans-serif;
+    .jc-autofill-body {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center
+    }
+
+    .jc-autofill-hint {
+      font-size: .74rem;
+      color: var(--text3);
+      flex: 1 1 280px
+    }
+
+    .jc-autofill-btn {
+      background: transparent;
+      color: var(--text2);
+      border: 1px dashed var(--border);
+      padding: 7px 10px;
+      font-size: .75rem
+    }
+
+    .jc-autofill-btn:hover {
+      border-color: color-mix(in srgb, var(--blue) 35%, var(--border));
+      color: var(--blue);
+      background: color-mix(in srgb, var(--blue) 6%, var(--surface))
+    }
+
+    .jc-segmented {
+      display: inline-flex;
+      border: 1.5px solid var(--border);
+      border-radius: 9px;
+      overflow: hidden;
+      background: var(--surface)
+    }
+
+    .jc-seg-btn {
+      min-width: 68px;
+      height: 32px;
+      border: none;
+      border-right: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text2);
       font-weight: 700;
-      line-height: 1.2;
-      margin-bottom: 2px
+      cursor: pointer;
+      font-size: .78rem
     }
 
-    .jc-detail {
+    .jc-seg-btn:last-child {
+      border-right: none
+    }
+
+    .jc-seg-btn.active {
+      background: var(--blue);
+      color: #fff
+    }
+
+    .jc-seg-btn:disabled {
+      cursor: not-allowed;
+      color: var(--text3);
+      background: color-mix(in srgb, var(--border) 18%, var(--surface));
+      opacity: .75
+    }
+
+    .jc-segmented-wide {
+      width: 100%;
+      border: none;
+      background: transparent;
+      gap: 6px;
+      flex-wrap: wrap
+    }
+
+    .jc-segmented-wide .jc-seg-btn {
+      flex: 1 1 220px;
+      min-width: 180px;
+      height: auto;
+      line-height: 1.25;
+      padding: 8px 10px;
+      border: 1.5px solid var(--border);
+      border-right: 1.5px solid var(--border);
+      border-radius: 8px
+    }
+
+    .jc-segmented-wide .jc-seg-btn:last-child {
+      border-right: 1.5px solid var(--border)
+    }
+
+    .jc-med-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(220px, 1fr));
+      gap: 10px
+    }
+
+    .jc-field {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px;
+      background: var(--surface)
+    }
+
+    .jc-field-span-2 {
+      grid-column: 1 / -1
+    }
+
+    .jc-field-helper {
+      font-size: .72rem;
+      color: var(--text3);
+      margin-top: 6px;
+      line-height: 1.35
+    }
+
+    .jc-ativ-mode-block {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border)
+    }
+
+    .jc-field-title-margin {
+      margin-top: 8px
+    }
+
+    .jc-mini-textarea {
+      width: 100%;
+      min-height: 74px;
+      resize: vertical;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 8px;
+      font-size: .76rem;
+      line-height: 1.35;
+      font-family: inherit;
+      background: var(--bg2);
+      color: var(--text)
+    }
+
+    .jc-select {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: .76rem;
+      background: var(--surface);
+      color: var(--text2)
+    }
+
+    .jc-complete-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(150px, 1fr));
+      gap: 8px;
+      margin-top: 6px
+    }
+
+    .jc-complete-item {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px;
+      background: var(--bg)
+    }
+
+    .jc-complete-item .jc-field-title {
+      font-size: .7rem
+    }
+
+    .jc-trace {
+      margin-top: 8px;
       font-size: .78rem;
       color: var(--text2);
-      line-height: 1.45
+      line-height: 1.45;
+      display: flex;
+      flex-direction: column;
+      gap: 4px
     }
 
-    .jc-detail strong {
-      color: var(--text)
+    .jc-trace-line {
+      border-left: 2px solid var(--border);
+      padding-left: 8px
+    }
+
+    .jc-status-badge {
+      border-radius: 9px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      padding: 10px 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .8rem;
+      color: var(--text2)
+    }
+
+    .jc-status-badge.dispensa {
+      border-color: #10B981;
+      color: #065F46;
+      background: #D1FAE5
+    }
+
+    .jc-status-badge.necessaria {
+      border-color: #EF4444;
+      color: #991B1B;
+      background: #FEE2E2
+    }
+
+    .jc-status-badge.pending {
+      border-color: #F59E0B;
+      color: #92400E;
+      background: #FEF3C7
+    }
+
+    [data-theme="dark"] .jc-status-badge.dispensa {
+      border-color: #10B981;
+      color: #6EE7B7;
+      background: #064E3B
+    }
+
+    [data-theme="dark"] .jc-status-badge.necessaria {
+      border-color: #F87171;
+      color: #FCA5A5;
+      background: #450A0A
+    }
+
+    [data-theme="dark"] .jc-status-badge.pending {
+      border-color: #F59E0B;
+      color: #FCD34D;
+      background: #451A03
     }
 
     .jc-textarea {
       width: 100%;
-      min-height: 185px;
+      min-height: 210px;
       resize: vertical;
       border: 1.5px solid var(--border);
       border-radius: 10px;
@@ -1312,6 +1733,130 @@
       color: var(--text)
     }
 
+    .jc-admin-rec-wrap {
+      margin-top: 8px;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 8px
+    }
+
+    .jc-help-details {
+      margin-top: 8px;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      background: color-mix(in srgb, var(--blue) 4%, var(--surface));
+      padding: 8px
+    }
+
+    .jc-help-details summary {
+      cursor: pointer;
+      font-size: .75rem;
+      color: var(--text2);
+      font-weight: 700
+    }
+
+    .jc-help-grid {
+      margin-top: 8px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(220px, 1fr));
+      gap: 8px
+    }
+
+    .jc-help-item {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 8px
+    }
+
+    .jc-help-title {
+      font-size: .74rem;
+      font-weight: 700;
+      color: var(--text2);
+      margin-bottom: 4px
+    }
+
+    .jc-help-item p {
+      font-size: .73rem;
+      color: var(--text2);
+      line-height: 1.45
+    }
+
+    .jc-help-item p + p {
+      margin-top: 5px
+    }
+
+    .jc-reduction-alert {
+      margin-top: 8px;
+      border: 1px solid #F59E0B;
+      background: #FFFBEB;
+      color: #92400E;
+      border-radius: 8px;
+      padding: 8px;
+      font-size: .74rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px
+    }
+
+    .jc-reduction-alert label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    [data-theme="dark"] .jc-reduction-alert {
+      border-color: #F59E0B;
+      background: #451A03;
+      color: #FCD34D
+    }
+
+    .jc-social-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(180px, 1fr));
+      gap: 8px
+    }
+
+    .jc-social-item {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px;
+      background: var(--bg)
+    }
+
+    .jc-social-item .jc-field-title {
+      font-size: .7rem
+    }
+
+    @media(max-width:900px) {
+      .jc-qual-grid {
+        grid-template-columns: 1fr
+      }
+
+      .jc-med-grid {
+        grid-template-columns: 1fr
+      }
+
+      .jc-social-grid {
+        grid-template-columns: 1fr
+      }
+
+      .jc-complete-grid {
+        grid-template-columns: repeat(2, minmax(150px, 1fr))
+      }
+
+      .jc-help-grid {
+        grid-template-columns: 1fr
+      }
+
+      .jc-actions-main .jc-primary-btn,
+      .jc-autofill-btn {
+        width: 100%;
+        justify-content: center
+      }
+    }
+
     .comp-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -1320,6 +1865,10 @@
 
     @media(max-width:600px) {
       .comp-grid {
+        grid-template-columns: 1fr
+      }
+
+      .jc-complete-grid {
         grid-template-columns: 1fr
       }
     }
@@ -1533,6 +2082,10 @@
       <span class="badge"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-balance"></use></svg>BPC / LOAS</span>
       <h1>Calculadora Biopsicossocial</h1>
       <p>Portaria Conjunta MDS/INSS nº 2/2015 · Tabela Conclusiva (Anexo IV)</p>
+      <div class="app-mode-switch" id="modeSwitcher" aria-label="Modo da aplicação">
+        <button class="mode-btn" data-mode="simulador">Simulador</button>
+        <button class="mode-btn" data-mode="controle">Controle Judicial</button>
+      </div>
       <div class="header-row">
         <label><input type="checkbox" id="toggleDark"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-moon"></use></svg>Modo escuro</label>
         <label><input type="checkbox" id="toggleMenor16"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-child"></use></svg>Idade inferior a 16 anos</label>
@@ -1544,23 +2097,27 @@
           </select>
           <strong id="faixaEtaria" class="idade-status"></strong>
         </span>
+        <span class="idade-status hidden" id="childAutoSummary"></span>
       </div>
     </header>
 
-    <div class="toolbar">
-      <button class="btn btn-gold" id="btnPadrao"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-chart"></use></svg>Aplicar Padrão Médio Social</button>
-      <button class="btn btn-outline" id="btnLimpar"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-trash"></use></svg>Limpar</button>
-      <label class="toggle-label">
-        <input type="checkbox" id="togglePadraoOverwrite"><span class="toggle-switch"></span><svg class="ui-icon sm" aria-hidden="true"><use href="#i-swap"></use></svg>
-        Sobrescrever domínios preenchidos
-      </label>
-      <label class="toggle-label">
-        <input type="checkbox" id="toggleImpedimento"><span class="toggle-switch"></span><svg class="ui-icon sm" aria-hidden="true"><use href="#i-alert"></use></svg>
-        Impedimento &lt; 2 anos
-      </label>
-    </div>
+    <details id="simuladorDetails" class="simulador-details" open>
+      <summary class="simulador-summary">Calculadora (consulta rápida)</summary>
+      <div class="simulador-body">
+        <div class="toolbar">
+          <button class="btn btn-gold" id="btnPadrao"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-chart"></use></svg>Aplicar Padrão Médio Social</button>
+          <button class="btn btn-outline" id="btnLimpar"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-trash"></use></svg>Limpar</button>
+          <label class="toggle-label">
+            <input type="checkbox" id="togglePadraoOverwrite"><span class="toggle-switch"></span><svg class="ui-icon sm" aria-hidden="true"><use href="#i-swap"></use></svg>
+            Sobrescrever domínios preenchidos
+          </label>
+          <label class="toggle-label">
+            <input type="checkbox" id="toggleImpedimento"><span class="toggle-switch"></span><svg class="ui-icon sm" aria-hidden="true"><use href="#i-alert"></use></svg>
+            Impedimento &lt; 2 anos
+          </label>
+        </div>
 
-    <main class="calculator">
+        <main class="calculator">
       <!-- Panel Ambiente -->
       <section class="panel" style="--panel-color:#2563EB">
         <div class="panel-header">
@@ -1629,9 +2186,9 @@
           </div>
         </div>
       </section>
-    </main>
+        </main>
 
-    <section class="resultado" id="resultado">
+        <section class="resultado" id="resultado">
       <h2>Resultado da Avaliação</h2>
       <div class="qualifiers-row">
         <div class="qual-card"><span class="qual-label">Fatores Ambientais</span>
@@ -1666,10 +2223,12 @@
         <span class="decision-reason" id="decReason">Insira as notas nos domínios acima</span>
         <span class="decision-item" id="decItem"></span>
       </div>
-    </section>
+        </section>
+      </div>
+    </details>
 
     <div class="footer-actions">
-      <button class="btn btn-outline" id="btnSaveINSS"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-save"></use></svg>Salvar</button>
+      <button class="btn btn-outline" id="btnSaveINSS"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-save"></use></svg>Fixar base pelos qualificadores atuais</button>
       <button class="btn btn-outline" id="btnGerarTexto"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-document"></use></svg>Gerar texto padronizado</button>
       <button class="btn btn-red hidden" id="btnClearComp"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-close"></use></svg>Limpar comparação</button>
     </div>
@@ -1699,39 +2258,399 @@
       <div class="comp-change" id="compChange"></div>
     </div>
     <div class="judicial-control" id="judicialControlSection">
-      <h3><svg class="ui-icon sm" aria-hidden="true"><use href="#i-balance"></use></svg>Modo Controle Judicial</h3>
-      <p class="helper">Triagem para definir se, na fase judicial, basta perícia médica ou se é necessária também avaliação social.</p>
-      <div class="jc-lock" id="jcLock"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-alert"></use></svg>Para habilitar este modo, salve primeiro a avaliação administrativa em <strong>Avaliação INSS</strong>.</div>
-      <div class="jc-body hidden" id="jcBody">
-        <div class="jc-admin" id="jcAdminSummary"></div>
-        <div class="jc-grid">
-          <div class="jc-card">
-            <div class="jc-field-title">Perícia Médica Judicial (controle)</div>
-            <div class="jc-q-buttons" id="jcCorpoButtons">
-              <button class="jc-q-btn" data-value="0">N</button>
-              <button class="jc-q-btn" data-value="1">L</button>
-              <button class="jc-q-btn" data-value="2">M</button>
-              <button class="jc-q-btn" data-value="3">G</button>
-              <button class="jc-q-btn" data-value="4">C</button>
-            </div>
-            <label class="toggle-label">
-              <input type="checkbox" id="jcImpedimentoLongo"><span class="toggle-switch"></span><svg class="ui-icon sm" aria-hidden="true"><use href="#i-alert"></use></svg>
-              Constatado impedimento de longo prazo
-            </label>
-          </div>
-          <div class="jc-card">
-            <div class="jc-rec" id="jcRecommendation"></div>
-            <div class="jc-detail" id="jcDetail"></div>
-          </div>
+      <h3><svg class="ui-icon sm" aria-hidden="true"><use href="#i-balance"></use></svg>Controle Judicial</h3>
+      <p class="helper">Fluxo probatório para decidir se basta perícia médica judicial ou se também é necessária avaliação social.</p>
+      <div class="jc-progress-wrap" id="jcProgressWrap">
+        <div class="jc-progress-head">
+          <span id="jcProgressLabel">Etapa 1 de 4 · Base administrativa</span>
+          <span id="jcProgressPct">25%</span>
         </div>
-        <div>
+        <div class="jc-progress-track">
+          <div class="jc-progress-bar" id="jcProgressBar"></div>
+        </div>
+      </div>
+      <div class="jc-why-blocked hidden" id="jcWhyBlocked"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-alert"></use></svg><span></span></div>
+      <div class="jc-workflow">
+        <section class="jc-step" id="stepAdmin">
+          <div class="jc-step-header">
+            <div class="jc-step-title"><span class="jc-step-index">1</span>Fixar avaliação administrativa (INSS)</div>
+            <span class="jc-step-state pending" id="jcAdminState">Pendente</span>
+          </div>
+          <p class="jc-step-helper">Informe os qualificadores finais da fase administrativa e os reconhecimentos prévios do INSS para Funções do Corpo.</p>
+          <p class="jc-step-note">O que fazer: escolha os 3 qualificadores finais administrativos, informe os reconhecimentos administrativos de Funções e clique em <strong>Fixar base administrativa</strong>. Se necessário, use o atalho opcional para preencher os qualificadores a partir da Calculadora.</p>
+          <div class="jc-qual-grid">
+            <div class="jc-qual-item">
+              <div class="jc-field-title">Fatores Ambientais (final)</div>
+              <div class="jc-q-buttons" id="jcAdminAmbButtons">
+                <button class="jc-q-btn" data-value="0">N</button>
+                <button class="jc-q-btn" data-value="1">L</button>
+                <button class="jc-q-btn" data-value="2">M</button>
+                <button class="jc-q-btn" data-value="3">G</button>
+                <button class="jc-q-btn" data-value="4">C</button>
+              </div>
+            </div>
+            <div class="jc-qual-item">
+              <div class="jc-field-title">Atividades e Participação (final)</div>
+              <div class="jc-q-buttons" id="jcAdminAtivButtons">
+                <button class="jc-q-btn" data-value="0">N</button>
+                <button class="jc-q-btn" data-value="1">L</button>
+                <button class="jc-q-btn" data-value="2">M</button>
+                <button class="jc-q-btn" data-value="3">G</button>
+                <button class="jc-q-btn" data-value="4">C</button>
+              </div>
+            </div>
+            <div class="jc-qual-item">
+              <div class="jc-field-title">Funções do Corpo (final)</div>
+              <div class="jc-q-buttons" id="jcAdminCorpoButtons">
+                <button class="jc-q-btn" data-value="0">N</button>
+                <button class="jc-q-btn" data-value="1">L</button>
+                <button class="jc-q-btn" data-value="2">M</button>
+                <button class="jc-q-btn" data-value="3">G</button>
+                <button class="jc-q-btn" data-value="4">C</button>
+              </div>
+            </div>
+          </div>
+          <div class="jc-admin-rec-wrap">
+            <div class="jc-field-title">Reconhecimentos administrativos do INSS (Funções do Corpo)</div>
+            <p class="jc-field-helper">Essas respostas controlam os motivos permitidos na requalificação judicial de Funções do Corpo.</p>
+            <div class="jc-social-grid">
+              <div class="jc-social-item">
+                <div class="jc-field-title">INSS reconheceu alterações em estruturas do corpo que configurem maiores limitações ou restrições ao avaliado do que as alterações observadas em Funções do Corpo?</div>
+                <div class="jc-segmented" id="jcAdminEstruturasRecButtons">
+                  <button class="jc-seg-btn" data-value="sim">Sim</button>
+                  <button class="jc-seg-btn" data-value="nao">Não</button>
+                </div>
+              </div>
+              <div class="jc-social-item">
+                <div class="jc-field-title">INSS reconheceu prognóstico desfavorável?</div>
+                <div class="jc-segmented" id="jcAdminProgRecButtons">
+                  <button class="jc-seg-btn" data-value="sim">Sim</button>
+                  <button class="jc-seg-btn" data-value="nao">Não</button>
+                </div>
+              </div>
+            </div>
+            <details class="jc-help-details">
+              <summary>Não sabe como responder? Ver explicação</summary>
+              <div class="jc-help-grid">
+                <article class="jc-help-item">
+                  <div class="jc-help-title">Estruturas do corpo mais limitantes que Funções</div>
+                  <p>Use esta resposta para registrar se o INSS já reconheceu, na fase administrativa, alterações anatômicas (órgãos, membros ou estruturas) com impacto maior do que o captado no qualificador de Funções do Corpo.</p>
+                  <p><strong>Marque “Sim”</strong> quando o próprio material administrativo do INSS já apontar esse descompasso.</p>
+                  <p><strong>Exemplos de “Sim”:</strong> amputação extensa, deformidade estrutural grave ou lesão anatômica permanente que imponha restrição superior à indicada no qualificador final de Funções.</p>
+                  <p><strong>Exemplos de “Não”:</strong> quando o INSS não reconheceu esse ponto, ou quando as alterações estruturais já estão proporcionais ao qualificador de Funções atribuído.</p>
+                </article>
+                <article class="jc-help-item">
+                  <div class="jc-help-title">Prognóstico desfavorável</div>
+                  <p>A Portaria pergunta apenas se as alterações configuram prognóstico desfavorável, sem exigir literalmente “piora” em todos os casos.</p>
+                  <p><strong>Manutenção isolada não basta automaticamente.</strong> Marque “Sim” quando o INSS tiver reconhecido, de forma técnica, curso funcional desfavorável: tendência de piora <strong>ou</strong> persistência relevante sem expectativa concreta de recuperação funcional significativa.</p>
+                  <p><strong>Exemplos de “Sim”:</strong> doença progressiva com perda funcional contínua; quadro crônico grave/irreversível com limitação importante e sem perspectiva real de reabilitação relevante.</p>
+                  <p><strong>Exemplos de “Não”:</strong> quadro estável com possibilidade real de melhora funcional; ou situação em que o INSS não tenha feito esse reconhecimento no ato administrativo.</p>
+                </article>
+              </div>
+            </details>
+          </div>
+          <details class="jc-autofill-details hidden" id="jcAutoFillDetails">
+            <summary>Atalho opcional: preencher rascunho com a Calculadora</summary>
+            <div class="jc-autofill-body">
+              <p class="jc-autofill-hint" id="jcAutoFillHint"></p>
+              <button class="btn jc-autofill-btn" id="btnUseCurrentAsBase"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-swap"></use></svg>Preencher automaticamente com a Calculadora</button>
+            </div>
+          </details>
+          <div class="jc-inline-note" id="jcAdminFixedSummary">Base administrativa ainda não fixada.</div>
+          <div class="jc-actions-main">
+            <button class="btn btn-gold jc-primary-btn" id="btnFixarBaseAdmin"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-save"></use></svg>Fixar base administrativa</button>
+          </div>
+        </section>
+
+        <section class="jc-step" id="stepMed">
+          <div class="jc-step-header">
+            <div class="jc-step-title"><span class="jc-step-index">2</span>Informações da perícia médica judicial</div>
+            <span class="jc-step-state blocked" id="jcMedState">Bloqueada</span>
+          </div>
+          <p class="jc-step-helper">Preencha os campos mínimos da perícia médica para liberar a triagem probatória.</p>
+          <p class="jc-step-note">O que fazer: informe impedimento de longo prazo, decida se mantém Funções do Corpo administrativas e, se necessário, requalifique com motivo fechado.</p>
+          <div class="jc-med-grid">
+            <div class="jc-field">
+              <div class="jc-field-title">Impedimento de longo prazo</div>
+              <div class="jc-segmented" id="jcImpedimentoButtons">
+                <button class="jc-seg-btn" data-value="sim">Sim</button>
+                <button class="jc-seg-btn" data-value="nao">Não</button>
+              </div>
+            </div>
+            <div class="jc-field jc-field-span-2">
+              <div class="jc-field-title">Funções do Corpo (judicial)</div>
+              <div class="jc-segmented jc-segmented-wide" id="jcCorpoKeepButtons">
+                <button class="jc-seg-btn" data-value="sim">Manter qualificador administrativo</button>
+                <button class="jc-seg-btn" data-value="nao">Alterar na fase judicial</button>
+              </div>
+              <p class="jc-field-helper">Se optar por alterar, escolha um motivo fechado. O sistema aplicará a regra correspondente para definir o qualificador judicial.</p>
+              <div class="jc-ativ-mode-block hidden" id="jcCorpoChangeWrap">
+                <label class="jc-field-title" for="jcCorpoReasonSelect">Motivo da alteração (seleção única)</label>
+                <select id="jcCorpoReasonSelect" class="jc-select">
+                  <option value="">Selecione o motivo</option>
+                  <option value="estruturas">Estruturas do corpo mais graves (não reconhecidas pelo INSS)</option>
+                  <option value="prognostico">Prognóstico desfavorável (não reconhecido pelo INSS)</option>
+                  <option value="dominio_max">Domínio administrativo b1–b8 mais grave</option>
+                  <option value="rebaixamento">Rebaixamento por prova superveniente</option>
+                </select>
+                <p class="jc-field-helper" id="jcCorpoReasonHint"></p>
+                <div class="jc-ativ-mode-block hidden" id="jcCorpoDomainWrap">
+                  <div class="jc-field-title">Pontuação administrativa dos domínios b1–b8</div>
+                  <p class="jc-field-helper">Informe o(s) domínio(s) necessário(s). Para este motivo, vale o domínio administrativo mais grave entre os informados.</p>
+                  <div class="jc-complete-grid">
+                    <div class="jc-complete-item">
+                      <div class="jc-field-title">b1 · Funções Mentais</div>
+                      <div class="jc-q-buttons" id="jcCorpoB1Buttons">
+                        <button class="jc-q-btn" data-value="0">N</button>
+                        <button class="jc-q-btn" data-value="1">L</button>
+                        <button class="jc-q-btn" data-value="2">M</button>
+                        <button class="jc-q-btn" data-value="3">G</button>
+                        <button class="jc-q-btn" data-value="4">C</button>
+                      </div>
+                    </div>
+                    <div class="jc-complete-item">
+                      <div class="jc-field-title">b2 · Visão</div>
+                      <div class="jc-q-buttons" id="jcCorpoB2Buttons">
+                        <button class="jc-q-btn" data-value="0">N</button>
+                        <button class="jc-q-btn" data-value="1">L</button>
+                        <button class="jc-q-btn" data-value="2">M</button>
+                        <button class="jc-q-btn" data-value="3">G</button>
+                        <button class="jc-q-btn" data-value="4">C</button>
+                      </div>
+                    </div>
+                    <div class="jc-complete-item">
+                      <div class="jc-field-title">b3 · Audição</div>
+                      <div class="jc-q-buttons" id="jcCorpoB3Buttons">
+                        <button class="jc-q-btn" data-value="0">N</button>
+                        <button class="jc-q-btn" data-value="1">L</button>
+                        <button class="jc-q-btn" data-value="2">M</button>
+                        <button class="jc-q-btn" data-value="3">G</button>
+                        <button class="jc-q-btn" data-value="4">C</button>
+                      </div>
+                    </div>
+                    <div class="jc-complete-item">
+                      <div class="jc-field-title">b4 · Dor e Sensações</div>
+                      <div class="jc-q-buttons" id="jcCorpoB4Buttons">
+                        <button class="jc-q-btn" data-value="0">N</button>
+                        <button class="jc-q-btn" data-value="1">L</button>
+                        <button class="jc-q-btn" data-value="2">M</button>
+                        <button class="jc-q-btn" data-value="3">G</button>
+                        <button class="jc-q-btn" data-value="4">C</button>
+                      </div>
+                    </div>
+                    <div class="jc-complete-item">
+                      <div class="jc-field-title">b5 · Voz e Fala</div>
+                      <div class="jc-q-buttons" id="jcCorpoB5Buttons">
+                        <button class="jc-q-btn" data-value="0">N</button>
+                        <button class="jc-q-btn" data-value="1">L</button>
+                        <button class="jc-q-btn" data-value="2">M</button>
+                        <button class="jc-q-btn" data-value="3">G</button>
+                        <button class="jc-q-btn" data-value="4">C</button>
+                      </div>
+                    </div>
+                    <div class="jc-complete-item">
+                      <div class="jc-field-title">b6 · Cardiovascular / Respiratório</div>
+                      <div class="jc-q-buttons" id="jcCorpoB6Buttons">
+                        <button class="jc-q-btn" data-value="0">N</button>
+                        <button class="jc-q-btn" data-value="1">L</button>
+                        <button class="jc-q-btn" data-value="2">M</button>
+                        <button class="jc-q-btn" data-value="3">G</button>
+                        <button class="jc-q-btn" data-value="4">C</button>
+                      </div>
+                    </div>
+                    <div class="jc-complete-item">
+                      <div class="jc-field-title">b7 · Digestivo / Metabólico</div>
+                      <div class="jc-q-buttons" id="jcCorpoB7Buttons">
+                        <button class="jc-q-btn" data-value="0">N</button>
+                        <button class="jc-q-btn" data-value="1">L</button>
+                        <button class="jc-q-btn" data-value="2">M</button>
+                        <button class="jc-q-btn" data-value="3">G</button>
+                        <button class="jc-q-btn" data-value="4">C</button>
+                      </div>
+                    </div>
+                    <div class="jc-complete-item">
+                      <div class="jc-field-title">b8 · Neuromusculoesquelético</div>
+                      <div class="jc-q-buttons" id="jcCorpoB8Buttons">
+                        <button class="jc-q-btn" data-value="0">N</button>
+                        <button class="jc-q-btn" data-value="1">L</button>
+                        <button class="jc-q-btn" data-value="2">M</button>
+                        <button class="jc-q-btn" data-value="3">G</button>
+                        <button class="jc-q-btn" data-value="4">C</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="jc-ativ-mode-block hidden" id="jcCorpoManualWrap">
+                  <div class="jc-field-title">Qualificador judicial manual (rebaixamento)</div>
+                  <div class="jc-q-buttons" id="jcCorpoManualButtons">
+                    <button class="jc-q-btn" data-value="0">N</button>
+                    <button class="jc-q-btn" data-value="1">L</button>
+                    <button class="jc-q-btn" data-value="2">M</button>
+                    <button class="jc-q-btn" data-value="3">G</button>
+                    <button class="jc-q-btn" data-value="4">C</button>
+                  </div>
+                </div>
+                <div class="jc-reduction-alert hidden" id="jcCorpoReductionAlert">
+                  <strong>Atenção:</strong> o qualificador judicial ficou inferior ao administrativo. Confirme para prosseguir.
+                  <label><input type="checkbox" id="jcCorpoReductionConfirm"> Confirmo a redução com base na prova superveniente</label>
+                </div>
+              </div>
+              <div class="jc-inline-note" id="jcCorpoResultSummary">Resultado de Funções do Corpo aguardando definição.</div>
+            </div>
+            <div class="jc-field">
+              <div class="jc-field-title">Perícia médica trouxe elementos para requalificar Atividades?</div>
+              <div class="jc-segmented" id="jcHasAtivMedButtons">
+                <button class="jc-seg-btn" data-value="sim">Sim</button>
+                <button class="jc-seg-btn" data-value="nao">Não</button>
+              </div>
+              <p class="jc-field-helper">Se “Sim”, escolha o modo de requalificação abaixo.</p>
+            </div>
+            <div class="jc-field hidden" id="jcAtivMedWrap">
+              <div class="jc-field-title">Modo de requalificação de Atividades (médico judicial)</div>
+              <div class="jc-segmented" id="jcAtivModeButtons">
+                <button class="jc-seg-btn" data-value="simples">Simples</button>
+                <button class="jc-seg-btn" data-value="completa">Completa (d1–d9)</button>
+              </div>
+              <p class="jc-field-helper">No modo simples, informe apenas o qualificador final com justificativa. No modo completo, informe d1–d9 e o sistema calcula o final pela fórmula normativa.</p>
+              <div class="jc-ativ-mode-block hidden" id="jcAtivModeSimpleWrap">
+                <div class="jc-field-title">Atividades e Participação (final, modo simples)</div>
+                <div class="jc-q-buttons" id="jcAtivMedSimpleButtons">
+                  <button class="jc-q-btn" data-value="0">N</button>
+                  <button class="jc-q-btn" data-value="1">L</button>
+                  <button class="jc-q-btn" data-value="2">M</button>
+                  <button class="jc-q-btn" data-value="3">G</button>
+                  <button class="jc-q-btn" data-value="4">C</button>
+                </div>
+                <label class="jc-field-title jc-field-title-margin" for="jcAtivMedJustification">Justificativa médica (obrigatória no modo simples)</label>
+                <textarea id="jcAtivMedJustification" class="jc-mini-textarea" placeholder="Descreva, de forma objetiva, o fundamento técnico para o qualificador final de Atividades."></textarea>
+              </div>
+              <div class="jc-ativ-mode-block hidden" id="jcAtivModeCompleteWrap">
+                <div class="jc-field-title">Domínios d1–d9 (modo completo)</div>
+                <p class="jc-field-helper">Preencha todos os domínios para calcular automaticamente o qualificador final de Atividades.</p>
+                <div class="jc-complete-grid">
+                  <div class="jc-complete-item">
+                    <div class="jc-field-title">d1 · Aprendizagem</div>
+                    <div class="jc-q-buttons" id="jcAtivD1Buttons">
+                      <button class="jc-q-btn" data-value="0">N</button>
+                      <button class="jc-q-btn" data-value="1">L</button>
+                      <button class="jc-q-btn" data-value="2">M</button>
+                      <button class="jc-q-btn" data-value="3">G</button>
+                      <button class="jc-q-btn" data-value="4">C</button>
+                    </div>
+                  </div>
+                  <div class="jc-complete-item">
+                    <div class="jc-field-title">d2 · Tarefas Gerais</div>
+                    <div class="jc-q-buttons" id="jcAtivD2Buttons">
+                      <button class="jc-q-btn" data-value="0">N</button>
+                      <button class="jc-q-btn" data-value="1">L</button>
+                      <button class="jc-q-btn" data-value="2">M</button>
+                      <button class="jc-q-btn" data-value="3">G</button>
+                      <button class="jc-q-btn" data-value="4">C</button>
+                    </div>
+                  </div>
+                  <div class="jc-complete-item">
+                    <div class="jc-field-title">d3 · Comunicação</div>
+                    <div class="jc-q-buttons" id="jcAtivD3Buttons">
+                      <button class="jc-q-btn" data-value="0">N</button>
+                      <button class="jc-q-btn" data-value="1">L</button>
+                      <button class="jc-q-btn" data-value="2">M</button>
+                      <button class="jc-q-btn" data-value="3">G</button>
+                      <button class="jc-q-btn" data-value="4">C</button>
+                    </div>
+                  </div>
+                  <div class="jc-complete-item">
+                    <div class="jc-field-title">d4 · Mobilidade</div>
+                    <div class="jc-q-buttons" id="jcAtivD4Buttons">
+                      <button class="jc-q-btn" data-value="0">N</button>
+                      <button class="jc-q-btn" data-value="1">L</button>
+                      <button class="jc-q-btn" data-value="2">M</button>
+                      <button class="jc-q-btn" data-value="3">G</button>
+                      <button class="jc-q-btn" data-value="4">C</button>
+                    </div>
+                  </div>
+                  <div class="jc-complete-item">
+                    <div class="jc-field-title">d5 · Cuidado Pessoal</div>
+                    <div class="jc-q-buttons" id="jcAtivD5Buttons">
+                      <button class="jc-q-btn" data-value="0">N</button>
+                      <button class="jc-q-btn" data-value="1">L</button>
+                      <button class="jc-q-btn" data-value="2">M</button>
+                      <button class="jc-q-btn" data-value="3">G</button>
+                      <button class="jc-q-btn" data-value="4">C</button>
+                    </div>
+                  </div>
+                  <div class="jc-complete-item">
+                    <div class="jc-field-title">d6 · Vida Doméstica</div>
+                    <div class="jc-q-buttons" id="jcAtivD6Buttons">
+                      <button class="jc-q-btn" data-value="0">N</button>
+                      <button class="jc-q-btn" data-value="1">L</button>
+                      <button class="jc-q-btn" data-value="2">M</button>
+                      <button class="jc-q-btn" data-value="3">G</button>
+                      <button class="jc-q-btn" data-value="4">C</button>
+                    </div>
+                  </div>
+                  <div class="jc-complete-item">
+                    <div class="jc-field-title">d7 · Relações Interpessoais</div>
+                    <div class="jc-q-buttons" id="jcAtivD7Buttons">
+                      <button class="jc-q-btn" data-value="0">N</button>
+                      <button class="jc-q-btn" data-value="1">L</button>
+                      <button class="jc-q-btn" data-value="2">M</button>
+                      <button class="jc-q-btn" data-value="3">G</button>
+                      <button class="jc-q-btn" data-value="4">C</button>
+                    </div>
+                  </div>
+                  <div class="jc-complete-item">
+                    <div class="jc-field-title">d8 · Áreas Principais da Vida</div>
+                    <div class="jc-q-buttons" id="jcAtivD8Buttons">
+                      <button class="jc-q-btn" data-value="0">N</button>
+                      <button class="jc-q-btn" data-value="1">L</button>
+                      <button class="jc-q-btn" data-value="2">M</button>
+                      <button class="jc-q-btn" data-value="3">G</button>
+                      <button class="jc-q-btn" data-value="4">C</button>
+                    </div>
+                  </div>
+                  <div class="jc-complete-item">
+                    <div class="jc-field-title">d9 · Vida Comunitária</div>
+                    <div class="jc-q-buttons" id="jcAtivD9Buttons">
+                      <button class="jc-q-btn" data-value="0">N</button>
+                      <button class="jc-q-btn" data-value="1">L</button>
+                      <button class="jc-q-btn" data-value="2">M</button>
+                      <button class="jc-q-btn" data-value="3">G</button>
+                      <button class="jc-q-btn" data-value="4">C</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="jc-inline-note" id="jcAtivComputedSummary">Preencha d1–d9 para calcular o qualificador final de Atividades.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="jc-step" id="stepTriagem">
+          <div class="jc-step-header">
+            <div class="jc-step-title"><span class="jc-step-index">3</span>Triagem probatória</div>
+            <span class="jc-step-state pending" id="jcTriagemState">Pendente</span>
+          </div>
+          <p class="jc-step-note">O que isso mostra: resultado dos Testes A/B e a razão objetiva para dispensar ou exigir avaliação social.</p>
+          <div class="jc-status-badge pending" id="jcStatusBadge">Preencha as etapas 1 e 2 para liberar a conclusão probatória.</div>
+          <div class="jc-trace" id="jcTrace"></div>
+        </section>
+
+        <section class="jc-step" id="stepTexto">
+          <div class="jc-step-header">
+            <div class="jc-step-title"><span class="jc-step-index">4</span>Texto para decisão</div>
+            <span class="jc-step-state blocked" id="jcTextoState">Aguardando triagem</span>
+          </div>
+          <p class="jc-step-helper">Gere texto padronizado com a trilha de raciocínio da triagem para colar na decisão.</p>
+          <p class="jc-step-note">O que fazer: gere e copie a minuta apenas após a triagem estar concluída.</p>
           <div class="standard-text-actions">
             <span class="copy-feedback" id="copyFeedbackControle"></span>
-            <button class="btn btn-outline" id="btnGerarControleTexto"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-document"></use></svg>Gerar texto do Controle Judicial</button>
-            <button class="btn btn-outline" id="btnCopiarControleTexto"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-clipboard"></use></svg>Copiar texto do Controle</button>
+            <button class="btn btn-outline" id="btnGerarControleTexto"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-document"></use></svg>Gerar texto</button>
+            <button class="btn btn-gold" id="btnGerarCopiarControleTexto"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-clipboard"></use></svg>Gerar e copiar texto da decisão</button>
+            <button class="btn btn-outline" id="btnCopiarControleTexto"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-clipboard"></use></svg>Somente copiar</button>
+            <button class="btn btn-red" id="btnLimparControleJudicial"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-close"></use></svg>Limpar controle judicial</button>
           </div>
           <textarea id="textoControleJudicial" class="jc-textarea" readonly></textarea>
-        </div>
+        </section>
       </div>
     </div>
 
@@ -1779,9 +2698,66 @@
     const domainNameById = [...DOM_AMB, ...DOM_CORPO, ...DOM_ATIV_M, ...DOM_ATIV_S]
       .reduce((acc, d) => { acc[d.id] = d.name; return acc; }, {});
     const CHILD_AGE_LIMIT_MONTHS = 192;
+    const JC_ATIV_RECLASS_DOMAINS = [...DOM_ATIV_M, ...DOM_ATIV_S].map(d => d.id);
+    const JC_CORPO_RECLASS_DOMAINS = DOM_CORPO.map(d => d.id);
+    const JC_CORPO_REASON_LABELS = {
+      estruturas: 'Estruturas do corpo mais graves (não reconhecidas pelo INSS)',
+      prognostico: 'Prognóstico desfavorável (não reconhecido pelo INSS)',
+      dominio_max: 'Domínio administrativo b1–b8 mais grave',
+      rebaixamento: 'Rebaixamento por prova superveniente'
+    };
     let progDesfav = false, estrMaior = false, impedimento = false, crianca = false, idadeMeses = CHILD_AGE_LIMIT_MONTHS, idadeValor = 15, idadeUnidade = 'anos';
     let savedINSS = null;
-    const judicialControl = { corpoJud: null, impedimentoLongoPrazo: false };
+    let uiMode = 'controle';
+
+    function createEmptyAdminCorpoRecognition() {
+      return { estruturasReconhecidas: null, prognosticoReconhecido: null };
+    }
+
+    function createEmptyCorpoReclassDomains() {
+      return JC_CORPO_RECLASS_DOMAINS.reduce((acc, id) => {
+        acc[id] = null;
+        return acc;
+      }, {});
+    }
+
+    function createEmptyAtivReclassDomains() {
+      return JC_ATIV_RECLASS_DOMAINS.reduce((acc, id) => {
+        acc[id] = null;
+        return acc;
+      }, {});
+    }
+
+    function createEmptyJudicialMed() {
+      return {
+        impedimentoLP: null,
+        corpoJud: null,
+        corpoKeepAdmin: null,
+        corpoChangeReason: null,
+        corpoAdminDomains: createEmptyCorpoReclassDomains(),
+        corpoJudManual: null,
+        corpoAlertReductionConfirmed: false,
+        hasAtivMed: null,
+        ativMode: null,
+        ativMedSimple: null,
+        ativMedJustification: '',
+        ativMedDomains: createEmptyAtivReclassDomains(),
+        ativMedComputed: null
+      };
+    }
+
+    const judicialControl = {
+      adminDraft: {
+        amb: null,
+        ativ: null,
+        corpo: null,
+        corpoReconhecimentoInss: createEmptyAdminCorpoRecognition()
+      },
+      adminBase: null,
+      med: createEmptyJudicialMed(),
+      triage: { ready: false, status: 'pending', testeA: null, testeB: null, reason: '' },
+      ui: { activeStep: 1, progressPct: 25, blockReason: '' }
+    };
     let currentAmbTab = 0;
     const childDomainBackup = {};
     const userFilledDomains = new Set();
@@ -1838,6 +2814,157 @@
         n++; if (c === corpo && a === ativ && e === amb) return n;
       }
       return n;
+    }
+
+    function escapeHtml(str = '') {
+      return String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    function computeAtivFromDomains(domains) {
+      if (!domains) return null;
+      const missing = JC_ATIV_RECLASS_DOMAINS.some(id => domains[id] == null);
+      if (missing) return null;
+      const sum = JC_ATIV_RECLASS_DOMAINS.reduce((acc, id) => acc + domains[id], 0);
+      const pctRaw = Math.max(0, (sum * 2.77777777777778) - 0.1);
+      return { sum, pct: +pctRaw.toFixed(1), q: pctToQ(pctRaw) };
+    }
+
+    function updateAtivMedComputed() {
+      const m = judicialControl.med;
+      if (m.ativMode !== 'completa' || m.hasAtivMed !== true) {
+        m.ativMedComputed = null;
+        return null;
+      }
+      m.ativMedComputed = computeAtivFromDomains(m.ativMedDomains);
+      return m.ativMedComputed;
+    }
+
+    function resolveAtivMed() {
+      const m = judicialControl.med;
+      if (m.hasAtivMed !== true) return null;
+      if (m.ativMode === 'simples') return m.ativMedSimple;
+      if (m.ativMode === 'completa') {
+        const computed = m.ativMedComputed || computeAtivFromDomains(m.ativMedDomains);
+        return computed ? computed.q : null;
+      }
+      return null;
+    }
+
+    function isCorpoReasonBlocked(reason) {
+      const base = judicialControl.adminBase;
+      if (!base || !reason) return false;
+      if (reason === 'estruturas') return base.corpoReconhecimentoInss.estruturasReconhecidas === true;
+      if (reason === 'prognostico') return base.corpoReconhecimentoInss.prognosticoReconhecido === true;
+      return false;
+    }
+
+    function getCorpoReasonBlockedMessage(reason) {
+      if (reason === 'estruturas') return 'Motivo indisponível: a base administrativa já registra reconhecimento de estruturas do corpo mais graves pelo INSS.';
+      if (reason === 'prognostico') return 'Motivo indisponível: a base administrativa já registra reconhecimento de prognóstico desfavorável pelo INSS.';
+      return 'Motivo indisponível para esta base administrativa.';
+    }
+
+    function resolveCorpoJudFlow() {
+      const base = judicialControl.adminBase;
+      const m = judicialControl.med;
+      if (!base) return { ready: false, q: null, reason: 'Fixe a base administrativa antes da requalificação de Funções do Corpo.', mode: 'pending' };
+      if (m.corpoKeepAdmin == null) return { ready: false, q: null, reason: 'Em Funções do Corpo, informe se o qualificador administrativo será mantido.', mode: 'pending' };
+
+      if (m.corpoKeepAdmin) {
+        return {
+          ready: true,
+          q: base.corpo,
+          mode: 'mantido',
+          reason: 'Qualificador administrativo de Funções do Corpo mantido na fase judicial.',
+          decreased: false
+        };
+      }
+
+      if (!m.corpoChangeReason) {
+        return { ready: false, q: null, reason: 'Selecione o motivo da alteração de Funções do Corpo.', mode: 'pending' };
+      }
+
+      if (isCorpoReasonBlocked(m.corpoChangeReason)) {
+        return { ready: false, q: null, reason: getCorpoReasonBlockedMessage(m.corpoChangeReason), mode: 'blocked' };
+      }
+
+      if (m.corpoChangeReason === 'estruturas') {
+        const q = Math.min(base.corpo + 1, 4);
+        return {
+          ready: true,
+          q,
+          mode: 'estruturas',
+          reason: 'Regra aplicada: majoração de +1 por estruturas do corpo mais graves não reconhecidas na fase administrativa.',
+          decreased: q < base.corpo
+        };
+      }
+
+      if (m.corpoChangeReason === 'prognostico') {
+        const q = Math.min(base.corpo + 1, 4);
+        return {
+          ready: true,
+          q,
+          mode: 'prognostico',
+          reason: 'Regra aplicada: majoração de +1 por prognóstico desfavorável não reconhecido na fase administrativa.',
+          decreased: q < base.corpo
+        };
+      }
+
+      if (m.corpoChangeReason === 'dominio_max') {
+        const filledDomains = JC_CORPO_RECLASS_DOMAINS.filter(id => m.corpoAdminDomains[id] != null);
+        if (!filledDomains.length) {
+          return { ready: false, q: null, reason: 'No motivo "Domínio administrativo b1–b8 mais grave", informe ao menos um domínio b1 a b8.', mode: 'pending' };
+        }
+        const q = filledDomains.reduce((acc, id) => Math.max(acc, m.corpoAdminDomains[id]), 0);
+        return {
+          ready: true,
+          q,
+          mode: 'dominio_max',
+          reason: 'Regra aplicada: para Funções do Corpo prevalece o domínio administrativo mais grave entre os domínios informados (b1–b8).',
+          domainsText: filledDomains.map(id => `${id.toUpperCase()}=${Q_LABELS[m.corpoAdminDomains[id]]}`).join(' · '),
+          decreased: q < base.corpo
+        };
+      }
+
+      if (m.corpoChangeReason === 'rebaixamento') {
+        if (m.corpoJudManual == null) {
+          return { ready: false, q: null, reason: 'No motivo "Rebaixamento por prova superveniente", selecione o qualificador judicial de Funções do Corpo.', mode: 'pending' };
+        }
+        const decreased = m.corpoJudManual < base.corpo;
+        if (decreased && !m.corpoAlertReductionConfirmed) {
+          return {
+            ready: false,
+            q: m.corpoJudManual,
+            reason: 'Confirme a redução do qualificador de Funções do Corpo para prosseguir.',
+            mode: 'rebaixamento',
+            decreased: true,
+            needsReductionConfirm: true
+          };
+        }
+        return {
+          ready: true,
+          q: m.corpoJudManual,
+          mode: 'rebaixamento',
+          reason: 'Regra aplicada: rebaixamento por prova superveniente, com fixação manual do qualificador judicial.',
+          decreased
+        };
+      }
+
+      return { ready: false, q: null, reason: 'Motivo de alteração de Funções do Corpo inválido.', mode: 'invalid' };
+    }
+
+    function getCorpoFlowTraceLine(corpoFlow) {
+      const base = judicialControl.adminBase;
+      const m = judicialControl.med;
+      if (!base) return `<div class="jc-trace-line"><strong>Funções do Corpo</strong>: base administrativa não fixada.</div>`;
+      if (m.corpoKeepAdmin == null) return `<div class="jc-trace-line"><strong>Funções do Corpo</strong>: aguardando decisão sobre manter ou alterar o qualificador administrativo.</div>`;
+      if (m.corpoKeepAdmin) return `<div class="jc-trace-line"><strong>Funções do Corpo</strong>: qualificador administrativo mantido em <strong>${Q_LABELS[base.corpo]}</strong>.</div>`;
+      if (!m.corpoChangeReason) return `<div class="jc-trace-line"><strong>Funções do Corpo</strong>: aguardando seleção do motivo da alteração.</div>`;
+      if (!corpoFlow.ready && corpoFlow.q == null) return `<div class="jc-trace-line"><strong>Funções do Corpo</strong>: ${corpoFlow.reason}</div>`;
+      const motivo = JC_CORPO_REASON_LABELS[m.corpoChangeReason] || 'Motivo não identificado';
+      const details = corpoFlow.mode === 'dominio_max' && corpoFlow.domainsText ? ` Domínios: ${corpoFlow.domainsText}.` : '';
+      const pendencia = !corpoFlow.ready ? ` Pendência: ${corpoFlow.reason}` : '';
+      return `<div class="jc-trace-line"><strong>Funções do Corpo</strong>: motivo "${motivo}". ${corpoFlow.reason} Resultado judicial: <strong>${Q_LABELS[corpoFlow.q]}</strong>.${details}${pendencia}</div>`;
     }
 
     // ============ DOM BUILDERS ============
@@ -1933,6 +3060,7 @@
       // Comparison
       if (savedINSS) updateComparison(amb, ativ, corpo);
       if (!document.getElementById('textoSection').classList.contains('hidden')) renderStandardText(amb, ativ, corpo);
+      if (uiMode === 'controle') updateAdminAutofillShortcut();
     }
 
     function setQBadge(id, q) {
@@ -1992,6 +3120,7 @@
       if (!crianca) {
         idadeMeses = CHILD_AGE_LIMIT_MONTHS;
         faixa.textContent = 'Padrão: 16 anos ou mais';
+        document.getElementById('childAutoSummary').classList.add('hidden');
         return;
       }
 
@@ -2042,6 +3171,7 @@
           });
         }
       });
+      updateChildAutoSummary();
     }
 
     // Amb tabs
@@ -2127,28 +3257,7 @@
       update();
     });
 
-    // Save INSS
-    document.getElementById('btnSaveINSS').addEventListener('click', () => {
-      const amb = calcAmbiente(), ativ = calcAtividades(), corpo = calcCorpo();
-      savedINSS = {
-        amb: amb.q, ativ: ativ.q, corpo: corpo.q,
-        result: impedimento ? false : tabelaConclusiva(amb.q, ativ.q, corpo.q),
-        impedimento, item: getItemNumber(amb.q, ativ.q, corpo.q)
-      };
-      document.getElementById('compSection').classList.remove('hidden');
-      document.getElementById('btnClearComp').classList.remove('hidden');
-      updateComparison(amb, ativ, corpo);
-      resetJudicialControlFromSavedINSS();
-      renderJudicialControl();
-    });
-    document.getElementById('btnClearComp').addEventListener('click', () => {
-      savedINSS = null;
-      document.getElementById('compSection').classList.add('hidden');
-      document.getElementById('btnClearComp').classList.add('hidden');
-      resetJudicialControlFromSavedINSS();
-      renderJudicialControl();
-    });
-
+    // Save/Comparison + Judicial Control
     function updateComparison(amb, ativ, corpo) {
       if (!savedINSS) return;
       const s = savedINSS;
@@ -2168,107 +3277,598 @@
       document.getElementById('compChange').innerHTML = changes.length ? changes.join(' · ') : 'Sem alteração no resultado';
     }
 
-    function resetJudicialControlFromSavedINSS() {
-      judicialControl.corpoJud = savedINSS ? savedINSS.corpo : null;
-      judicialControl.impedimentoLongoPrazo = false;
-      document.getElementById('jcImpedimentoLongo').checked = false;
+    function setStepState(id, state, text) {
+      const el = document.getElementById(id);
+      el.className = `jc-step-state ${state}`;
+      el.textContent = text;
+    }
+
+    function setStatusBadge(kind, text) {
+      const badge = document.getElementById('jcStatusBadge');
+      badge.className = `jc-status-badge ${kind}`;
+      badge.innerHTML = text;
+    }
+
+    function setWhyBlocked(message = '') {
+      const box = document.getElementById('jcWhyBlocked');
+      const text = box.querySelector('span');
+      if (!message) {
+        box.classList.add('hidden');
+        text.textContent = '';
+        return;
+      }
+      box.classList.remove('hidden');
+      text.textContent = message;
+    }
+
+    function syncModeSwitcher() {
+      document.querySelectorAll('#modeSwitcher .mode-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.mode === uiMode);
+      });
+    }
+
+    function scrollToJudicialControlSection() {
+      const section = document.getElementById('judicialControlSection');
+      if (!section) return;
+      const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          section.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+        });
+      });
+    }
+
+    function renderModeVisibility(options = {}) {
+      const app = document.querySelector('.app');
+      const details = document.getElementById('simuladorDetails');
+      app.classList.toggle('mode-simulador', uiMode === 'simulador');
+      app.classList.toggle('mode-controle', uiMode === 'controle');
+      if (uiMode === 'simulador') {
+        details.open = true;
+      } else if (!options.preserveAccordionState) {
+        details.open = false;
+      }
+      syncModeSwitcher();
+    }
+
+    function setUIMode(mode, options = {}) {
+      if (!['simulador', 'controle'].includes(mode)) return;
+      if (uiMode === mode) {
+        renderModeVisibility({ preserveAccordionState: true, ...options });
+        if (mode === 'controle' && options.scrollToJudicial) scrollToJudicialControlSection();
+        return;
+      }
+      uiMode = mode;
+      renderModeVisibility(options);
+      if (mode === 'controle' && options.scrollToJudicial) scrollToJudicialControlSection();
+    }
+
+    function getActiveJudicialStep() {
+      const triageReady = judicialControl.triage && judicialControl.triage.ready;
+      if (!judicialControl.adminBase) return 1;
+      if (!getMedComplete()) return 2;
+      if (!triageReady) return 3;
+      return 4;
+    }
+
+    function getJudicialProgressPct(activeStep) {
+      return Math.max(25, Math.min(100, activeStep * 25));
+    }
+
+    function renderJudicialProgress() {
+      const labels = ['Base administrativa', 'Perícia médica', 'Triagem probatória', 'Texto da decisão'];
+      const stepIds = ['stepAdmin', 'stepMed', 'stepTriagem', 'stepTexto'];
+      const activeStep = getActiveJudicialStep();
+      const progressPct = getJudicialProgressPct(activeStep);
+      judicialControl.ui.activeStep = activeStep;
+      judicialControl.ui.progressPct = progressPct;
+
+      document.getElementById('jcProgressBar').style.width = `${progressPct}%`;
+      document.getElementById('jcProgressPct').textContent = `${progressPct}%`;
+      document.getElementById('jcProgressLabel').textContent = `Etapa ${activeStep} de 4 · ${labels[activeStep - 1]}`;
+      stepIds.forEach((id, idx) => {
+        document.getElementById(id).classList.toggle('active-step', idx + 1 === activeStep);
+      });
+    }
+
+    function syncQButtonGroup(groupId, value) {
+      document.querySelectorAll(`#${groupId} .jc-q-btn`).forEach(btn => {
+        btn.classList.toggle('active', value != null && +btn.dataset.value === value);
+      });
+    }
+
+    function syncSegmentedGroup(groupId, value) {
+      document.querySelectorAll(`#${groupId} .jc-seg-btn`).forEach(btn => {
+        btn.classList.toggle('active', value != null && btn.dataset.value === value);
+      });
+    }
+
+    function clearJudicialTextArea() {
       document.getElementById('textoControleJudicial').value = '';
       document.getElementById('copyFeedbackControle').textContent = '';
     }
 
-    function computeJudicialControl() {
-      if (!savedINSS || judicialControl.corpoJud == null) return null;
-      const resultadoCorpoSuficiente = tabelaConclusiva(savedINSS.amb, savedINSS.ativ, judicialControl.corpoJud);
-      const dispensaSocial = !judicialControl.impedimentoLongoPrazo || resultadoCorpoSuficiente;
-      return { resultadoCorpoSuficiente, dispensaSocial };
+    function resetAtivMedReclassFields() {
+      judicialControl.med.ativMode = null;
+      judicialControl.med.ativMedSimple = null;
+      judicialControl.med.ativMedJustification = '';
+      judicialControl.med.ativMedDomains = createEmptyAtivReclassDomains();
+      judicialControl.med.ativMedComputed = null;
+    }
+
+    function resetCorpoChangeDetails() {
+      judicialControl.med.corpoChangeReason = null;
+      judicialControl.med.corpoAdminDomains = createEmptyCorpoReclassDomains();
+      judicialControl.med.corpoJudManual = null;
+      judicialControl.med.corpoAlertReductionConfirmed = false;
+      judicialControl.med.corpoJud = null;
+    }
+
+    function resetCorpoReclassFields() {
+      judicialControl.med.corpoKeepAdmin = null;
+      resetCorpoChangeDetails();
+    }
+
+    function getAdminDraftComplete() {
+      const d = judicialControl.adminDraft;
+      return d.amb != null
+        && d.ativ != null
+        && d.corpo != null
+        && d.corpoReconhecimentoInss.estruturasReconhecidas != null
+        && d.corpoReconhecimentoInss.prognosticoReconhecido != null;
+    }
+
+    function isAdminDraftDirty() {
+      if (!judicialControl.adminBase) return false;
+      const d = judicialControl.adminDraft;
+      const b = judicialControl.adminBase;
+      if (d.amb !== b.amb || d.ativ !== b.ativ || d.corpo !== b.corpo) return true;
+      if (d.corpoReconhecimentoInss.estruturasReconhecidas !== b.corpoReconhecimentoInss.estruturasReconhecidas) return true;
+      if (d.corpoReconhecimentoInss.prognosticoReconhecido !== b.corpoReconhecimentoInss.prognosticoReconhecido) return true;
+      return false;
+    }
+
+    function getMedBlockingReason() {
+      const m = judicialControl.med;
+      if (!judicialControl.adminBase) return 'Fixe a base administrativa para iniciar a etapa médica.';
+      if (m.impedimentoLP == null) return 'Informe se há impedimento de longo prazo.';
+      const corpoFlow = resolveCorpoJudFlow();
+      m.corpoJud = corpoFlow.q;
+      if (!corpoFlow.ready || corpoFlow.q == null) return corpoFlow.reason;
+      if (m.hasAtivMed == null) return 'Informe se a perícia médica trouxe elementos para requalificar Atividades.';
+      if (!m.hasAtivMed) return '';
+      if (m.ativMode == null) return 'Selecione o modo de requalificação de Atividades (simples ou completa).';
+      if (m.ativMode === 'simples') {
+        if (m.ativMedSimple == null) return 'No modo simples, selecione o qualificador final de Atividades.';
+        if (!m.ativMedJustification.trim()) return 'No modo simples, informe a justificativa médica de Atividades.';
+        return '';
+      }
+      if (m.ativMode === 'completa') {
+        const computed = updateAtivMedComputed();
+        if (!computed) return 'No modo completo de Atividades, preencha todos os domínios d1 a d9.';
+        return '';
+      }
+      return 'Modo de requalificação de Atividades inválido.';
+    }
+
+    function getMedComplete() {
+      return !getMedBlockingReason();
+    }
+
+    function getAtivMedTraceLine() {
+      const m = judicialControl.med;
+      if (m.hasAtivMed !== true) {
+        return `<div class="jc-trace-line"><strong>Origem Ativ_med</strong>: não aplicada (sem elementos médicos para requalificar Atividades).</div>`;
+      }
+
+      const ativMedResolved = resolveAtivMed();
+      if (m.ativMode === 'simples') {
+        const raw = m.ativMedJustification.trim();
+        const preview = raw.length > 160 ? `${raw.slice(0, 157)}...` : raw;
+        return `<div class="jc-trace-line"><strong>Origem Ativ_med</strong>: modo simples, qualificador final <strong>${Q_LABELS[ativMedResolved]}</strong>; justificativa médica: "${escapeHtml(preview)}".</div>`;
+      }
+
+      if (m.ativMode === 'completa') {
+        const computed = m.ativMedComputed || computeAtivFromDomains(m.ativMedDomains);
+        const details = JC_ATIV_RECLASS_DOMAINS.map(id => `${id.toUpperCase()}=${Q_LABELS[m.ativMedDomains[id]]}`).join(' · ');
+        if (!computed) {
+          return `<div class="jc-trace-line"><strong>Origem Ativ_med</strong>: modo completo d1–d9 ainda incompleto.</div>`;
+        }
+        return `<div class="jc-trace-line"><strong>Origem Ativ_med</strong>: modo completo (${details}); Σ=${computed.sum}, %=${computed.pct}, Ativ_med=<strong>${Q_LABELS[computed.q]}</strong>.</div>`;
+      }
+
+      return `<div class="jc-trace-line"><strong>Origem Ativ_med</strong>: modo não definido.</div>`;
+    }
+
+    function computeJudicialTriage() {
+      if (!judicialControl.adminBase) {
+        return { ready: false, status: 'pending', testeA: null, testeB: null, reason: 'Fixe a base administrativa para iniciar a triagem.' };
+      }
+      if (isAdminDraftDirty()) {
+        return { ready: false, status: 'pending', testeA: null, testeB: null, reason: 'Há alterações no rascunho administrativo. Refixe a base antes da triagem.' };
+      }
+      const base = judicialControl.adminBase;
+      const med = judicialControl.med;
+      const medBlock = getMedBlockingReason();
+      const corpoFlow = resolveCorpoJudFlow();
+      const corpoJud = corpoFlow.q;
+      const ativMedResolved = resolveAtivMed();
+      if (medBlock) {
+        return { ready: false, status: 'pending', testeA: null, testeB: null, reason: medBlock };
+      }
+
+      if (med.impedimentoLP === false) {
+        return {
+          ready: true,
+          status: 'dispensa',
+          testeA: null,
+          testeB: null,
+          reason: 'Perícia médica sem impedimento de longo prazo: a avaliação social judicial torna-se dispensável para esta triagem.'
+        };
+      }
+
+      const testeA = tabelaConclusiva(base.amb, base.ativ, corpoJud);
+      if (testeA) {
+        const modeLabel = corpoFlow.mode === 'mantido' ? 'com manutenção de Funções do Corpo' : 'com requalificação médica em Funções do Corpo';
+        return {
+          ready: true,
+          status: 'dispensa',
+          testeA,
+          testeB: null,
+          reason: `Teste A positivo ${modeLabel}.`
+        };
+      }
+
+      let testeB = null;
+      if (med.hasAtivMed) {
+        testeB = tabelaConclusiva(base.amb, ativMedResolved, corpoJud);
+        if (testeB) {
+          const modo = med.ativMode === 'completa' ? 'modo completo (fórmula d1–d9)' : 'modo simples';
+          return {
+            ready: true,
+            status: 'dispensa',
+            testeA,
+            testeB,
+            reason: `Teste B positivo com requalificação médica de Atividades no ${modo}.`
+          };
+        }
+      }
+
+      return {
+        ready: true,
+        status: 'necessaria',
+        testeA,
+        testeB,
+        reason: 'Perícia médica isolada não foi suficiente para resultado positivo; recomenda-se avaliação social judicial com potencial de requalificação de Ambiente e Atividades.'
+      };
+    }
+
+    function renderAdminFixedSummary() {
+      const summary = document.getElementById('jcAdminFixedSummary');
+      if (!judicialControl.adminBase) {
+        summary.textContent = 'Base administrativa ainda não fixada.';
+        return;
+      }
+      const b = judicialControl.adminBase;
+      const reconhecimentoText = ` Reconhecimento INSS em Funções: estruturas mais graves = ${b.corpoReconhecimentoInss.estruturasReconhecidas ? 'Sim' : 'Não'}; prognóstico desfavorável = ${b.corpoReconhecimentoInss.prognosticoReconhecido ? 'Sim' : 'Não'}.`;
+      const dirtyText = isAdminDraftDirty() ? ' Existem alterações no rascunho; clique em "Fixar base administrativa" para atualizar a base vigente.' : '';
+      summary.textContent = `Base fixada: Ambiente ${Q_LABELS[b.amb]} (${Q_NAMES[b.amb]}), Atividades ${Q_LABELS[b.ativ]} (${Q_NAMES[b.ativ]}), Funções ${Q_LABELS[b.corpo]} (${Q_NAMES[b.corpo]}).${reconhecimentoText}${dirtyText}`;
+    }
+
+    function formatQualifierTuple(values) {
+      const ambLabel = values.amb == null ? '—' : Q_LABELS[values.amb];
+      const ativLabel = values.ativ == null ? '—' : Q_LABELS[values.ativ];
+      const corpoLabel = values.corpo == null ? '—' : Q_LABELS[values.corpo];
+      return `Amb ${ambLabel} · Ativ ${ativLabel} · Funções ${corpoLabel}`;
+    }
+
+    function updateAdminAutofillShortcut() {
+      const details = document.getElementById('jcAutoFillDetails');
+      const hint = document.getElementById('jcAutoFillHint');
+      if (!details || !hint) return;
+
+      const draft = judicialControl.adminDraft;
+      const calc = { amb: calcAmbiente().q, ativ: calcAtividades().q, corpo: calcCorpo().q };
+      const draftValues = [draft.amb, draft.ativ, draft.corpo];
+      const draftComplete = draftValues.every(v => v != null);
+      const draftHasAny = draftValues.some(v => v != null);
+      const calcHasNonNeutral = calc.amb !== 0 || calc.ativ !== 0 || calc.corpo !== 0;
+      const differs = draft.amb !== calc.amb || draft.ativ !== calc.ativ || draft.corpo !== calc.corpo;
+      const shouldShow = differs && (calcHasNonNeutral || draftHasAny);
+
+      details.classList.toggle('hidden', !shouldShow);
+      if (!shouldShow) {
+        details.open = false;
+        hint.textContent = '';
+        return;
+      }
+
+      const calcText = formatQualifierTuple(calc);
+      if (!draftComplete) {
+        hint.textContent = `Atalho opcional: copiar os qualificadores atuais da Calculadora (${calcText}) para o rascunho desta etapa. Depois, revise e clique em "Fixar base administrativa".`;
+        return;
+      }
+
+      const draftText = formatQualifierTuple(draft);
+      hint.textContent = `Rascunho atual: ${draftText}. Calculadora: ${calcText}. Use o atalho para substituir rapidamente o rascunho e, em seguida, fixe a base administrativa.`;
+    }
+
+    function applyCurrentQualifiersAsAdminDraft() {
+      const amb = calcAmbiente(), ativ = calcAtividades(), corpo = calcCorpo();
+      judicialControl.adminDraft.amb = amb.q;
+      judicialControl.adminDraft.ativ = ativ.q;
+      judicialControl.adminDraft.corpo = corpo.q;
+      renderJudicialControl();
+    }
+
+    function fixAdminBaseFromDraft() {
+      if (!getAdminDraftComplete()) {
+        alert('Preencha os três qualificadores finais da base administrativa e os reconhecimentos do INSS em Funções do Corpo.');
+        return;
+      }
+      judicialControl.adminBase = {
+        amb: judicialControl.adminDraft.amb,
+        ativ: judicialControl.adminDraft.ativ,
+        corpo: judicialControl.adminDraft.corpo,
+        corpoReconhecimentoInss: { ...judicialControl.adminDraft.corpoReconhecimentoInss }
+      };
+      judicialControl.med = createEmptyJudicialMed();
+
+      savedINSS = {
+        amb: judicialControl.adminBase.amb,
+        ativ: judicialControl.adminBase.ativ,
+        corpo: judicialControl.adminBase.corpo,
+        result: tabelaConclusiva(judicialControl.adminBase.amb, judicialControl.adminBase.ativ, judicialControl.adminBase.corpo),
+        impedimento: false,
+        item: getItemNumber(judicialControl.adminBase.amb, judicialControl.adminBase.ativ, judicialControl.adminBase.corpo)
+      };
+      document.getElementById('compSection').classList.remove('hidden');
+      document.getElementById('btnClearComp').classList.remove('hidden');
+      updateComparison(calcAmbiente(), calcAtividades(), calcCorpo());
+      clearJudicialTextArea();
+      renderJudicialControl();
+      document.getElementById('judicialControlSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function resetJudicialControl() {
+      judicialControl.adminDraft = {
+        amb: null,
+        ativ: null,
+        corpo: null,
+        corpoReconhecimentoInss: createEmptyAdminCorpoRecognition()
+      };
+      judicialControl.adminBase = null;
+      judicialControl.med = createEmptyJudicialMed();
+      judicialControl.triage = { ready: false, status: 'pending', testeA: null, testeB: null, reason: '' };
+      judicialControl.ui = { activeStep: 1, progressPct: 25, blockReason: '' };
+      clearJudicialTextArea();
+    }
+
+    function clearJudicialMedicalAndTriage() {
+      judicialControl.med = createEmptyJudicialMed();
+      judicialControl.triage = { ready: false, status: 'pending', testeA: null, testeB: null, reason: '' };
+      clearJudicialTextArea();
+      renderJudicialControl();
+      document.getElementById('copyFeedbackControle').textContent = judicialControl.adminBase
+        ? 'Etapa médica e triagem reiniciadas. A base administrativa foi mantida.'
+        : 'Controle judicial limpo.';
     }
 
     function renderJudicialControl() {
-      const lock = document.getElementById('jcLock');
-      const body = document.getElementById('jcBody');
-      const admin = document.getElementById('jcAdminSummary');
-      const rec = document.getElementById('jcRecommendation');
-      const detail = document.getElementById('jcDetail');
-
-      if (!savedINSS) {
-        lock.classList.remove('hidden');
-        body.classList.add('hidden');
-        rec.className = 'jc-rec';
-        rec.textContent = '';
-        detail.textContent = '';
-        return;
-      }
-
-      lock.classList.add('hidden');
-      body.classList.remove('hidden');
-      admin.innerHTML = [
-        '<strong>Avaliação administrativa (INSS) mantida como referência:</strong>',
-        `Fatores Ambientais = <strong>${Q_LABELS[savedINSS.amb]}</strong> (${Q_NAMES[savedINSS.amb]}),`,
-        `Atividades e Participação = <strong>${Q_LABELS[savedINSS.ativ]}</strong> (${Q_NAMES[savedINSS.ativ]}),`,
-        `Funções do Corpo = <strong>${Q_LABELS[savedINSS.corpo]}</strong> (${Q_NAMES[savedINSS.corpo]}).`
-      ].join(' ');
-
-      document.querySelectorAll('#jcCorpoButtons .jc-q-btn').forEach(btn => {
-        btn.classList.toggle('active', +btn.dataset.value === judicialControl.corpoJud);
+      syncQButtonGroup('jcAdminAmbButtons', judicialControl.adminDraft.amb);
+      syncQButtonGroup('jcAdminAtivButtons', judicialControl.adminDraft.ativ);
+      syncQButtonGroup('jcAdminCorpoButtons', judicialControl.adminDraft.corpo);
+      syncSegmentedGroup('jcAdminEstruturasRecButtons', judicialControl.adminDraft.corpoReconhecimentoInss.estruturasReconhecidas == null ? null : (judicialControl.adminDraft.corpoReconhecimentoInss.estruturasReconhecidas ? 'sim' : 'nao'));
+      syncSegmentedGroup('jcAdminProgRecButtons', judicialControl.adminDraft.corpoReconhecimentoInss.prognosticoReconhecido == null ? null : (judicialControl.adminDraft.corpoReconhecimentoInss.prognosticoReconhecido ? 'sim' : 'nao'));
+      syncSegmentedGroup('jcCorpoKeepButtons', judicialControl.med.corpoKeepAdmin == null ? null : (judicialControl.med.corpoKeepAdmin ? 'sim' : 'nao'));
+      syncQButtonGroup('jcCorpoManualButtons', judicialControl.med.corpoJudManual);
+      JC_CORPO_RECLASS_DOMAINS.forEach(id => {
+        syncQButtonGroup(`jcCorpo${id.toUpperCase()}Buttons`, judicialControl.med.corpoAdminDomains[id]);
       });
+      syncQButtonGroup('jcAtivMedSimpleButtons', judicialControl.med.ativMedSimple);
+      updateAdminAutofillShortcut();
+      JC_ATIV_RECLASS_DOMAINS.forEach(id => {
+        syncQButtonGroup(`jcAtiv${id.toUpperCase()}Buttons`, judicialControl.med.ativMedDomains[id]);
+      });
+      syncSegmentedGroup('jcImpedimentoButtons', judicialControl.med.impedimentoLP == null ? null : (judicialControl.med.impedimentoLP ? 'sim' : 'nao'));
+      syncSegmentedGroup('jcHasAtivMedButtons', judicialControl.med.hasAtivMed == null ? null : (judicialControl.med.hasAtivMed ? 'sim' : 'nao'));
+      syncSegmentedGroup('jcAtivModeButtons', judicialControl.med.ativMode);
+      let corpoFlow = resolveCorpoJudFlow();
+      judicialControl.med.corpoJud = corpoFlow.q;
+      const reasonSelect = document.getElementById('jcCorpoReasonSelect');
+      const reasonHint = document.getElementById('jcCorpoReasonHint');
+      [...reasonSelect.options].forEach(opt => {
+        if (!opt.value) return;
+        opt.disabled = isCorpoReasonBlocked(opt.value);
+      });
+      if (judicialControl.med.corpoChangeReason && isCorpoReasonBlocked(judicialControl.med.corpoChangeReason)) {
+        resetCorpoChangeDetails();
+        corpoFlow = resolveCorpoJudFlow();
+        judicialControl.med.corpoJud = corpoFlow.q;
+      }
+      reasonSelect.value = judicialControl.med.corpoChangeReason || '';
+      if (!judicialControl.adminBase) {
+        reasonHint.textContent = 'Fixe a base administrativa para habilitar os motivos.';
+      } else if (judicialControl.med.corpoKeepAdmin === false) {
+        reasonHint.textContent = judicialControl.med.corpoChangeReason
+          ? (isCorpoReasonBlocked(judicialControl.med.corpoChangeReason)
+            ? getCorpoReasonBlockedMessage(judicialControl.med.corpoChangeReason)
+            : (JC_CORPO_REASON_LABELS[judicialControl.med.corpoChangeReason] || ''))
+          : 'Selecione um motivo para definir o qualificador judicial de Funções do Corpo.';
+      } else {
+        reasonHint.textContent = '';
+      }
+      const showCorpoChange = judicialControl.med.corpoKeepAdmin === false;
+      const showCorpoDomains = showCorpoChange && judicialControl.med.corpoChangeReason === 'dominio_max';
+      const showCorpoManual = showCorpoChange && judicialControl.med.corpoChangeReason === 'rebaixamento';
+      document.getElementById('jcCorpoChangeWrap').classList.toggle('hidden', !showCorpoChange);
+      document.getElementById('jcCorpoDomainWrap').classList.toggle('hidden', !showCorpoDomains);
+      document.getElementById('jcCorpoManualWrap').classList.toggle('hidden', !showCorpoManual);
+      const reductionAlert = document.getElementById('jcCorpoReductionAlert');
+      const reductionConfirm = document.getElementById('jcCorpoReductionConfirm');
+      const hasReduction = showCorpoChange && corpoFlow.q != null && judicialControl.adminBase && corpoFlow.q < judicialControl.adminBase.corpo;
+      reductionAlert.classList.toggle('hidden', !hasReduction);
+      reductionConfirm.checked = !!judicialControl.med.corpoAlertReductionConfirmed;
+      const corpoSummary = document.getElementById('jcCorpoResultSummary');
+      if (!judicialControl.adminBase) {
+        corpoSummary.textContent = 'Resultado de Funções do Corpo aguardando base administrativa.';
+      } else if (judicialControl.med.corpoKeepAdmin == null) {
+        corpoSummary.textContent = `Base administrativa em Funções: ${Q_LABELS[judicialControl.adminBase.corpo]} (${Q_NAMES[judicialControl.adminBase.corpo]}). Informe se deseja manter ou alterar.`;
+      } else if (!corpoFlow.ready && corpoFlow.q == null) {
+        corpoSummary.textContent = corpoFlow.reason;
+      } else {
+        const motivo = corpoFlow.mode === 'mantido' ? 'manutenção administrativa' : (JC_CORPO_REASON_LABELS[judicialControl.med.corpoChangeReason] || 'motivo não identificado');
+        const extra = corpoFlow.mode === 'dominio_max' && corpoFlow.domainsText ? ` Domínios: ${corpoFlow.domainsText}.` : '';
+        const pendencia = !corpoFlow.ready ? ` Pendência: ${corpoFlow.reason}` : '';
+        corpoSummary.textContent = `Resultado judicial de Funções: ${Q_LABELS[corpoFlow.q]} (${Q_NAMES[corpoFlow.q]}), por ${motivo}.${extra}${pendencia}`;
+      }
+      const showAtivMed = judicialControl.med.hasAtivMed === true;
+      const isSimple = showAtivMed && judicialControl.med.ativMode === 'simples';
+      const isComplete = showAtivMed && judicialControl.med.ativMode === 'completa';
+      document.getElementById('jcAtivMedWrap').classList.toggle('hidden', !showAtivMed);
+      document.getElementById('jcAtivModeSimpleWrap').classList.toggle('hidden', !isSimple);
+      document.getElementById('jcAtivModeCompleteWrap').classList.toggle('hidden', !isComplete);
+      const justField = document.getElementById('jcAtivMedJustification');
+      if (justField.value !== judicialControl.med.ativMedJustification) {
+        justField.value = judicialControl.med.ativMedJustification;
+      }
+      const computed = updateAtivMedComputed();
+      const summary = document.getElementById('jcAtivComputedSummary');
+      if (!isComplete) {
+        summary.textContent = 'Preencha d1–d9 para calcular o qualificador final de Atividades.';
+      } else if (!computed) {
+        const filled = JC_ATIV_RECLASS_DOMAINS.filter(id => judicialControl.med.ativMedDomains[id] != null).length;
+        summary.textContent = `Preenchimento parcial: ${filled}/9 domínios. O qualificador final só será calculado após completar d1–d9.`;
+      } else {
+        summary.textContent = `Cálculo automático: (Σ × 2,777...) − 0,1 = ${computed.pct}% · Σ=${computed.sum} · Ativ_med final = ${Q_LABELS[computed.q]} (${Q_NAMES[computed.q]}).`;
+      }
+      renderAdminFixedSummary();
 
-      const computed = computeJudicialControl();
-      if (!computed) {
-        rec.className = 'jc-rec';
-        rec.innerHTML = `<div class="jc-rec-title">${iconMarkup('alert', 'ui-icon sm')} Informe os parâmetros para análise.</div>`;
-        detail.textContent = '';
+      const adminDone = !!judicialControl.adminBase;
+      const adminDraftReady = getAdminDraftComplete();
+      const adminDirty = isAdminDraftDirty();
+      const adminStateClass = !adminDone ? 'pending' : (adminDirty ? 'pending' : 'done');
+      const adminStateText = !adminDone ? (adminDraftReady ? 'Pronta para fixar' : 'Pendente') : (adminDirty ? 'Revalidar base' : 'Concluída');
+      setStepState('jcAdminState', adminStateClass, adminStateText);
+
+      if (!adminDone) {
+        const blockReason = 'Etapa 2 bloqueada: primeiro fixe a base administrativa na etapa 1.';
+        judicialControl.ui.blockReason = blockReason;
+        setStepState('jcMedState', 'blocked', 'Bloqueada');
+        setStepState('jcTriagemState', 'pending', 'Pendente');
+        setStepState('jcTextoState', 'blocked', 'Aguardando triagem');
+        setStatusBadge('pending', `${iconMarkup('alert', 'ui-icon sm')} Preencha as etapas 1 e 2 para liberar a conclusão probatória.`);
+        document.getElementById('jcTrace').innerHTML = `<div class="jc-trace-line">Etapa 1: fixe a base administrativa do INSS para iniciar o controle judicial.</div>`;
+        setWhyBlocked(blockReason);
+        renderJudicialProgress();
         return;
       }
 
-      const { resultadoCorpoSuficiente, dispensaSocial } = computed;
-      rec.className = 'jc-rec ' + (dispensaSocial ? 'dispensa' : 'necessaria');
-      rec.innerHTML = dispensaSocial
-        ? `<div class="jc-rec-title">${iconMarkup('check-circle', 'ui-icon sm')} Avaliação social judicial dispensável</div><div>Basta perícia médica judicial no cenário atual.</div>`
-        : `<div class="jc-rec-title">${iconMarkup('alert', 'ui-icon sm')} Avaliação social judicial necessária</div><div>Perícia médica isolada não é suficiente no cenário atual.</div>`;
+      const medDone = getMedComplete();
+      setStepState('jcMedState', medDone ? 'done' : 'pending', medDone ? 'Concluída' : 'Pendente');
+      const triage = computeJudicialTriage();
+      judicialControl.triage = triage;
 
-      const resultadoTabela = resultadoCorpoSuficiente ? 'SIM' : 'NÃO';
-      const regraImpedimento = judicialControl.impedimentoLongoPrazo
-        ? 'A perícia médica judicial constatou impedimento de longo prazo.'
-        : 'A perícia médica judicial não constatou impedimento de longo prazo; sem esse requisito, dispensa-se avaliação social judicial para esta triagem.';
-      const regraCorpo = `Mantidos Ambiente (${Q_LABELS[savedINSS.amb]}) e Atividades (${Q_LABELS[savedINSS.ativ]}) da fase administrativa, a requalificação judicial em Funções do Corpo = ${Q_LABELS[judicialControl.corpoJud]} resulta em ${resultadoTabela} na Tabela Conclusiva.`;
-      detail.innerHTML = `${regraImpedimento}<br>${regraCorpo}`;
+      if (!triage.ready) {
+        judicialControl.ui.blockReason = triage.reason;
+        setStepState('jcTriagemState', 'pending', 'Pendente');
+        setStepState('jcTextoState', 'blocked', 'Aguardando triagem');
+        setStatusBadge('pending', `${iconMarkup('alert', 'ui-icon sm')} ${triage.reason}`);
+        document.getElementById('jcTrace').innerHTML = `<div class="jc-trace-line">${triage.reason}</div>`;
+        setWhyBlocked(triage.reason);
+        renderJudicialProgress();
+        return;
+      }
+
+      judicialControl.ui.blockReason = '';
+      setStepState('jcTriagemState', 'done', 'Concluída');
+      setStepState('jcTextoState', 'done', 'Pronta');
+      const b = judicialControl.adminBase;
+      const m = judicialControl.med;
+      const ativMedResolved = resolveAtivMed();
+      const testALine = m.impedimentoLP
+        ? `<div class="jc-trace-line"><strong>Teste A</strong>: tabela(Amb ${Q_LABELS[b.amb]}, Ativ ${Q_LABELS[b.ativ]}, Corpo_jud ${Q_LABELS[corpoFlow.q]}) = <strong>${triage.testeA ? 'Sim' : 'Não'}</strong>.</div>`
+        : `<div class="jc-trace-line"><strong>Teste A</strong>: não aplicado porque não houve impedimento de longo prazo.</div>`;
+      const testBLine = m.impedimentoLP && m.hasAtivMed && ativMedResolved != null
+        ? `<div class="jc-trace-line"><strong>Teste B</strong>: tabela(Amb ${Q_LABELS[b.amb]}, Ativ_med ${Q_LABELS[ativMedResolved]}, Corpo_jud ${Q_LABELS[corpoFlow.q]}) = <strong>${triage.testeB ? 'Sim' : 'Não'}</strong>.</div>`
+        : `<div class="jc-trace-line"><strong>Teste B</strong>: ${m.hasAtivMed ? 'aguardando definição válida do Ativ_med.' : 'não aplicado (sem elementos médicos para requalificar Atividades).'}</div>`;
+      const routeLine = triage.status === 'necessaria'
+        ? `<div class="jc-trace-line"><strong>Rotas de reversão pela avaliação social judicial</strong>: requalificação de <strong>Ambiente</strong> e/ou <strong>Atividades</strong>.</div>`
+        : '';
+      document.getElementById('jcTrace').innerHTML = [
+        `<div class="jc-trace-line"><strong>Base administrativa fixada</strong>: Amb ${Q_LABELS[b.amb]} · Ativ ${Q_LABELS[b.ativ]} · Corpo ${Q_LABELS[b.corpo]}.</div>`,
+        `<div class="jc-trace-line"><strong>Perícia médica judicial</strong>: impedimento de longo prazo = <strong>${m.impedimentoLP ? 'Sim' : 'Não'}</strong>.</div>`,
+        getCorpoFlowTraceLine(corpoFlow),
+        getAtivMedTraceLine(),
+        testALine,
+        testBLine,
+        `<div class="jc-trace-line">${triage.reason}</div>`,
+        routeLine
+      ].filter(Boolean).join('');
+
+      if (triage.status === 'dispensa') {
+        setStatusBadge('dispensa', `${iconMarkup('check-circle', 'ui-icon sm')} <strong>Avaliação social judicial dispensável</strong>`);
+      } else {
+        setStatusBadge('necessaria', `${iconMarkup('alert', 'ui-icon sm')} <strong>Avaliação social judicial necessária</strong>`);
+      }
+      setWhyBlocked('');
+      renderJudicialProgress();
     }
 
     function renderJudicialControlText() {
       const output = document.getElementById('textoControleJudicial');
-      if (!savedINSS) {
-        output.value = 'Salve a avaliação INSS para habilitar o modo Controle Judicial.';
+      const triage = judicialControl.triage;
+      if (!judicialControl.adminBase) {
+        output.value = 'Fixe a base administrativa para habilitar a minuta do Controle Judicial.';
+        return;
+      }
+      if (!triage.ready) {
+        output.value = 'Complete a etapa da perícia médica judicial para concluir a triagem probatória.';
         return;
       }
 
-      const computed = computeJudicialControl();
-      if (!computed) {
-        output.value = 'Informe a requalificação judicial em Funções do Corpo.';
-        return;
+      const b = judicialControl.adminBase;
+      const m = judicialControl.med;
+      const corpoFlow = resolveCorpoJudFlow();
+      const ativMedResolved = resolveAtivMed();
+      const testeAItem = m.impedimentoLP ? getItemNumber(b.amb, b.ativ, corpoFlow.q) : null;
+      const testeBItem = m.impedimentoLP && m.hasAtivMed && ativMedResolved != null ? getItemNumber(b.amb, ativMedResolved, corpoFlow.q) : null;
+      const qWord = q => ['nenhum', 'leve', 'moderado', 'grave', 'completo'][q];
+
+      // Textos-base incorporados do arquivo modelos_textos_decisao_bpc.md (sem dependência externa)
+      const baseIntro = `No controle judicial da prova técnica, parte-se da base administrativa já fixada (Ambiente ${qWord(b.amb)}, Atividades ${qWord(b.ativ)} e Funções ${qWord(b.corpo)}).`;
+      const reconhecimento = `Na fase administrativa, registrou-se: estruturas do corpo mais graves = ${b.corpoReconhecimentoInss.estruturasReconhecidas ? 'sim' : 'não'}; prognóstico desfavorável = ${b.corpoReconhecimentoInss.prognosticoReconhecido ? 'sim' : 'não'}.`;
+
+      const corpoPart = corpoFlow.mode === 'mantido'
+        ? `manutenção de Funções do Corpo em grau ${qWord(corpoFlow.q)}`
+        : `requalificação de Funções do Corpo para grau ${qWord(corpoFlow.q)}`;
+
+      const ativPart = (m.hasAtivMed && ativMedResolved != null)
+        ? ` e requalificação médica de Atividades e Participação para grau ${qWord(ativMedResolved)}`
+        : ', mantendo-se inalterados os demais componentes';
+
+      let paragrafo2 = '';
+      if (triage.status === 'dispensa') {
+        if (m.impedimentoLP === false) {
+          paragrafo2 = 'Em perícia médica judicial, não se reconheceu impedimento de longo prazo, circunstância que, por si, afasta a utilidade de nova avaliação social para reversão do resultado nesta triagem.';
+        } else if (triage.testeA) {
+          paragrafo2 = `Em perícia médica judicial, reconheceu-se impedimento de longo prazo e ${corpoPart}${ativPart}. Aplicada essa reclassificação ao Teste A da Tabela Conclusiva (Anexo IV da Portaria Conjunta MDS/INSS nº 2/2015, item ${testeAItem}), o resultado passou a ser positivo, suficiente para o enquadramento sem necessidade de nova intervenção social no caso concreto.`;
+        } else {
+          paragrafo2 = `Em perícia médica judicial, reconheceu-se impedimento de longo prazo e ${corpoPart}${ativPart}. No Teste A (item ${testeAItem}), o resultado permaneceu negativo; contudo, no Teste B (item ${testeBItem}), houve resultado positivo, suficiente para o enquadramento sem necessidade de nova intervenção social no caso concreto.`;
+        }
+      } else {
+        if (m.hasAtivMed && ativMedResolved != null) {
+          paragrafo2 = `A perícia médica judicial reconheceu impedimento de longo prazo, mas a reclassificação médica de Funções do Corpo, isoladamente, não produziu resultado positivo na Tabela Conclusiva (Teste A, item ${testeAItem}). Também não houve resultado positivo em eventual requalificação médica de Atividades (Teste B, item ${testeBItem}), de modo que a prova médica, por si só, não foi suficiente para alterar o desfecho administrativo.`;
+        } else {
+          paragrafo2 = `A perícia médica judicial reconheceu impedimento de longo prazo, mas a reclassificação médica de Funções do Corpo, isoladamente, não produziu resultado positivo na Tabela Conclusiva (Teste A, item ${testeAItem}). Também não houve elementos médicos para requalificação de Atividades (Teste B), de modo que a prova médica, por si só, não foi suficiente para alterar o desfecho administrativo.`;
+        }
       }
 
-      const { resultadoCorpoSuficiente, dispensaSocial } = computed;
-      const item = getItemNumber(savedINSS.amb, savedINSS.ativ, judicialControl.corpoJud);
-      const resultadoTabela = resultadoCorpoSuficiente ? 'Sim' : 'Não';
-      const recomendacao = dispensaSocial
-        ? 'Na fase judicial, é suficiente a realização de perícia médica, com dispensa de avaliação social.'
-        : 'Na fase judicial, recomenda-se a realização de perícia médica e avaliação social.';
-      const conclusao = !judicialControl.impedimentoLongoPrazo
-        ? 'Ausente impedimento de longo prazo na perícia médica judicial, não há enquadramento como pessoa com deficiência para fins de BPC/LOAS.'
-        : resultadoCorpoSuficiente
-          ? 'Com impedimento de longo prazo e requalificação judicial das funções do corpo, a combinação atinge resultado positivo na Tabela Conclusiva, suficiente para enquadramento no conceito de pessoa com deficiência.'
-          : 'Embora constatado impedimento de longo prazo, a requalificação isolada das funções do corpo não alcança resultado positivo na Tabela Conclusiva, impondo avaliação social judicial para reexame global dos qualificadores.';
+      const paragrafo3 = triage.status === 'dispensa'
+        ? 'Nessas condições, a prova médica judicial mostrou-se bastante para definição do requisito biopsicossocial, de modo que a avaliação social judicial se revela dispensável nesta fase processual.'
+        : 'Nesse contexto, permanece necessária a avaliação social judicial, com potencial de requalificação dos componentes de Ambiente e Atividades e Participação, a fim de permitir cognição probatória completa sobre o requisito biopsicossocial.';
 
-      const linhas = [
-        'No modo de controle judicial, adota-se como base a avaliação biopsicossocial administrativa já produzida, mantendo-se os qualificadores de Fatores Ambientais e de Atividades e Participação, com requalificação judicial apenas das Funções do Corpo.',
-        `Base administrativa mantida: Fatores Ambientais = ${Q_LABELS[savedINSS.amb]} (${Q_NAMES[savedINSS.amb]}), Atividades e Participação = ${Q_LABELS[savedINSS.ativ]} (${Q_NAMES[savedINSS.ativ]}).`,
-        `Perícia médica judicial: Funções do Corpo = ${Q_LABELS[judicialControl.corpoJud]} (${Q_NAMES[judicialControl.corpoJud]}); impedimento de longo prazo = ${judicialControl.impedimentoLongoPrazo ? 'sim' : 'não'}.`,
-        `Aplicando a Tabela Conclusiva do Anexo IV da Portaria Conjunta MDS/INSS nº 2/2015 à combinação (Ambiente ${Q_LABELS[savedINSS.amb]}, Atividades ${Q_LABELS[savedINSS.ativ]}, Funções ${Q_LABELS[judicialControl.corpoJud]}), item ${item}, o resultado técnico é ${resultadoTabela}.`,
-        'Nos termos do art. 20, §§ 2º e 10, da Lei nº 8.742/1993, o impedimento de longo prazo é requisito para caracterização da pessoa com deficiência para fins de BPC/LOAS.',
-        recomendacao,
-        conclusao
-      ];
-      output.value = linhas.join('\n\n');
+      output.value = [baseIntro, reconhecimento, paragrafo2, paragrafo3].filter(Boolean).join('\n\n');
     }
 
     async function copyJudicialControlText() {
@@ -2285,21 +3885,57 @@
         area.focus();
         area.select();
         document.execCommand('copy');
-        feedback.textContent = 'Texto copiado.';
+        feedback.textContent = 'Não foi possível copiar automaticamente. Use Ctrl+C.';
       }
     }
+
+    function generateAndCopyJudicialText() {
+      renderJudicialControlText();
+      copyJudicialControlText();
+    }
+
+    document.getElementById('btnSaveINSS').addEventListener('click', () => {
+      applyCurrentQualifiersAsAdminDraft();
+      fixAdminBaseFromDraft();
+    });
+    document.getElementById('btnUseCurrentAsBase').addEventListener('click', () => {
+      applyCurrentQualifiersAsAdminDraft();
+      document.getElementById('copyFeedbackControle').textContent = 'Rascunho preenchido com os qualificadores atuais da Calculadora. Revise e clique em "Fixar base administrativa".';
+    });
+    document.getElementById('btnFixarBaseAdmin').addEventListener('click', fixAdminBaseFromDraft);
+    document.getElementById('btnClearComp').addEventListener('click', () => {
+      savedINSS = null;
+      document.getElementById('compSection').classList.add('hidden');
+      document.getElementById('btnClearComp').classList.add('hidden');
+      resetJudicialControl();
+      renderJudicialControl();
+    });
 
     function getAutoQualifiedChildDomains() {
       if (!crianca) return [];
       return [...DOM_ATIV_M, ...DOM_ATIV_S].filter(d => idadeMeses < d.cut);
     }
 
+    function updateChildAutoSummary() {
+      const summary = document.getElementById('childAutoSummary');
+      if (!crianca) {
+        summary.classList.add('hidden');
+        summary.textContent = '';
+        return;
+      }
+      const forced = getAutoQualifiedChildDomains();
+      if (!forced.length) {
+        summary.classList.add('hidden');
+        summary.textContent = '';
+        return;
+      }
+      summary.classList.remove('hidden');
+      summary.textContent = `Autoqualificados por corte etário: ${forced.map(d => d.id.toUpperCase()).join(', ')}.`;
+    }
+
     function renderStandardText(amb = calcAmbiente(), ativ = calcAtividades(), corpo = calcCorpo()) {
       const yes = !impedimento && tabelaConclusiva(amb.q, ativ.q, corpo.q);
-      const item = getItemNumber(amb.q, ativ.q, corpo.q);
-      const reason = impedimento
-        ? 'Impedimento inferior a 2 (dois) anos.'
-        : getDecisionReason(amb.q, ativ.q, corpo.q, yes);
+      const reason = getDecisionReason(amb.q, ativ.q, corpo.q, yes);
       const forced = getAutoQualifiedChildDomains();
       const forcedText = forced.length
         ? `Nos domínios de Atividades e Participação abaixo do ponto de corte etário, foi aplicado automaticamente o qualificador 4 (dificuldade completa), conforme Portaria Conjunta MDS/INSS nº 2/2015: ${forced.map(d => `${d.id.toUpperCase()} (${d.name}, corte ${d.cut} meses)`).join('; ')}.`
@@ -2307,20 +3943,27 @@
       const idadeTexto = crianca
         ? `Foi assinalada idade inferior a 16 anos, com idade informada de ${idadeValor} ${idadeUnidade} (${idadeMeses} meses).`
         : 'Não foi assinalada idade inferior a 16 anos, de modo que se considerou a faixa etária de 16 anos ou mais.';
-      const linhas = [
-        'Com base no art. 20, § 2º, da Lei nº 8.742/1993 (LOAS) e na Portaria Conjunta MDS/INSS nº 2/2015 (Anexo IV), procede-se à análise do enquadramento da parte autora no conceito de pessoa com deficiência para fins de BPC.',
-        idadeTexto,
-        forcedText,
-        `No caso concreto, os qualificadores finais apurados foram: Fatores Ambientais = ${Q_LABELS[amb.q]} (${Q_FULL.amb[amb.q]}); Atividades e Participação = ${Q_LABELS[ativ.q]} (${Q_FULL.ativ[ativ.q]}); Funções do Corpo = ${Q_LABELS[corpo.q]} (${Q_FULL.corpo[corpo.q]}).`,
-        impedimento
-          ? 'Consta, ainda, resposta técnica no sentido de impedimento com perspectiva de resolução em prazo inferior a 2 (dois) anos, o que afasta o requisito de impedimento de longo prazo (art. 20, §§ 2º e 10, da Lei nº 8.742/1993).'
-          : `Confrontados os qualificadores com a Tabela Conclusiva do Anexo IV (item ${item}), o resultado técnico é ${yes ? 'deferido (Sim)' : 'indeferido (Não)'}.`,
-        `Fundamentação sintética da combinação dos qualificadores: ${reason}`,
-        yes
-          ? 'Conclusão: à luz dos parâmetros normativos aplicáveis, a parte autora se enquadra no conceito de pessoa com deficiência para fins de concessão do BPC/LOAS.'
-          : 'Conclusão: à luz dos parâmetros normativos aplicáveis, a parte autora não se enquadra no conceito de pessoa com deficiência para fins de concessão do BPC/LOAS.'
-      ].filter(Boolean);
-      document.getElementById('textoPadrao').value = linhas.join('\n\n');
+      const qWord = q => ['nenhum', 'leve', 'moderado', 'grave', 'completo'][q];
+      const contextoEtario = `${idadeTexto}${forcedText ? ` ${forcedText}` : ''}`;
+
+      // Textos-base incorporados do arquivo modelos_textos_decisao_bpc.md (sem dependência externa)
+      let paragrafo1 = '';
+      let paragrafo2 = '';
+
+      if (yes) {
+        paragrafo1 = `À luz do art. 20, §§ 2º e 10, da Lei nº 8.742/1993, e dos critérios da Portaria Conjunta MDS/INSS nº 2/2015 (Anexo IV), examina-se o enquadramento da parte autora como pessoa com deficiência para fins de BPC. ${contextoEtario} No caso concreto, os qualificadores finais apurados foram: Fatores Ambientais em grau ${qWord(amb.q)}, Atividades e Participação em grau ${qWord(ativ.q)} e Funções do Corpo em grau ${qWord(corpo.q)}, com reconhecimento de impedimento de longo prazo. A combinação desses qualificadores, confrontada com a Tabela Conclusiva da Portaria, conduz a resultado positivo para reconhecimento do requisito biopsicossocial legal.`;
+        paragrafo2 = 'Diante desse quadro técnico-normativo, reputo preenchido o requisito legal, motivo pelo qual a parte autora se enquadra no conceito de pessoa com deficiência para fins do benefício assistencial.';
+      } else {
+        if (impedimento) {
+          paragrafo1 = `A controvérsia deve ser resolvida conforme o art. 20, §§ 2º e 10, da Lei nº 8.742/1993, em conjunto com a Portaria Conjunta MDS/INSS nº 2/2015 (Anexo IV). ${contextoEtario} Na avaliação produzida, os qualificadores finais resultaram em Fatores Ambientais ${qWord(amb.q)}, Atividades e Participação ${qWord(ativ.q)} e Funções do Corpo ${qWord(corpo.q)}. Consta, ainda, indicação técnica de possibilidade de resolução das alterações em prazo inferior a 2 (dois) anos, o que afasta o requisito de impedimento de longo prazo.`;
+        } else {
+          const reasonFinal = /[.!?]$/.test(reason) ? reason : `${reason}.`;
+          paragrafo1 = `A controvérsia deve ser resolvida conforme o art. 20, §§ 2º e 10, da Lei nº 8.742/1993, em conjunto com a Portaria Conjunta MDS/INSS nº 2/2015 (Anexo IV). ${contextoEtario} Na avaliação produzida, os qualificadores finais resultaram em Fatores Ambientais ${qWord(amb.q)}, Atividades e Participação ${qWord(ativ.q)} e Funções do Corpo ${qWord(corpo.q)}, com reconhecimento de impedimento de longo prazo. Ainda que presente limitação funcional, a combinação normativa não supera o patamar mínimo exigido pela Tabela Conclusiva. ${reasonFinal}`;
+        }
+        paragrafo2 = 'Assim, à luz dos parâmetros legais e regulamentares aplicáveis, não se configura, neste ponto, o enquadramento da parte autora como pessoa com deficiência para fins de BPC/LOAS.';
+      }
+
+      document.getElementById('textoPadrao').value = [paragrafo1, paragrafo2].filter(Boolean).join('\n\n');
     }
 
     async function copyStandardText() {
@@ -2347,21 +3990,133 @@
       document.getElementById('copyFeedback').textContent = '';
     });
     document.getElementById('btnCopiarTexto').addEventListener('click', copyStandardText);
-    document.getElementById('jcCorpoButtons').addEventListener('click', e => {
-      const btn = e.target.closest('.jc-q-btn');
+    document.getElementById('modeSwitcher').addEventListener('click', e => {
+      const btn = e.target.closest('.mode-btn');
       if (!btn) return;
-      judicialControl.corpoJud = +btn.dataset.value;
+      setUIMode(btn.dataset.mode, { scrollToJudicial: btn.dataset.mode === 'controle' });
+    });
+
+    function bindQGroup(groupId, onPick) {
+      document.getElementById(groupId).addEventListener('click', e => {
+        const btn = e.target.closest('.jc-q-btn');
+        if (!btn) return;
+        onPick(+btn.dataset.value);
+        renderJudicialControl();
+      });
+    }
+
+    function bindSegmented(groupId, onPick) {
+      document.getElementById(groupId).addEventListener('click', e => {
+        const btn = e.target.closest('.jc-seg-btn');
+        if (!btn) return;
+        onPick(btn.dataset.value);
+        renderJudicialControl();
+      });
+    }
+
+    bindQGroup('jcAdminAmbButtons', value => { judicialControl.adminDraft.amb = value; clearJudicialTextArea(); });
+    bindQGroup('jcAdminAtivButtons', value => { judicialControl.adminDraft.ativ = value; clearJudicialTextArea(); });
+    bindQGroup('jcAdminCorpoButtons', value => { judicialControl.adminDraft.corpo = value; clearJudicialTextArea(); });
+    bindSegmented('jcAdminEstruturasRecButtons', value => {
+      judicialControl.adminDraft.corpoReconhecimentoInss.estruturasReconhecidas = value === 'sim';
+      clearJudicialTextArea();
+    });
+    bindSegmented('jcAdminProgRecButtons', value => {
+      judicialControl.adminDraft.corpoReconhecimentoInss.prognosticoReconhecido = value === 'sim';
+      clearJudicialTextArea();
+    });
+    bindSegmented('jcCorpoKeepButtons', value => {
+      if (!judicialControl.adminBase) return;
+      judicialControl.med.corpoKeepAdmin = value === 'sim';
+      resetCorpoChangeDetails();
+      if (judicialControl.med.corpoKeepAdmin) {
+        judicialControl.med.corpoJud = judicialControl.adminBase.corpo;
+      }
+      clearJudicialTextArea();
+    });
+    bindQGroup('jcCorpoManualButtons', value => {
+      if (!judicialControl.adminBase || judicialControl.med.corpoKeepAdmin !== false || judicialControl.med.corpoChangeReason !== 'rebaixamento') return;
+      judicialControl.med.corpoJudManual = value;
+      judicialControl.med.corpoAlertReductionConfirmed = false;
+      clearJudicialTextArea();
+    });
+    JC_CORPO_RECLASS_DOMAINS.forEach(id => {
+      bindQGroup(`jcCorpo${id.toUpperCase()}Buttons`, value => {
+        if (!judicialControl.adminBase || judicialControl.med.corpoKeepAdmin !== false || judicialControl.med.corpoChangeReason !== 'dominio_max') return;
+        judicialControl.med.corpoAdminDomains[id] = value;
+        judicialControl.med.corpoAlertReductionConfirmed = false;
+        clearJudicialTextArea();
+      });
+    });
+    document.getElementById('jcCorpoReasonSelect').addEventListener('change', e => {
+      if (!judicialControl.adminBase || judicialControl.med.corpoKeepAdmin !== false) return;
+      const nextReason = e.target.value || null;
+      if (nextReason && isCorpoReasonBlocked(nextReason)) {
+        e.target.value = '';
+        return;
+      }
+      resetCorpoChangeDetails();
+      judicialControl.med.corpoChangeReason = nextReason;
+      clearJudicialTextArea();
       renderJudicialControl();
     });
-    document.getElementById('jcImpedimentoLongo').addEventListener('change', e => {
-      judicialControl.impedimentoLongoPrazo = e.target.checked;
+    document.getElementById('jcCorpoReductionConfirm').addEventListener('change', e => {
+      if (!judicialControl.adminBase) return;
+      judicialControl.med.corpoAlertReductionConfirmed = e.target.checked;
+      clearJudicialTextArea();
       renderJudicialControl();
     });
+    bindQGroup('jcAtivMedSimpleButtons', value => {
+      if (!judicialControl.adminBase) return;
+      judicialControl.med.ativMedSimple = value;
+      clearJudicialTextArea();
+    });
+    JC_ATIV_RECLASS_DOMAINS.forEach(id => {
+      bindQGroup(`jcAtiv${id.toUpperCase()}Buttons`, value => {
+        if (!judicialControl.adminBase) return;
+        judicialControl.med.ativMedDomains[id] = value;
+        judicialControl.med.ativMedComputed = computeAtivFromDomains(judicialControl.med.ativMedDomains);
+        clearJudicialTextArea();
+      });
+    });
+    bindSegmented('jcAtivModeButtons', value => {
+      if (!judicialControl.adminBase || judicialControl.med.hasAtivMed !== true) return;
+      judicialControl.med.ativMode = value;
+      if (value === 'simples') {
+        judicialControl.med.ativMedDomains = createEmptyAtivReclassDomains();
+        judicialControl.med.ativMedComputed = null;
+      } else if (value === 'completa') {
+        judicialControl.med.ativMedSimple = null;
+        judicialControl.med.ativMedJustification = '';
+        judicialControl.med.ativMedComputed = computeAtivFromDomains(judicialControl.med.ativMedDomains);
+      }
+      clearJudicialTextArea();
+    });
+    bindSegmented('jcImpedimentoButtons', value => {
+      if (!judicialControl.adminBase) return;
+      judicialControl.med.impedimentoLP = value === 'sim';
+      clearJudicialTextArea();
+    });
+    bindSegmented('jcHasAtivMedButtons', value => {
+      if (!judicialControl.adminBase) return;
+      judicialControl.med.hasAtivMed = value === 'sim';
+      if (!judicialControl.med.hasAtivMed) resetAtivMedReclassFields();
+      clearJudicialTextArea();
+    });
+    document.getElementById('jcAtivMedJustification').addEventListener('input', e => {
+      if (!judicialControl.adminBase || judicialControl.med.hasAtivMed !== true) return;
+      judicialControl.med.ativMedJustification = e.target.value;
+      clearJudicialTextArea();
+      renderJudicialControl();
+    });
+
     document.getElementById('btnGerarControleTexto').addEventListener('click', () => {
       renderJudicialControlText();
       document.getElementById('copyFeedbackControle').textContent = '';
     });
+    document.getElementById('btnGerarCopiarControleTexto').addEventListener('click', generateAndCopyJudicialText);
     document.getElementById('btnCopiarControleTexto').addEventListener('click', copyJudicialControlText);
+    document.getElementById('btnLimparControleJudicial').addEventListener('click', clearJudicialMedicalAndTriage);
 
     // ============ INIT ============
     buildDomainRows(document.getElementById('domAmb'), DOM_AMB);
@@ -2370,8 +4125,9 @@
     buildDomainRows(document.getElementById('domAtivS'), DOM_ATIV_S);
     syncChildModeByControls();
     applyChildRules();
-    resetJudicialControlFromSavedINSS();
+    resetJudicialControl();
     renderJudicialControl();
+    setUIMode('controle', { preserveAccordionState: false });
     buildTabelaGrid();
     update();
   </script>
