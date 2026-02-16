@@ -300,6 +300,33 @@
       flex-shrink: 0
     }
 
+    .note-scale-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 0 4px
+    }
+
+    .note-scale-spacer {
+      flex: 1;
+      min-width: 0
+    }
+
+    .note-scale {
+      display: grid;
+      grid-template-columns: repeat(5, 34px);
+      gap: 3px;
+      flex-shrink: 0
+    }
+
+    .note-scale span {
+      text-align: center;
+      font-size: .66rem;
+      color: var(--text3);
+      font-weight: 700;
+      letter-spacing: .02em
+    }
+
     .note-btn {
       width: 34px;
       height: 34px;
@@ -311,13 +338,81 @@
       font-size: .8rem;
       color: var(--text3);
       cursor: pointer;
-      transition: all .15s;
-      position: relative
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      --hover-color: var(--text3);
+      --hover-fg: #fff;
+      transition: transform .18s cubic-bezier(.2, .8, .2, 1), border-color .18s ease, box-shadow .18s ease, background .2s ease, color .2s ease, filter .2s ease
     }
 
-    .note-btn:hover {
-      border-color: var(--text3);
-      transform: scale(1.05)
+    .note-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, .45) 50%, transparent 80%);
+      transform: translateX(-135%);
+      opacity: 0;
+      transition: transform .4s ease, opacity .2s ease;
+      pointer-events: none
+    }
+
+    .note-btn[data-value="0"] {
+      --hover-color: var(--qN);
+      --hover-fg: #fff
+    }
+
+    .note-btn[data-value="1"] {
+      --hover-color: var(--qL);
+      --hover-fg: #fff
+    }
+
+    .note-btn[data-value="2"] {
+      --hover-color: var(--qM);
+      --hover-fg: #1a1a1a
+    }
+
+    .note-btn[data-value="3"] {
+      --hover-color: var(--qG);
+      --hover-fg: #fff
+    }
+
+    .note-btn[data-value="4"] {
+      --hover-color: var(--qC);
+      --hover-fg: #fff
+    }
+
+    @media (hover:hover) {
+      .note-btn:hover {
+        border-color: color-mix(in srgb, var(--hover-color) 48%, var(--border) 52%);
+        background: linear-gradient(145deg, color-mix(in srgb, var(--hover-color) 14%, var(--surface)), color-mix(in srgb, var(--hover-color) 6%, var(--surface)));
+        color: color-mix(in srgb, var(--hover-color) 54%, var(--text2) 46%);
+        transform: translateY(-1px) scale(1.02);
+        filter: saturate(1.05);
+        box-shadow:
+          0 0 0 2px color-mix(in srgb, var(--hover-color) 10%, transparent),
+          0 4px 8px color-mix(in srgb, var(--hover-color) 18%, transparent)
+      }
+
+      .note-btn:hover::after {
+        transform: translateX(110%);
+        opacity: .45
+      }
+
+      .note-btn.active:hover {
+        background: var(--hover-color);
+        color: var(--hover-fg);
+        border-color: var(--hover-color);
+        box-shadow:
+          0 0 0 2px color-mix(in srgb, var(--hover-color) 16%, transparent),
+          0 5px 10px color-mix(in srgb, var(--hover-color) 22%, transparent),
+          inset 0 1px 0 rgba(255, 255, 255, .22)
+      }
+
+      .note-btn:active {
+        transform: translateY(0) scale(1)
+      }
     }
 
     .note-btn.active[data-value="0"] {
@@ -862,6 +957,57 @@
       color: var(--text2)
     }
 
+    /* STANDARD TEXT */
+    .standard-text {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin-bottom: 20px
+    }
+
+    .standard-text h3 {
+      font-size: .95rem;
+      margin-bottom: 8px;
+      text-align: center;
+      color: var(--text2)
+    }
+
+    .standard-text .helper {
+      text-align: center;
+      font-size: .75rem;
+      color: var(--text3);
+      margin-bottom: 12px
+    }
+
+    .standard-text textarea {
+      width: 100%;
+      min-height: 220px;
+      resize: vertical;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      font-size: .8rem;
+      line-height: 1.45;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      background: var(--bg2);
+      color: var(--text)
+    }
+
+    .standard-text-actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap
+    }
+
+    .copy-feedback {
+      font-size: .75rem;
+      color: var(--text3)
+    }
+
     .comp-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -1106,7 +1252,17 @@
 
     <div class="footer-actions">
       <button class="btn btn-outline" id="btnSaveINSS">📸 Salvar</button>
+      <button class="btn btn-outline" id="btnGerarTexto">📝 Gerar texto padronizado</button>
       <button class="btn btn-red hidden" id="btnClearComp">✕ Limpar comparação</button>
+    </div>
+    <div class="standard-text hidden" id="textoSection">
+      <h3>Minuta Padronizada para Decisão</h3>
+      <p class="helper">Texto automático para copiar e colar na fundamentação sobre o enquadramento da parte autora no conceito de pessoa com deficiência para fins de BPC/LOAS.</p>
+      <textarea id="textoPadrao" readonly></textarea>
+      <div class="standard-text-actions">
+        <span class="copy-feedback" id="copyFeedback"></span>
+        <button class="btn btn-outline" id="btnCopiarTexto">📋 Copiar texto</button>
+      </div>
     </div>
     <div class="comparison hidden" id="compSection">
       <h3>Comparação: Avaliação INSS × Reclassificação Judicial</h3>
@@ -1200,6 +1356,16 @@
       if (ativ >= 3) return true;
       return amb >= 3;
     }
+    function getDecisionReason(ambQ, ativQ, corpoQ, yes) {
+      if (!yes) {
+        if (corpoQ <= 1) return `Funções do Corpo = ${Q_LABELS[corpoQ]} (${Q_NAMES[corpoQ]}) — exige-se ≥ Moderada`;
+        if (ativQ <= 1) return `Atividades e Participação = ${Q_LABELS[ativQ]} (${Q_NAMES[ativQ]}) — exige-se ≥ Moderada`;
+        return `Combinação M-M com Ambiente ${Q_LABELS[ambQ]} — exige-se Ambiente ≥ Grave`;
+      }
+      if (corpoQ >= 3 && ativQ >= 2) return `Funções ${Q_LABELS[corpoQ]} + Atividades ${Q_LABELS[ativQ]} — deferimento independente do Ambiente`;
+      if (ativQ >= 3 && corpoQ >= 2) return `Atividades ${Q_LABELS[ativQ]} + Funções ${Q_LABELS[corpoQ]} — deferimento independente do Ambiente`;
+      return `Corpo M + Atividades M + Ambiente ${Q_LABELS[ambQ]} (≥ G) — combinação deferida`;
+    }
     function getItemNumber(amb, ativ, corpo) {
       // Items ordered: corpo C→N, for each corpo: ativ C→N, for each ativ: amb C→N
       const corpoOrder = [4, 3, 2, 1, 0], ativOrder = [4, 3, 2, 1, 0], ambOrder = [4, 3, 2, 1, 0];
@@ -1212,6 +1378,11 @@
 
     // ============ DOM BUILDERS ============
     function buildDomainRows(container, domains) {
+      const scale = document.createElement('div');
+      scale.className = 'note-scale-row';
+      scale.innerHTML = `<div class="note-scale-spacer"></div>
+      <div class="note-scale">${Q_LABELS.map(l => `<span>${l}</span>`).join('')}</div>`;
+      container.appendChild(scale);
       domains.forEach(d => {
         const row = document.createElement('div');
         row.className = 'domain-row';
@@ -1288,16 +1459,7 @@
         dec.className = 'decision ' + (yes ? 'deferido' : 'indeferido');
         document.getElementById('decIcon').textContent = yes ? '✅' : '❌';
         document.getElementById('decLabel').textContent = yes ? 'DEFERIDO' : 'INDEFERIDO';
-        let reason = '';
-        if (!yes) {
-          if (corpo.q <= 1) reason = `Funções do Corpo = ${Q_LABELS[corpo.q]} (${Q_NAMES[corpo.q]}) — exige-se ≥ Moderada`;
-          else if (ativ.q <= 1) reason = `Atividades e Participação = ${Q_LABELS[ativ.q]} (${Q_NAMES[ativ.q]}) — exige-se ≥ Moderada`;
-          else reason = `Combinação M-M com Ambiente ${Q_LABELS[amb.q]} — exige-se Ambiente ≥ Grave`;
-        } else {
-          if (corpo.q >= 3 && ativ.q >= 2) reason = `Funções ${Q_LABELS[corpo.q]} + Atividades ${Q_LABELS[ativ.q]} — deferimento independente do Ambiente`;
-          else if (ativ.q >= 3 && corpo.q >= 2) reason = `Atividades ${Q_LABELS[ativ.q]} + Funções ${Q_LABELS[corpo.q]} — deferimento independente do Ambiente`;
-          else reason = `Corpo M + Atividades M + Ambiente ${Q_LABELS[amb.q]} (≥ G) — combinação deferida`;
-        }
+        const reason = getDecisionReason(amb.q, ativ.q, corpo.q, yes);
         document.getElementById('decReason').textContent = reason;
         document.getElementById('decItem').textContent = `Item ${item} da Tabela Conclusiva`;
       }
@@ -1306,6 +1468,7 @@
 
       // Comparison
       if (savedINSS) updateComparison(amb, ativ, corpo);
+      if (!document.getElementById('textoSection').classList.contains('hidden')) renderStandardText(amb, ativ, corpo);
     }
 
     function setQBadge(id, q) {
@@ -1452,6 +1615,65 @@
       else if (s.result && !curResult) changes.push('🔄 Resultado REVERTIDO: Deferido → Indeferido');
       document.getElementById('compChange').innerHTML = changes.length ? changes.join(' · ') : 'Sem alteração no resultado';
     }
+
+    function getAutoQualifiedChildDomains() {
+      if (!crianca) return [];
+      return [...DOM_ATIV_M, ...DOM_ATIV_S].filter(d => idadeMeses < d.cut);
+    }
+
+    function renderStandardText(amb = calcAmbiente(), ativ = calcAtividades(), corpo = calcCorpo()) {
+      const yes = !impedimento && tabelaConclusiva(amb.q, ativ.q, corpo.q);
+      const item = getItemNumber(amb.q, ativ.q, corpo.q);
+      const reason = impedimento
+        ? 'Impedimento inferior a 2 (dois) anos.'
+        : getDecisionReason(amb.q, ativ.q, corpo.q, yes);
+      const forced = getAutoQualifiedChildDomains();
+      const forcedText = forced.length
+        ? `Nos domínios de Atividades e Participação abaixo do ponto de corte etário, foi aplicado automaticamente o qualificador 4 (dificuldade completa), conforme Portaria Conjunta MDS/INSS nº 2/2015: ${forced.map(d => `${d.id.toUpperCase()} (${d.name}, corte ${d.cut} meses)`).join('; ')}.`
+        : '';
+      const idadeTexto = crianca
+        ? `A parte autora possui ${idadeMeses} meses de idade (menor de 16 anos).`
+        : `A parte autora possui ${idadeMeses} meses de idade (16 anos ou mais).`;
+      const linhas = [
+        'Com base no art. 20, § 2º, da Lei nº 8.742/1993 (LOAS) e na Portaria Conjunta MDS/INSS nº 2/2015 (Anexo IV), procede-se à análise do enquadramento da parte autora no conceito de pessoa com deficiência para fins de BPC.',
+        idadeTexto,
+        forcedText,
+        `No caso concreto, os qualificadores finais apurados foram: Fatores Ambientais = ${Q_LABELS[amb.q]} (${Q_FULL.amb[amb.q]}); Atividades e Participação = ${Q_LABELS[ativ.q]} (${Q_FULL.ativ[ativ.q]}); Funções do Corpo = ${Q_LABELS[corpo.q]} (${Q_FULL.corpo[corpo.q]}).`,
+        impedimento
+          ? 'Consta, ainda, resposta técnica no sentido de impedimento com perspectiva de resolução em prazo inferior a 2 (dois) anos, o que afasta o requisito de impedimento de longo prazo (art. 20, §§ 2º e 10, da Lei nº 8.742/1993).'
+          : `Confrontados os qualificadores com a Tabela Conclusiva do Anexo IV (item ${item}), o resultado técnico é ${yes ? 'deferido (Sim)' : 'indeferido (Não)'}.`,
+        `Fundamentação sintética da combinação dos qualificadores: ${reason}`,
+        yes
+          ? 'Conclusão: à luz dos parâmetros normativos aplicáveis, a parte autora se enquadra no conceito de pessoa com deficiência para fins de concessão do BPC/LOAS.'
+          : 'Conclusão: à luz dos parâmetros normativos aplicáveis, a parte autora não se enquadra no conceito de pessoa com deficiência para fins de concessão do BPC/LOAS.'
+      ].filter(Boolean);
+      document.getElementById('textoPadrao').value = linhas.join('\n\n');
+    }
+
+    async function copyStandardText() {
+      const feedback = document.getElementById('copyFeedback');
+      const area = document.getElementById('textoPadrao');
+      if (!area.value.trim()) {
+        feedback.textContent = 'Gere o texto antes de copiar.';
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(area.value);
+        feedback.textContent = 'Texto copiado para a área de transferência.';
+      } catch (err) {
+        area.focus();
+        area.select();
+        document.execCommand('copy');
+        feedback.textContent = 'Texto copiado.';
+      }
+    }
+
+    document.getElementById('btnGerarTexto').addEventListener('click', () => {
+      document.getElementById('textoSection').classList.remove('hidden');
+      renderStandardText();
+      document.getElementById('copyFeedback').textContent = '';
+    });
+    document.getElementById('btnCopiarTexto').addEventListener('click', copyStandardText);
 
     // ============ INIT ============
     buildDomainRows(document.getElementById('domAmb'), DOM_AMB);
