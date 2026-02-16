@@ -3239,7 +3239,7 @@
         const row = document.createElement('div');
         row.className = 'domain-row';
         row.innerHTML = `<div class="domain-label"><span class="domain-code">${d.id}</span> <span class="domain-name">${d.name}</span></div>
-      <div class="note-buttons" data-domain="${d.id}">${[0, 1, 2, 3, 4].map(v => `<button class="note-btn${v === 0 ? ' active' : ''}" data-value="${v}">${v}</button>`).join('')}</div>`;
+      <div class="note-buttons" data-domain="${d.id}">${[0, 1, 2, 3, 4].map(v => `<button class="note-btn${v === 0 ? ' active' : ''}" data-value="${v}" aria-label="Nota ${v}: ${Q_NAMES[v]}" title="Nota ${v}: ${Q_NAMES[v]}">${v}</button>`).join('')}</div>`;
         container.appendChild(row);
       });
     }
@@ -4441,6 +4441,20 @@
     renderJudicialControl();
     setUIMode('controle', { preserveAccordionState: false });
     buildTabelaGrid();
+
+    function initA11yLabels() {
+      const setLabels = (btn, idx) => {
+        if (Q_NAMES[idx]) {
+          const label = Q_NAMES[idx];
+          btn.setAttribute('aria-label', label);
+          btn.setAttribute('title', label);
+        }
+      };
+      document.querySelectorAll('.amb-tab').forEach(b => setLabels(b, +b.dataset.a));
+      document.querySelectorAll('.jc-q-btn').forEach(b => setLabels(b, +b.dataset.value));
+    }
+    initA11yLabels();
+
     update();
   </script>
 </body>
