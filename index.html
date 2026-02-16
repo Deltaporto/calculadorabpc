@@ -1341,6 +1341,10 @@
       <button class="btn btn-gold" id="btnPadrao"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-chart"></use></svg>Aplicar Padrão Médio Social</button>
       <button class="btn btn-outline" id="btnLimpar"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-trash"></use></svg>Limpar</button>
       <label class="toggle-label">
+        <input type="checkbox" id="togglePadraoOverwrite"><span class="toggle-switch"></span><svg class="ui-icon sm" aria-hidden="true"><use href="#i-swap"></use></svg>
+        Sobrescrever domínios preenchidos
+      </label>
+      <label class="toggle-label">
         <input type="checkbox" id="toggleImpedimento"><span class="toggle-switch"></span><svg class="ui-icon sm" aria-hidden="true"><use href="#i-alert"></use></svg>
         Impedimento &lt; 2 anos
       </label>
@@ -1526,11 +1530,14 @@
     // ============ STATE ============
     const state = {};
     [...DOM_AMB, ...DOM_CORPO, ...DOM_ATIV_M, ...DOM_ATIV_S].forEach(d => state[d.id] = 0);
+    const domainNameById = [...DOM_AMB, ...DOM_CORPO, ...DOM_ATIV_M, ...DOM_ATIV_S]
+      .reduce((acc, d) => { acc[d.id] = d.name; return acc; }, {});
     const CHILD_AGE_LIMIT_MONTHS = 192;
     let progDesfav = false, estrMaior = false, impedimento = false, crianca = false, idadeMeses = CHILD_AGE_LIMIT_MONTHS, idadeValor = 15, idadeUnidade = 'anos';
     let savedINSS = null;
     let currentAmbTab = 0;
     const childDomainBackup = {};
+    const userFilledDomains = new Set();
 
     // ============ CALCULATION ============
     function pctToQ(pct) {
@@ -1702,6 +1709,7 @@
       group.querySelectorAll('.note-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       state[domain] = val;
+      userFilledDomains.add(domain);
       update();
     });
 
@@ -1804,11 +1812,47 @@
     // Padrão Médio Social
     document.getElementById('btnPadrao').addEventListener('click', () => {
       const padrao = { e1: 2, e2: 2, e3: 2, e4: 1, e5: 2, d6: 3, d7: 2, d8: 3, d9: 3 };
-      Object.entries(padrao).forEach(([id, v]) => {
+      const padraoEntries = Object.entries(padrao);
+      const overwriteFilled = document.getElementById('togglePadraoOverwrite').checked;
+      let skippedByAgeCut = 0;
+      const eligibleEntries = padraoEntries.filter(([id]) => {
         if (crianca) {
           const d = [...DOM_ATIV_M, ...DOM_ATIV_S].find(x => x.id === id);
-          if (d && idadeMeses < d.cut) return;
+          if (d && idadeMeses < d.cut) { skippedByAgeCut++; return false; }
         }
+        return true;
+      });
+      const manuallyFilledEligible = eligibleEntries.filter(([id]) => userFilledDomains.has(id));
+      const entriesToApply = overwriteFilled
+        ? eligibleEntries
+        : eligibleEntries.filter(([id]) => !userFilledDomains.has(id));
+
+      if (!eligibleEntries.length) {
+        alert('Padrão Médio Social não aplicado: nenhum domínio está elegível em razão dos pontos de corte etários.');
+        return;
+      }
+
+      if (!entriesToApply.length) {
+        alert('Padrão Médio Social não aplicado: todos os domínios elegíveis já foram preenchidos manualmente e a sobrescrita está desativada.');
+        return;
+      }
+
+      if (!overwriteFilled && manuallyFilledEligible.length > 0) {
+        const appliedList = entriesToApply.map(([id]) => `${id.toUpperCase()} (${domainNameById[id]})`).join(', ');
+        const confirmMessage = [
+          'Foram encontrados domínios do Padrão Médio Social já preenchidos manualmente.',
+          '',
+          'Como a opção "Sobrescrever domínios preenchidos" está desativada, esses domínios serão preservados.',
+          `Serão atualizados ${entriesToApply.length} domínio(s):`,
+          appliedList,
+          '',
+          `Domínios manuais preservados: ${manuallyFilledEligible.length}.`,
+          `Domínios não aplicáveis por ponto de corte etário: ${skippedByAgeCut}.`
+        ].join('\n');
+        if (!window.confirm(confirmMessage)) return;
+      }
+
+      entriesToApply.forEach(([id, v]) => {
         state[id] = v;
         const btns = document.querySelectorAll(`[data-domain="${id}"] .note-btn`);
         btns.forEach(b => { b.classList.remove('active'); if (+b.dataset.value === v) b.classList.add('active') });
@@ -1820,10 +1864,12 @@
     document.getElementById('btnLimpar').addEventListener('click', () => {
       Object.keys(state).forEach(k => state[k] = 0);
       Object.keys(childDomainBackup).forEach(k => delete childDomainBackup[k]);
+      userFilledDomains.clear();
       progDesfav = false; estrMaior = false; impedimento = false;
       crianca = false; idadeValor = 15; idadeUnidade = 'anos'; idadeMeses = CHILD_AGE_LIMIT_MONTHS;
       document.getElementById('toggleProg').checked = false;
       document.getElementById('toggleEstr').checked = false;
+      document.getElementById('togglePadraoOverwrite').checked = false;
       document.getElementById('toggleImpedimento').checked = false;
       document.getElementById('toggleMenor16').checked = false;
       document.getElementById('inputIdade').value = idadeValor;
