@@ -2696,14 +2696,15 @@
               </div>
               <div class="jc-inline-note" id="jcCorpoResultSummary">Resultado de Funções do Corpo aguardando definição.</div>
             </div>
-            <div class="jc-field">
+            <div class="jc-field" id="jcHasAtivMedField">
               <div class="jc-field-title">Perícia médica trouxe elementos para requalificar Atividades e Participação?</div>
               <div class="jc-segmented" id="jcHasAtivMedButtons">
                 <button class="jc-seg-btn" data-value="sim">Sim</button>
                 <button class="jc-seg-btn" data-value="nao">Não</button>
               </div>
-              <p class="jc-field-helper">Se “Sim”, escolha o modo de requalificação abaixo.</p>
+              <p class="jc-field-helper" id="jcHasAtivMedHint">Se “Sim”, escolha o modo de requalificação abaixo.</p>
             </div>
+            <div class="jc-inline-note hidden" id="jcAtivNotApplicableNote"></div>
             <div class="jc-field hidden" id="jcAtivMedWrap">
               <div class="jc-field-title">Modo de requalificação de Atividades e Participação (médico judicial)</div>
               <div class="jc-segmented" id="jcAtivModeButtons">
@@ -2954,7 +2955,7 @@
       },
       adminBase: null,
       med: createEmptyJudicialMed(),
-      triage: { ready: false, status: 'pending', testeA: null, testeB: null, reason: '' },
+      triage: { ready: false, status: 'pending', testeA: null, testeB: null, reason: '', route: null },
       ui: { activeStep: 1, progressPct: 25, blockReason: '' }
     };
     let currentAmbTab = 0;
@@ -3047,6 +3048,67 @@
         return computed ? computed.q : null;
       }
       return null;
+    }
+
+    function getAtivReclassContext(corpoFlowParam = null) {
+      const base = judicialControl.adminBase;
+      const med = judicialControl.med;
+      if (!base) {
+        return {
+          showQuestion: false,
+          relevant: false,
+          code: 'sem_base',
+          reason: 'Fixe a base administrativa para avaliar a relevância da reclassificação de Atividades e Participação.'
+        };
+      }
+      if (med.impedimentoLP == null) {
+        return {
+          showQuestion: false,
+          relevant: false,
+          code: 'aguardando_impedimento',
+          reason: 'Defina primeiro se há impedimento de longo prazo.'
+        };
+      }
+      const corpoFlow = corpoFlowParam || resolveCorpoJudFlow();
+      if (!corpoFlow.ready || corpoFlow.q == null) {
+        return {
+          showQuestion: false,
+          relevant: false,
+          code: 'aguardando_funcoes',
+          reason: 'Defina primeiro o resultado judicial de Funções do Corpo.'
+        };
+      }
+      if (med.impedimentoLP === false) {
+        return {
+          showQuestion: false,
+          relevant: false,
+          code: 'sem_impedimento_lp',
+          reason: 'Pergunta não aplicável: não houve reconhecimento de impedimento de longo prazo.'
+        };
+      }
+      if (corpoFlow.q <= 1) {
+        return {
+          showQuestion: false,
+          relevant: false,
+          code: 'corpo_nl',
+          reason: 'Pergunta não aplicável: com Funções do Corpo judiciais em N/L, reclassificar Atividades e Participação não altera o desfecho da Tabela Conclusiva.'
+        };
+      }
+      const verificacaoComBaseAdministrativa = tabelaConclusiva(base.amb, base.ativ, corpoFlow.q);
+      if (verificacaoComBaseAdministrativa) {
+        return {
+          showQuestion: false,
+          relevant: false,
+          code: 'verificacao_adm_positiva',
+          reason: 'Pergunta não aplicável: com manutenção de Fatores Ambientais e Atividades e Participação administrativas, o resultado já é positivo.'
+        };
+      }
+      return {
+        showQuestion: true,
+        relevant: true,
+        code: 'relevante',
+        reason: 'A reclassificação de Atividades e Participação pode ser decisiva neste cenário; informe se a perícia médica trouxe elementos.'
+      };
     }
 
     function isCorpoReasonBlocked(reason) {
@@ -3634,6 +3696,8 @@
       const corpoFlow = resolveCorpoJudFlow();
       m.corpoJud = corpoFlow.q;
       if (!corpoFlow.ready || corpoFlow.q == null) return corpoFlow.reason;
+      const ativContext = getAtivReclassContext(corpoFlow);
+      if (!ativContext.showQuestion) return '';
       if (m.hasAtivMed == null) return 'Informe se a perícia médica trouxe elementos para requalificar Atividades e Participação.';
       if (!m.hasAtivMed) return '';
       if (m.ativMode == null) return 'Selecione o modo de requalificação de Atividades e Participação (simples ou completa).';
@@ -3654,8 +3718,11 @@
       return !getMedBlockingReason();
     }
 
-    function getAtivMedTraceLine() {
+    function getAtivMedTraceLine(ativContext = null) {
       const m = judicialControl.med;
+      if (ativContext && !ativContext.showQuestion) {
+        return `<div class="jc-trace-line"><strong>Reclassificação médica de Atividades e Participação</strong>: não aplicável. ${ativContext.reason}</div>`;
+      }
       if (m.hasAtivMed !== true) {
         return `<div class="jc-trace-line"><strong>Origem da reclassificação médica de Atividades e Participação</strong>: não aplicada (sem elementos médicos para requalificar Atividades e Participação).</div>`;
       }
@@ -3681,19 +3748,20 @@
 
     function computeJudicialTriage() {
       if (!judicialControl.adminBase) {
-        return { ready: false, status: 'pending', testeA: null, testeB: null, reason: 'Fixe a base administrativa para iniciar a triagem.' };
+        return { ready: false, status: 'pending', testeA: null, testeB: null, reason: 'Fixe a base administrativa para iniciar a triagem.', route: 'pendente_base' };
       }
       if (isAdminDraftDirty()) {
-        return { ready: false, status: 'pending', testeA: null, testeB: null, reason: 'Há alterações no rascunho administrativo. Refixe a base antes da triagem.' };
+        return { ready: false, status: 'pending', testeA: null, testeB: null, reason: 'Há alterações no rascunho administrativo. Refixe a base antes da triagem.', route: 'pendente_refixacao' };
       }
       const base = judicialControl.adminBase;
       const med = judicialControl.med;
-      const medBlock = getMedBlockingReason();
       const corpoFlow = resolveCorpoJudFlow();
       const corpoJud = corpoFlow.q;
+      const ativContext = getAtivReclassContext(corpoFlow);
+      const medBlock = getMedBlockingReason();
       const ativMedResolved = resolveAtivMed();
       if (medBlock) {
-        return { ready: false, status: 'pending', testeA: null, testeB: null, reason: medBlock };
+        return { ready: false, status: 'pending', testeA: null, testeB: null, reason: medBlock, route: 'pendente_medica' };
       }
 
       if (med.impedimentoLP === false) {
@@ -3702,7 +3770,8 @@
           status: 'dispensa',
           testeA: null,
           testeB: null,
-          reason: 'A perícia médica judicial não reconheceu impedimento de longo prazo; nesta triagem, a avaliação social judicial é dispensável.'
+          reason: 'A perícia médica judicial não reconheceu impedimento de longo prazo; nesta triagem, a avaliação social judicial é dispensável.',
+          route: 'sem_impedimento_lp'
         };
       }
 
@@ -3716,12 +3785,24 @@
           status: 'dispensa',
           testeA,
           testeB: null,
-          reason: `Resultado positivo na verificação com manutenção de Fatores Ambientais e Atividades e Participação administrativas, ${modeLabel}.`
+          reason: `Resultado positivo na verificação com manutenção de Fatores Ambientais e Atividades e Participação administrativas, ${modeLabel}.`,
+          route: 'verificacao_administrativa_positiva'
+        };
+      }
+
+      if (!ativContext.showQuestion && ativContext.code === 'corpo_nl') {
+        return {
+          ready: true,
+          status: 'dispensa',
+          testeA,
+          testeB: null,
+          reason: 'Com Funções do Corpo judiciais em N/L, a reclassificação de Atividades e Participação não altera o desfecho da Tabela Conclusiva; a avaliação social judicial é dispensável para esta triagem.',
+          route: 'corpo_nl_irrelevante'
         };
       }
 
       let testeB = null;
-      if (med.hasAtivMed) {
+      if (ativContext.showQuestion && med.hasAtivMed) {
         testeB = tabelaConclusiva(base.amb, ativMedResolved, corpoJud);
         if (testeB) {
           const modo = med.ativMode === 'completa' ? 'modo completo (fórmula d1–d9)' : 'modo simples';
@@ -3730,7 +3811,8 @@
             status: 'dispensa',
             testeA,
             testeB,
-            reason: `Resultado positivo na verificação com reclassificação médica de Atividades e Participação (${modo}).`
+            reason: `Resultado positivo na verificação com reclassificação médica de Atividades e Participação (${modo}).`,
+            route: 'verificacao_atividades_medicas_positiva'
           };
         }
       }
@@ -3740,7 +3822,8 @@
         status: 'necessaria',
         testeA,
         testeB,
-        reason: 'A prova médica isolada não produziu resultado positivo nas verificações disponíveis; recomenda-se avaliação social judicial com potencial de requalificação de Fatores Ambientais e Atividades e Participação.'
+        reason: 'A prova médica isolada não produziu resultado positivo nas verificações disponíveis; recomenda-se avaliação social judicial com potencial de requalificação de Fatores Ambientais e Atividades e Participação.',
+        route: 'avaliacao_social_necessaria'
       };
     }
 
@@ -3840,14 +3923,14 @@
       };
       judicialControl.adminBase = null;
       judicialControl.med = createEmptyJudicialMed();
-      judicialControl.triage = { ready: false, status: 'pending', testeA: null, testeB: null, reason: '' };
+      judicialControl.triage = { ready: false, status: 'pending', testeA: null, testeB: null, reason: '', route: null };
       judicialControl.ui = { activeStep: 1, progressPct: 25, blockReason: '' };
       clearJudicialTextArea();
     }
 
     function clearJudicialMedicalAndTriage() {
       judicialControl.med = createEmptyJudicialMed();
-      judicialControl.triage = { ready: false, status: 'pending', testeA: null, testeB: null, reason: '' };
+      judicialControl.triage = { ready: false, status: 'pending', testeA: null, testeB: null, reason: '', route: null };
       clearJudicialTextArea();
       renderJudicialControl();
       document.getElementById('copyFeedbackControle').textContent = judicialControl.adminBase
@@ -3872,7 +3955,6 @@
         syncQButtonGroup(`jcAtiv${id.toUpperCase()}Buttons`, judicialControl.med.ativMedDomains[id]);
       });
       syncSegmentedGroup('jcImpedimentoButtons', judicialControl.med.impedimentoLP == null ? null : (judicialControl.med.impedimentoLP ? 'sim' : 'nao'));
-      syncSegmentedGroup('jcHasAtivMedButtons', judicialControl.med.hasAtivMed == null ? null : (judicialControl.med.hasAtivMed ? 'sim' : 'nao'));
       syncSegmentedGroup('jcAtivModeButtons', judicialControl.med.ativMode);
       let corpoFlow = resolveCorpoJudFlow();
       judicialControl.med.corpoJud = corpoFlow.q;
@@ -3923,7 +4005,27 @@
         const pendencia = !corpoFlow.ready ? ` Pendência: ${corpoFlow.reason}` : '';
         corpoSummary.textContent = `Resultado judicial de Funções do Corpo: ${Q_LABELS[corpoFlow.q]} (${Q_NAMES[corpoFlow.q]}), por ${motivo}.${extra}${pendencia}`;
       }
-      const showAtivMed = judicialControl.med.hasAtivMed === true;
+      const ativContext = getAtivReclassContext(corpoFlow);
+      const hasAtivField = document.getElementById('jcHasAtivMedField');
+      const hasAtivHint = document.getElementById('jcHasAtivMedHint');
+      const ativNotApplicableNote = document.getElementById('jcAtivNotApplicableNote');
+      if (!ativContext.showQuestion) {
+        judicialControl.med.hasAtivMed = null;
+        resetAtivMedReclassFields();
+      }
+      hasAtivField.classList.toggle('hidden', !ativContext.showQuestion);
+      if (ativContext.showQuestion) {
+        hasAtivHint.textContent = `${ativContext.reason} Se “Sim”, escolha o modo de requalificação abaixo.`;
+        ativNotApplicableNote.classList.add('hidden');
+        ativNotApplicableNote.textContent = '';
+      } else {
+        hasAtivHint.textContent = 'Se “Sim”, escolha o modo de requalificação abaixo.';
+        const showAtivContextNote = ['sem_impedimento_lp', 'corpo_nl', 'verificacao_adm_positiva'].includes(ativContext.code);
+        ativNotApplicableNote.textContent = showAtivContextNote ? ativContext.reason : '';
+        ativNotApplicableNote.classList.toggle('hidden', !showAtivContextNote);
+      }
+      syncSegmentedGroup('jcHasAtivMedButtons', judicialControl.med.hasAtivMed == null ? null : (judicialControl.med.hasAtivMed ? 'sim' : 'nao'));
+      const showAtivMed = ativContext.showQuestion && judicialControl.med.hasAtivMed === true;
       const isSimple = showAtivMed && judicialControl.med.ativMode === 'simples';
       const isComplete = showAtivMed && judicialControl.med.ativMode === 'completa';
       document.getElementById('jcAtivMedWrap').classList.toggle('hidden', !showAtivMed);
@@ -3990,9 +4092,16 @@
       const testALine = m.impedimentoLP
         ? `<div class="jc-trace-line"><strong>Verificação com manutenção de Atividades e Participação administrativas</strong>: tabela(Fatores Ambientais ${Q_LABELS[b.amb]}, Atividades e Participação ${Q_LABELS[b.ativ]}, Funções do Corpo judiciais ${Q_LABELS[corpoFlow.q]}) = <strong>${triage.testeA ? 'Sim' : 'Não'}</strong>.</div>`
         : `<div class="jc-trace-line"><strong>Verificação com manutenção de Atividades e Participação administrativas</strong>: não aplicável, pois não houve reconhecimento de impedimento de longo prazo.</div>`;
-      const testBLine = m.impedimentoLP && m.hasAtivMed && ativMedResolved != null
-        ? `<div class="jc-trace-line"><strong>Verificação com reclassificação médica de Atividades e Participação</strong>: tabela(Fatores Ambientais ${Q_LABELS[b.amb]}, Atividades e Participação médicas ${Q_LABELS[ativMedResolved]}, Funções do Corpo judiciais ${Q_LABELS[corpoFlow.q]}) = <strong>${triage.testeB ? 'Sim' : 'Não'}</strong>.</div>`
-        : `<div class="jc-trace-line"><strong>Verificação com reclassificação médica de Atividades e Participação</strong>: ${m.hasAtivMed ? 'aguardando definição válida do qualificador de Atividades e Participação.' : 'não aplicável (sem elementos médicos para requalificar Atividades e Participação).'}</div>`;
+      let testBLine = '';
+      if (!ativContext.showQuestion) {
+        testBLine = `<div class="jc-trace-line"><strong>Verificação com reclassificação médica de Atividades e Participação</strong>: não aplicável. ${ativContext.reason}</div>`;
+      } else if (m.hasAtivMed && ativMedResolved != null) {
+        testBLine = `<div class="jc-trace-line"><strong>Verificação com reclassificação médica de Atividades e Participação</strong>: tabela(Fatores Ambientais ${Q_LABELS[b.amb]}, Atividades e Participação médicas ${Q_LABELS[ativMedResolved]}, Funções do Corpo judiciais ${Q_LABELS[corpoFlow.q]}) = <strong>${triage.testeB ? 'Sim' : 'Não'}</strong>.</div>`;
+      } else if (m.hasAtivMed === false) {
+        testBLine = '<div class="jc-trace-line"><strong>Verificação com reclassificação médica de Atividades e Participação</strong>: não aplicada, pois a perícia médica não trouxe elementos para reclassificação.</div>';
+      } else {
+        testBLine = '<div class="jc-trace-line"><strong>Verificação com reclassificação médica de Atividades e Participação</strong>: aguardando definição sobre existência de elementos médicos.</div>';
+      }
       const routeLine = triage.status === 'necessaria'
         ? `<div class="jc-trace-line"><strong>Rotas de reversão pela avaliação social judicial</strong>: requalificação de <strong>Fatores Ambientais</strong> e/ou <strong>Atividades e Participação</strong>.</div>`
         : '';
@@ -4000,7 +4109,7 @@
         `<div class="jc-trace-line"><strong>Base administrativa fixada</strong>: Fatores Ambientais ${Q_LABELS[b.amb]} · Atividades e Participação ${Q_LABELS[b.ativ]} · Funções do Corpo ${Q_LABELS[b.corpo]}.</div>`,
         `<div class="jc-trace-line"><strong>Perícia médica judicial</strong>: impedimento de longo prazo = <strong>${m.impedimentoLP ? 'Sim' : 'Não'}</strong>.</div>`,
         getCorpoFlowTraceLine(corpoFlow),
-        getAtivMedTraceLine(),
+        getAtivMedTraceLine(ativContext),
         testALine,
         testBLine,
         `<div class="jc-trace-line">${triage.reason}</div>`,
@@ -4050,10 +4159,12 @@
 
       let paragrafo2 = '';
       if (triage.status === 'dispensa') {
-        if (m.impedimentoLP === false) {
+        if (triage.route === 'sem_impedimento_lp' || m.impedimentoLP === false) {
           paragrafo2 = 'Em perícia médica judicial, não se reconheceu impedimento de longo prazo, circunstância que, por si, afasta a utilidade de nova avaliação social judicial para reversão do resultado nesta triagem.';
-        } else if (triage.testeA) {
+        } else if (triage.route === 'verificacao_administrativa_positiva' || triage.testeA) {
           paragrafo2 = `Em perícia médica judicial, reconheceu-se impedimento de longo prazo e ${corpoPart}${ativPart}. Aplicada essa reclassificação na verificação com manutenção de Fatores Ambientais e Atividades e Participação administrativas, a Tabela Conclusiva (Anexo IV da Portaria Conjunta MDS/INSS nº 2/2015, item ${testeAItem}) passou a resultado positivo, suficiente para o enquadramento sem necessidade de nova intervenção social no caso concreto.`;
+        } else if (triage.route === 'corpo_nl_irrelevante') {
+          paragrafo2 = `Em perícia médica judicial, reconheceu-se impedimento de longo prazo, porém o resultado judicial de Funções do Corpo permaneceu em grau ${qWord(corpoFlow.q)}. Nessa configuração, a reclassificação de Atividades e Participação não altera o desfecho da Tabela Conclusiva (item ${testeAItem}), razão pela qual a avaliação social judicial é dispensável para esta triagem.`;
         } else {
           paragrafo2 = `Em perícia médica judicial, reconheceu-se impedimento de longo prazo e ${corpoPart}${ativPart}. Na verificação com manutenção de Fatores Ambientais e Atividades e Participação administrativas (item ${testeAItem}), o resultado permaneceu negativo; contudo, na verificação com reclassificação médica de Atividades e Participação (item ${testeBItem}), houve resultado positivo, suficiente para o enquadramento sem necessidade de nova intervenção social no caso concreto.`;
         }
@@ -4266,13 +4377,13 @@
       renderJudicialControl();
     });
     bindQGroup('jcAtivMedSimpleButtons', value => {
-      if (!judicialControl.adminBase) return;
+      if (!judicialControl.adminBase || judicialControl.med.hasAtivMed !== true || judicialControl.med.ativMode !== 'simples') return;
       judicialControl.med.ativMedSimple = value;
       clearJudicialTextArea();
     });
     JC_ATIV_RECLASS_DOMAINS.forEach(id => {
       bindQGroup(`jcAtiv${id.toUpperCase()}Buttons`, value => {
-        if (!judicialControl.adminBase) return;
+        if (!judicialControl.adminBase || judicialControl.med.hasAtivMed !== true || judicialControl.med.ativMode !== 'completa') return;
         judicialControl.med.ativMedDomains[id] = value;
         judicialControl.med.ativMedComputed = computeAtivFromDomains(judicialControl.med.ativMedDomains);
         clearJudicialTextArea();
@@ -4298,6 +4409,8 @@
     });
     bindSegmented('jcHasAtivMedButtons', value => {
       if (!judicialControl.adminBase) return;
+      const ativContext = getAtivReclassContext(resolveCorpoJudFlow());
+      if (!ativContext.showQuestion) return;
       judicialControl.med.hasAtivMed = value === 'sim';
       if (!judicialControl.med.hasAtivMed) resetAtivMedReclassFields();
       clearJudicialTextArea();
