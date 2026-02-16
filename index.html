@@ -72,6 +72,37 @@
       font-weight: 700
     }
 
+    .icon-sprite {
+      position: absolute;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+      pointer-events: none
+    }
+
+    .ui-icon {
+      width: 1.05em;
+      height: 1.05em;
+      flex-shrink: 0;
+      display: inline-block;
+      vertical-align: -.12em;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round
+    }
+
+    .ui-icon.sm {
+      width: .95em;
+      height: .95em
+    }
+
+    .ui-icon.lg {
+      width: 2.1rem;
+      height: 2.1rem
+    }
+
     .app {
       max-width: 1400px;
       margin: 0 auto;
@@ -95,7 +126,9 @@
     }
 
     header .badge {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       background: var(--gold);
       color: var(--navy);
       font-size: .7rem;
@@ -105,6 +138,11 @@
       margin-bottom: 8px;
       letter-spacing: .05em;
       text-transform: uppercase
+    }
+
+    header .badge .ui-icon {
+      width: .86em;
+      height: .86em
     }
 
     header p {
@@ -158,6 +196,11 @@
       display: inline-flex;
       align-items: center;
       gap: 6px
+    }
+
+    .btn .ui-icon {
+      width: .95em;
+      height: .95em
     }
 
     .btn-gold {
@@ -255,7 +298,20 @@
     }
 
     .panel-icon {
-      font-size: 1.6rem
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--panel-color);
+      background: color-mix(in srgb, var(--panel-color) 14%, transparent);
+      border: 1px solid color-mix(in srgb, var(--panel-color) 28%, transparent)
+    }
+
+    .panel-icon .ui-icon {
+      width: 1.35rem;
+      height: 1.35rem
     }
 
     .panel-header h2 {
@@ -906,8 +962,34 @@
     }
 
     .decision-icon {
-      font-size: 2.2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 4px
+    }
+
+    .decision.deferido .decision-icon {
+      color: #065F46
+    }
+
+    .decision.indeferido .decision-icon {
+      color: #991B1B
+    }
+
+    .decision.impedimento .decision-icon {
+      color: #92400E
+    }
+
+    [data-theme="dark"] .decision.deferido .decision-icon {
+      color: #6EE7B7
+    }
+
+    [data-theme="dark"] .decision.indeferido .decision-icon {
+      color: #FCA5A5
+    }
+
+    [data-theme="dark"] .decision.impedimento .decision-icon {
+      color: #FCD34D
     }
 
     .decision-label {
@@ -1074,7 +1156,16 @@
     .comp-result {
       font-family: 'DM Sans', sans-serif;
       font-weight: 700;
-      font-size: 1rem
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px
+    }
+
+    .comp-result .ui-icon {
+      width: .95em;
+      height: .95em
     }
 
     .comp-result.yes {
@@ -1134,13 +1225,107 @@
 
 <body>
   <div class="app">
+    <svg class="icon-sprite" aria-hidden="true">
+      <symbol id="i-balance" viewBox="0 0 24 24">
+        <path d="M4 7h16" />
+        <path d="M12 7v10" />
+        <path d="M8 17h8" />
+        <path d="M5 7 2.5 11h5z" />
+        <path d="M19 7 16.5 11h5z" />
+        <path d="M2.5 11c0 1.7 1.3 3 3 3s3-1.3 3-3" />
+        <path d="M16.5 11c0 1.7 1.3 3 3 3s3-1.3 3-3" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20 14.5A8 8 0 1 1 9.5 4 6.5 6.5 0 0 0 20 14.5z" />
+      </symbol>
+      <symbol id="i-child" viewBox="0 0 24 24">
+        <rect x="2.5" y="5.5" width="19" height="13" rx="2" />
+        <circle cx="8.5" cy="11.2" r="1.8" />
+        <path d="M5.9 15.4c.6-1.4 1.5-2.1 2.6-2.1s2 .7 2.6 2.1" />
+        <path d="M14 10h4.5" />
+        <path d="M14 13h4.5" />
+      </symbol>
+      <symbol id="i-chart" viewBox="0 0 24 24">
+        <path d="M4 20h16" />
+        <rect x="5" y="12" width="3" height="6" rx="1" />
+        <rect x="10.5" y="9" width="3" height="9" rx="1" />
+        <rect x="16" y="6" width="3" height="12" rx="1" />
+      </symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24">
+        <path d="M4 7h16" />
+        <path d="M9 7V5h6v2" />
+        <path d="M7 7l1 12h8l1-12" />
+        <path d="M10 10v6" />
+        <path d="M14 10v6" />
+      </symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24">
+        <path d="M12 3 2.8 19h18.4L12 3z" />
+        <path d="M12 9v4" />
+        <circle cx="12" cy="15.2" r=".9" fill="currentColor" stroke="none" />
+      </symbol>
+      <symbol id="i-home" viewBox="0 0 24 24">
+        <path d="M3.5 10.5 12 4l8.5 6.5" />
+        <path d="M5 9.8V20h14V9.8" />
+        <path d="M10 20v-5h4v5" />
+      </symbol>
+      <symbol id="i-stethoscope" viewBox="0 0 24 24">
+        <path d="M7 4v5a3 3 0 0 0 6 0V4" />
+        <path d="M7 6h6" />
+        <path d="M13 10v3a4 4 0 0 0 8 0v-2" />
+        <circle cx="21" cy="10.5" r="1.5" />
+      </symbol>
+      <symbol id="i-network" viewBox="0 0 24 24">
+        <circle cx="6" cy="12" r="2" />
+        <circle cx="18" cy="7" r="2" />
+        <circle cx="18" cy="17" r="2" />
+        <path d="M8 12h5" />
+        <path d="M13 12 16.2 8.8" />
+        <path d="M13 12 16.2 15.2" />
+      </symbol>
+      <symbol id="i-save" viewBox="0 0 24 24">
+        <path d="M5 4h11l3 3v13H5z" />
+        <path d="M8 4v6h8V6.5L13.5 4z" />
+        <rect x="8" y="14" width="8" height="5" rx="1" />
+      </symbol>
+      <symbol id="i-document" viewBox="0 0 24 24">
+        <path d="M7 3h7l4 4v14H7z" />
+        <path d="M14 3v4h4" />
+        <path d="M10 12h6" />
+        <path d="M10 15h6" />
+      </symbol>
+      <symbol id="i-close" viewBox="0 0 24 24">
+        <path d="M6 6 18 18" />
+        <path d="M18 6 6 18" />
+      </symbol>
+      <symbol id="i-clipboard" viewBox="0 0 24 24">
+        <rect x="6" y="5" width="12" height="16" rx="2" />
+        <path d="M9 5.5h6V4a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1z" />
+        <path d="M9 10h6" />
+        <path d="M9 13h6" />
+      </symbol>
+      <symbol id="i-check-circle" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" />
+        <path d="m8 12 2.6 2.7L16.5 9" />
+      </symbol>
+      <symbol id="i-x-circle" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" />
+        <path d="m9 9 6 6" />
+        <path d="m15 9-6 6" />
+      </symbol>
+      <symbol id="i-swap" viewBox="0 0 24 24">
+        <path d="M4 8h11" />
+        <path d="m12 5 3 3-3 3" />
+        <path d="M20 16H9" />
+        <path d="m12 13-3 3 3 3" />
+      </symbol>
+    </svg>
     <header>
-      <span class="badge">⚖️ BPC / LOAS</span>
+      <span class="badge"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-balance"></use></svg>BPC / LOAS</span>
       <h1>Calculadora Biopsicossocial</h1>
       <p>Portaria Conjunta MDS/INSS nº 2/2015 · Tabela Conclusiva (Anexo IV)</p>
       <div class="header-row">
-        <label><input type="checkbox" id="toggleDark"> 🌙 Modo escuro</label>
-        <label><input type="checkbox" id="toggleMenor16"> 👶 Idade inferior a 16 anos</label>
+        <label><input type="checkbox" id="toggleDark"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-moon"></use></svg>Modo escuro</label>
+        <label><input type="checkbox" id="toggleMenor16"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-child"></use></svg>Idade inferior a 16 anos</label>
         <span class="idade-input hidden" id="idadeWrap">Idade:
           <input type="number" id="inputIdade" min="0" max="15" step="1" value="15" inputmode="numeric">
           <select id="inputIdadeUnidade">
@@ -1153,11 +1338,11 @@
     </header>
 
     <div class="toolbar">
-      <button class="btn btn-gold" id="btnPadrao">📊 Aplicar Padrão Médio Social</button>
-      <button class="btn btn-outline" id="btnLimpar">🗑️ Limpar</button>
+      <button class="btn btn-gold" id="btnPadrao"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-chart"></use></svg>Aplicar Padrão Médio Social</button>
+      <button class="btn btn-outline" id="btnLimpar"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-trash"></use></svg>Limpar</button>
       <label class="toggle-label">
-        <input type="checkbox" id="toggleImpedimento"><span class="toggle-switch"></span>
-        ⚠️ Impedimento &lt; 2 anos
+        <input type="checkbox" id="toggleImpedimento"><span class="toggle-switch"></span><svg class="ui-icon sm" aria-hidden="true"><use href="#i-alert"></use></svg>
+        Impedimento &lt; 2 anos
       </label>
     </div>
 
@@ -1165,7 +1350,7 @@
       <!-- Panel Ambiente -->
       <section class="panel" style="--panel-color:#2563EB">
         <div class="panel-header">
-          <div class="panel-icon">🏠</div>
+          <div class="panel-icon"><svg class="ui-icon" aria-hidden="true"><use href="#i-home"></use></svg></div>
           <div>
             <h2>Fatores Ambientais</h2>
             <div class="sub">Avaliação Social · 5 domínios (e1–e5)</div>
@@ -1185,7 +1370,7 @@
       <!-- Panel Corpo -->
       <section class="panel" style="--panel-color:#DC2626">
         <div class="panel-header">
-          <div class="panel-icon">🩺</div>
+          <div class="panel-icon"><svg class="ui-icon" aria-hidden="true"><use href="#i-stethoscope"></use></svg></div>
           <div>
             <h2>Funções do Corpo</h2>
             <div class="sub">Avaliação Médica · 8 domínios (b1–b8)</div>
@@ -1208,7 +1393,7 @@
       <!-- Panel Atividades -->
       <section class="panel" style="--panel-color:#7C3AED">
         <div class="panel-header">
-          <div class="panel-icon">🤝</div>
+          <div class="panel-icon"><svg class="ui-icon" aria-hidden="true"><use href="#i-network"></use></svg></div>
           <div>
             <h2>Atividades e Participação</h2>
             <div class="sub">Misto · 9 domínios (d1–d9)</div>
@@ -1262,7 +1447,7 @@
               class="dot r"></span> Indeferido (Não)</span></div>
       </div>
       <div class="decision indeferido" id="decision">
-        <div class="decision-icon" id="decIcon">—</div>
+        <div class="decision-icon" id="decIcon"><svg class="ui-icon lg" aria-hidden="true"><use href="#i-alert"></use></svg></div>
         <div class="decision-label" id="decLabel">AGUARDANDO DADOS</div>
         <span class="decision-reason" id="decReason">Insira as notas nos domínios acima</span>
         <span class="decision-item" id="decItem"></span>
@@ -1270,9 +1455,9 @@
     </section>
 
     <div class="footer-actions">
-      <button class="btn btn-outline" id="btnSaveINSS">📸 Salvar</button>
-      <button class="btn btn-outline" id="btnGerarTexto">📝 Gerar texto padronizado</button>
-      <button class="btn btn-red hidden" id="btnClearComp">✕ Limpar comparação</button>
+      <button class="btn btn-outline" id="btnSaveINSS"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-save"></use></svg>Salvar</button>
+      <button class="btn btn-outline" id="btnGerarTexto"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-document"></use></svg>Gerar texto padronizado</button>
+      <button class="btn btn-red hidden" id="btnClearComp"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-close"></use></svg>Limpar comparação</button>
     </div>
     <div class="standard-text hidden" id="textoSection">
       <h3>Minuta Padronizada para Decisão</h3>
@@ -1280,7 +1465,7 @@
       <textarea id="textoPadrao" readonly></textarea>
       <div class="standard-text-actions">
         <span class="copy-feedback" id="copyFeedback"></span>
-        <button class="btn btn-outline" id="btnCopiarTexto">📋 Copiar texto</button>
+        <button class="btn btn-outline" id="btnCopiarTexto"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-clipboard"></use></svg>Copiar texto</button>
       </div>
     </div>
     <div class="comparison hidden" id="compSection">
@@ -1385,6 +1570,12 @@
       if (ativQ >= 3 && corpoQ >= 2) return `Atividades ${Q_LABELS[ativQ]} + Funções ${Q_LABELS[corpoQ]} — deferimento independente do Ambiente`;
       return `Corpo M + Atividades M + Ambiente ${Q_LABELS[ambQ]} (≥ G) — combinação deferida`;
     }
+    function iconMarkup(name, cls = 'ui-icon') {
+      return `<svg class="${cls}" aria-hidden="true"><use href="#i-${name}"></use></svg>`;
+    }
+    function setDecisionIcon(name) {
+      document.getElementById('decIcon').innerHTML = iconMarkup(name, 'ui-icon lg');
+    }
     function getItemNumber(amb, ativ, corpo) {
       // Items ordered: corpo C→N, for each corpo: ativ C→N, for each ativ: amb C→N
       const corpoOrder = [4, 3, 2, 1, 0], ativOrder = [4, 3, 2, 1, 0], ambOrder = [4, 3, 2, 1, 0];
@@ -1469,14 +1660,14 @@
       const item = getItemNumber(amb.q, ativ.q, corpo.q);
       if (impedimento) {
         dec.className = 'decision impedimento';
-        document.getElementById('decIcon').textContent = '⚠️';
+        setDecisionIcon('alert');
         document.getElementById('decLabel').textContent = 'INDEFERIDO';
         document.getElementById('decReason').textContent = 'Impedimento inferior a 2 anos — requisito não satisfeito';
         document.getElementById('decItem').textContent = 'Art. 20, §§ 2º e 10, Lei 8.742/93';
       } else {
         const yes = tabelaConclusiva(amb.q, ativ.q, corpo.q);
         dec.className = 'decision ' + (yes ? 'deferido' : 'indeferido');
-        document.getElementById('decIcon').textContent = yes ? '✅' : '❌';
+        setDecisionIcon(yes ? 'check-circle' : 'x-circle');
         document.getElementById('decLabel').textContent = yes ? 'DEFERIDO' : 'INDEFERIDO';
         const reason = getDecisionReason(amb.q, ativ.q, corpo.q, yes);
         document.getElementById('decReason').textContent = reason;
@@ -1665,18 +1856,18 @@
       if (!savedINSS) return;
       const s = savedINSS;
       document.getElementById('compINSSq').textContent = `Ambiente: ${Q_LABELS[s.amb]} · Atividades: ${Q_LABELS[s.ativ]} · Funções: ${Q_LABELS[s.corpo]}`;
-      document.getElementById('compINSSr').textContent = s.result ? '✅ DEFERIDO' : '❌ INDEFERIDO';
+      document.getElementById('compINSSr').innerHTML = `${iconMarkup(s.result ? 'check-circle' : 'x-circle', 'ui-icon sm')} ${s.result ? 'DEFERIDO' : 'INDEFERIDO'}`;
       document.getElementById('compINSSr').className = 'comp-result ' + (s.result ? 'yes' : 'no');
       const curResult = impedimento ? false : tabelaConclusiva(amb.q, ativ.q, corpo.q);
       document.getElementById('compPERq').textContent = `Ambiente: ${Q_LABELS[amb.q]} · Atividades: ${Q_LABELS[ativ.q]} · Funções: ${Q_LABELS[corpo.q]}`;
-      document.getElementById('compPERr').textContent = curResult ? '✅ DEFERIDO' : '❌ INDEFERIDO';
+      document.getElementById('compPERr').innerHTML = `${iconMarkup(curResult ? 'check-circle' : 'x-circle', 'ui-icon sm')} ${curResult ? 'DEFERIDO' : 'INDEFERIDO'}`;
       document.getElementById('compPERr').className = 'comp-result ' + (curResult ? 'yes' : 'no');
       let changes = [];
       if (s.amb !== amb.q) changes.push(`Ambiente: ${Q_LABELS[s.amb]}→${Q_LABELS[amb.q]}`);
       if (s.ativ !== ativ.q) changes.push(`Atividades: ${Q_LABELS[s.ativ]}→${Q_LABELS[ativ.q]}`);
       if (s.corpo !== corpo.q) changes.push(`Funções: ${Q_LABELS[s.corpo]}→${Q_LABELS[corpo.q]}`);
-      if (!s.result && curResult) changes.push('🔄 Resultado REVERTIDO: Indeferido → Deferido');
-      else if (s.result && !curResult) changes.push('🔄 Resultado REVERTIDO: Deferido → Indeferido');
+      if (!s.result && curResult) changes.push(`${iconMarkup('swap', 'ui-icon sm')} Resultado REVERTIDO: Indeferido → Deferido`);
+      else if (s.result && !curResult) changes.push(`${iconMarkup('swap', 'ui-icon sm')} Resultado REVERTIDO: Deferido → Indeferido`);
       document.getElementById('compChange').innerHTML = changes.length ? changes.join(' · ') : 'Sem alteração no resultado';
     }
 
