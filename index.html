@@ -4184,22 +4184,28 @@
       output.value = [baseIntro, reconhecimento, paragrafo2, paragrafo3].filter(Boolean).join('\n\n');
     }
 
-    async function copyJudicialControlText() {
-      const feedback = document.getElementById('copyFeedbackControle');
-      const area = document.getElementById('textoControleJudicial');
+    async function copyToClipboard(area, feedback) {
       if (!area.value.trim()) {
         feedback.textContent = 'Gere o texto antes de copiar.';
         return;
       }
       try {
+        if (!navigator.clipboard || !navigator.clipboard.writeText) {
+          throw new Error('Clipboard API not available');
+        }
         await navigator.clipboard.writeText(area.value);
         feedback.textContent = 'Texto copiado para a área de transferência.';
       } catch (err) {
         area.focus();
         area.select();
-        document.execCommand('copy');
         feedback.textContent = 'Não foi possível copiar automaticamente. Use Ctrl+C.';
       }
+    }
+
+    async function copyJudicialControlText() {
+      const feedback = document.getElementById('copyFeedbackControle');
+      const area = document.getElementById('textoControleJudicial');
+      await copyToClipboard(area, feedback);
     }
 
     function generateAndCopyJudicialText() {
@@ -4285,19 +4291,7 @@
     async function copyStandardText() {
       const feedback = document.getElementById('copyFeedback');
       const area = document.getElementById('textoPadrao');
-      if (!area.value.trim()) {
-        feedback.textContent = 'Gere o texto antes de copiar.';
-        return;
-      }
-      try {
-        await navigator.clipboard.writeText(area.value);
-        feedback.textContent = 'Texto copiado para a área de transferência.';
-      } catch (err) {
-        area.focus();
-        area.select();
-        document.execCommand('copy');
-        feedback.textContent = 'Texto copiado.';
-      }
+      await copyToClipboard(area, feedback);
     }
 
     document.getElementById('btnCopiarTexto').addEventListener('click', copyStandardText);
