@@ -2228,8 +2228,7 @@
     </details>
 
     <div class="footer-actions">
-      <button class="btn btn-outline" id="btnSaveINSS"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-save"></use></svg>Fixar base pelos qualificadores atuais</button>
-      <button class="btn btn-outline" id="btnGerarTexto"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-document"></use></svg>Gerar texto padronizado</button>
+      <button class="btn btn-gold" id="btnLevarParaControle"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-balance"></use></svg>Levar cenário para Controle Judicial</button>
       <button class="btn btn-red hidden" id="btnClearComp"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-close"></use></svg>Limpar comparação</button>
     </div>
     <div class="standard-text hidden" id="textoSection">
@@ -3894,10 +3893,13 @@
       copyJudicialControlText();
     }
 
-    document.getElementById('btnSaveINSS').addEventListener('click', () => {
+    function sendScenarioToJudicialDraft() {
       applyCurrentQualifiersAsAdminDraft();
-      fixAdminBaseFromDraft();
-    });
+      setUIMode('controle', { scrollToJudicial: true });
+      document.getElementById('copyFeedbackControle').textContent = 'Rascunho preenchido. Revise os reconhecimentos do INSS e clique em "Fixar base administrativa".';
+    }
+
+    document.getElementById('btnLevarParaControle').addEventListener('click', sendScenarioToJudicialDraft);
     document.getElementById('btnUseCurrentAsBase').addEventListener('click', () => {
       applyCurrentQualifiersAsAdminDraft();
       document.getElementById('copyFeedbackControle').textContent = 'Rascunho preenchido com os qualificadores atuais da Calculadora. Revise e clique em "Fixar base administrativa".';
@@ -3984,11 +3986,6 @@
       }
     }
 
-    document.getElementById('btnGerarTexto').addEventListener('click', () => {
-      document.getElementById('textoSection').classList.remove('hidden');
-      renderStandardText();
-      document.getElementById('copyFeedback').textContent = '';
-    });
     document.getElementById('btnCopiarTexto').addEventListener('click', copyStandardText);
     document.getElementById('modeSwitcher').addEventListener('click', e => {
       const btn = e.target.closest('.mode-btn');
