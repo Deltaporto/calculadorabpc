@@ -1,0 +1,10 @@
+{
+  "name": "calculadora-bpc",
+  "version": "1.0.0",
+  "description": "Aplicação web para apoiar a análise técnica do requisito de deficiência no BPC/LOAS.",
+  "main": "index.html",
+  "scripts": {
+    "test": "node --test tests/*.test.js"
+  },
+  "type": "commonjs"
+}
