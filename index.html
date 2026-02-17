@@ -3243,21 +3243,25 @@
         container.appendChild(row);
       });
     }
+    let lastAmbTabForGrid = null;
     function buildTabelaGrid() {
+      if (lastAmbTabForGrid === currentAmbTab) return;
+      lastAmbTabForGrid = currentAmbTab;
       const g = document.getElementById('tGrid');
-      g.innerHTML = '';
+      let html = '';
       // Corner
-      g.innerHTML += '<div class="tc corner"></div>';
+      html += '<div class="tc corner"></div>';
       // Header row (Atividades)
-      Q_LABELS.forEach(l => g.innerHTML += `<div class="tc header">${l}</div>`);
+      Q_LABELS.forEach(l => html += `<div class="tc header">${l}</div>`);
       // Rows (Corpo)
       for (let c = 0; c < 5; c++) {
-        g.innerHTML += `<div class="tc row-header">${Q_LABELS[c]}</div>`;
+        html += `<div class="tc row-header">${Q_LABELS[c]}</div>`;
         for (let a = 0; a < 5; a++) {
           const yes = tabelaConclusiva(currentAmbTab, a, c);
-          g.innerHTML += `<div class="tc ${yes ? 'yes' : 'no'}" data-c="${c}" data-a="${a}">${yes ? 'Sim' : 'Não'}</div>`;
+          html += `<div class="tc ${yes ? 'yes' : 'no'}" data-c="${c}" data-a="${a}">${yes ? 'Sim' : 'Não'}</div>`;
         }
       }
+      g.innerHTML = html;
     }
 
     // ============ UI UPDATE ============
