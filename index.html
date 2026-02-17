@@ -3239,7 +3239,7 @@
         const row = document.createElement('div');
         row.className = 'domain-row';
         row.innerHTML = `<div class="domain-label"><span class="domain-code">${d.id}</span> <span class="domain-name">${d.name}</span></div>
-      <div class="note-buttons" data-domain="${d.id}">${[0, 1, 2, 3, 4].map(v => `<button class="note-btn${v === 0 ? ' active' : ''}" data-value="${v}">${v}</button>`).join('')}</div>`;
+      <div class="note-buttons" data-domain="${d.id}">${[0, 1, 2, 3, 4].map(v => `<button class="note-btn${v === 0 ? ' active' : ''}" data-value="${v}" aria-label="${Q_NAMES[v]}" title="${Q_NAMES[v]}">${v}</button>`).join('')}</div>`;
         container.appendChild(row);
       });
     }
@@ -4430,6 +4430,15 @@
     document.getElementById('btnLimparControleJudicial').addEventListener('click', clearJudicialMedicalAndTriage);
 
     // ============ INIT ============
+    // A11y & Tooltips for static buttons
+    document.querySelectorAll('.jc-q-btn').forEach(btn => {
+      const v = +btn.dataset.value;
+      if (Q_NAMES[v]) {
+        btn.setAttribute('aria-label', Q_NAMES[v]);
+        btn.setAttribute('title', Q_NAMES[v]);
+      }
+    });
+
     buildDomainRows(document.getElementById('domAmb'), DOM_AMB);
     buildDomainRows(document.getElementById('domCorpo'), DOM_CORPO);
     buildDomainRows(document.getElementById('domAtivM'), DOM_ATIV_M);
