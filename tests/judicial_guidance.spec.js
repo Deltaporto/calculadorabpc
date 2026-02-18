@@ -50,7 +50,7 @@ async function startStaticServer(rootDir) {
   };
 }
 
-test('Guidance advances focus to next pending judicial field', async ({ page }) => {
+test('Guidance advances focus in selection fields without stealing focus from textarea typing', async ({ page }) => {
   const rootDir = process.cwd();
   const { server, url } = await startStaticServer(rootDir);
 
@@ -82,10 +82,9 @@ test('Guidance advances focus to next pending judicial field', async ({ page }) 
     await page.click('#jcAtivModeButtons button[data-value="simples"]');
     await page.click('#jcAtivMedSimpleButtons button[data-value="0"]');
     await page.fill('#jcAtivMedJustification', 'Justificativa técnica para teste de orientação.');
-
     await expect.poll(async () => (
       page.evaluate(() => document.activeElement && document.activeElement.id)
-    )).toBe('btnGerarControleTexto');
+    )).toBe('jcAtivMedJustification');
     await expect(page.locator('#jcTextoGuidanceText')).toContainText('Gere a minuta');
   } finally {
     await new Promise(resolve => server.close(resolve));

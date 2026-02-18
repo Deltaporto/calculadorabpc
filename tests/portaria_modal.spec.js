@@ -50,14 +50,19 @@ async function startStaticServer(rootDir) {
   };
 }
 
-test('Portaria can be opened in modal with PDF shortcut', async ({ page }) => {
+test('Portaria prioritizes PDF links and keeps in-app text as secondary', async ({ page }) => {
   const rootDir = process.cwd();
   const { server, url } = await startStaticServer(rootDir);
 
   try {
     await page.goto(`${url}/index.html`);
 
-    await page.click('#openPortariaBtn');
+    await expect(page.locator('#headerPortariaPdfLink')).toHaveAttribute('href', 'docs/normas/portaria-conjunta-2-2015.pdf');
+    await expect(page.locator('#headerPortariaPdfLink')).toHaveAttribute('title', /nova aba/i);
+    await expect(page.locator('#footerPortariaPdfLink')).toHaveAttribute('href', 'docs/normas/portaria-conjunta-2-2015.pdf');
+    await expect(page.locator('#footerPortariaPdfLink')).toHaveAttribute('title', /nova aba/i);
+
+    await page.click('#openPortariaTextBtn');
     await expect(page.locator('#portariaModal')).toBeVisible();
     await expect(page.locator('#portariaStatus')).toContainText('Texto da Portaria carregado.');
     await expect(page.locator('#portariaContent')).toContainText('PORTARIA CONJUNTA MDS/INSS');
@@ -67,7 +72,7 @@ test('Portaria can be opened in modal with PDF shortcut', async ({ page }) => {
     await expect(page.locator('#portariaModal')).toBeHidden();
     await expect.poll(async () => (
       page.evaluate(() => document.activeElement && document.activeElement.id)
-    )).toBe('openPortariaBtn');
+    )).toBe('openPortariaTextBtn');
   } finally {
     await new Promise(resolve => server.close(resolve));
   }

@@ -83,7 +83,7 @@ test('Trace and minuta avoid redundant non-applicable wording', async ({ page })
     await page.click('#btnGerarControleTexto');
     const minuta = await page.inputValue('#textoControleJudicial');
     expect(occurrences(minuta, 'não reconheceu impedimento de longo prazo')).toBe(1);
-    expect(minuta).toContain('À luz do motivo-base acima');
+    expect(minuta).toContain('Ausente o impedimento de longo prazo');
   } finally {
     await new Promise(resolve => server.close(resolve));
   }

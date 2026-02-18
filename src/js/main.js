@@ -489,6 +489,14 @@ function getGuidanceFocusElement(target) {
   return target.querySelector('button:not([disabled]), select:not([disabled]), textarea:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])');
 }
 
+function isTextEntryElement(el) {
+  if (!el || !el.tagName) return false;
+  if (el.tagName === 'TEXTAREA') return true;
+  if (el.tagName !== 'INPUT') return false;
+  const type = (el.getAttribute('type') || 'text').toLowerCase();
+  return ['text', 'search', 'email', 'url', 'tel', 'password', 'number'].includes(type);
+}
+
 function focusJudicialTarget(targetId, options = {}) {
   if (!targetId) return false;
   const target = document.getElementById(targetId);
@@ -523,6 +531,8 @@ function maybeAdvanceToNextPending(nextTargetId) {
   pendingJudicialInteraction = null;
   if (!interaction || !nextTargetId) return;
   if (interaction.sourceId === nextTargetId) return;
+  const activeEl = document.activeElement;
+  if (activeEl && activeEl.id === interaction.sourceId && isTextEntryElement(activeEl)) return;
   focusJudicialTarget(nextTargetId);
 }
 
@@ -1373,15 +1383,16 @@ function setPortariaStatus(statusEl, message, isError = false) {
 }
 
 function initPortariaModal() {
-  const openBtn = document.getElementById('openPortariaBtn');
+  const openTextBtn = document.getElementById('openPortariaTextBtn');
   const modal = document.getElementById('portariaModal');
   const closeBtn = document.getElementById('closePortariaModalBtn');
   const contentEl = document.getElementById('portariaContent');
   const statusEl = document.getElementById('portariaStatus');
   const pdfLink = document.getElementById('portariaPdfLink');
-  if (!openBtn || !modal || !contentEl || !statusEl || !pdfLink) return;
+  if (!modal || !contentEl || !statusEl || !pdfLink) return;
 
   pdfLink.href = PORTARIA_PDF_PATH;
+  if (!openTextBtn) return;
 
   const closeModal = () => {
     if (typeof modal.close === 'function') {
@@ -1392,7 +1403,7 @@ function initPortariaModal() {
   };
 
   const openModal = async () => {
-    lastPortariaTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : openBtn;
+    lastPortariaTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : openTextBtn;
     if (typeof modal.showModal === 'function') {
       if (!modal.open) modal.showModal();
     } else {
@@ -1418,7 +1429,7 @@ function initPortariaModal() {
     }
   };
 
-  openBtn.addEventListener('click', openModal);
+  openTextBtn.addEventListener('click', openModal);
   modal.querySelectorAll('[data-portaria-close]').forEach(btn => {
     btn.addEventListener('click', closeModal);
   });

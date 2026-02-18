@@ -65,13 +65,11 @@ export function buildJudicialControlText({
     }
   }
 
-  const dispensaRef = triage.route === 'sem_impedimento_lp'
-    ? 'À luz do motivo-base acima (ausência de impedimento de longo prazo),'
-    : 'À luz do motivo-base acima,';
-
   const paragrafo3 = triage.status === 'dispensa'
-    ? `${dispensaRef} a prova médica judicial é suficiente para definição do requisito biopsicossocial, dispensando a renovação da avaliação social em juízo.`
-    : 'Nesse contexto, a renovação da avaliação social em juízo é necessária para possibilitar a requalificação de Fatores Ambientais e Atividades e Participação e permitir cognição probatória completa sobre o requisito biopsicossocial.';
+    ? triage.route === 'sem_impedimento_lp'
+      ? 'Ausente o impedimento de longo prazo, a prova médica judicial é suficiente para definição do requisito biopsicossocial, dispensando a renovação da avaliação social em juízo.'
+      : 'Diante disso, a prova médica judicial é suficiente para definição do requisito biopsicossocial, dispensando a renovação da avaliação social em juízo.'
+    : 'Diante disso, a renovação da avaliação social em juízo é necessária para possibilitar a requalificação de Fatores Ambientais e Atividades e Participação e permitir cognição probatória completa sobre o requisito biopsicossocial.';
 
   return [baseIntro, reconhecimento, paragrafo2, paragrafo3].filter(Boolean).join('\n\n');
 }

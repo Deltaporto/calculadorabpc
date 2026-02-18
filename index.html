@@ -116,10 +116,13 @@
           <use href="#i-balance"></use>
         </svg>BPC / LOAS</span>
       <h1>Calculadora Biopsicossocial</h1>
-      <p>Portaria Conjunta MDS/INSS nº 2/2015 · Tabela Conclusiva (Anexo IV)</p>
+      <p><a class="header-portaria-link" id="headerPortariaPdfLink" href="docs/normas/portaria-conjunta-2-2015.pdf"
+          target="_blank" rel="noopener noreferrer"
+          title="Abrir o PDF da Portaria Conjunta MDS/INSS nº 2/2015 em nova aba">Portaria Conjunta MDS/INSS nº
+          2/2015</a></p>
       <div class="app-mode-switch" id="modeSwitcher" aria-label="Modo da aplicação">
-        <button class="mode-btn" data-mode="simulador">Simulador</button>
         <button class="mode-btn" data-mode="controle">Controle Judicial</button>
+        <button class="mode-btn" data-mode="simulador">Simulador</button>
       </div>
       <div class="header-row">
         <label><input type="checkbox" id="toggleDark"><svg class="ui-icon sm" aria-hidden="true">
@@ -784,10 +787,16 @@
     </div>
 
     <footer>
-      <p>Base normativa: Portaria Conjunta MDS/INSS nº 2/2015 (Anexo IV) · Portaria MDS/INSS nº 34/2025 (Art. 13, §7º)
-        <button type="button" class="footer-norm-link" id="openPortariaBtn"><svg class="ui-icon sm" aria-hidden="true">
+      <p>Base normativa:
+        <a class="footer-norm-link" id="footerPortariaPdfLink" href="docs/normas/portaria-conjunta-2-2015.pdf"
+          target="_blank" rel="noopener noreferrer"
+          title="Abrir o PDF da Portaria Conjunta MDS/INSS nº 2/2015 em nova aba"><svg class="ui-icon sm"
+            aria-hidden="true">
             <use href="#i-document"></use>
-          </svg>Consultar Portaria 2/2015</button>
+          </svg>Portaria Conjunta MDS/INSS nº 2/2015 (PDF)</a>
+        · Portaria MDS/INSS nº 34/2025 (Art. 13, §7º)
+        <button type="button" class="footer-text-link" id="openPortariaTextBtn"
+          title="Abrir a versão em texto dentro desta página">Ler versão texto na aplicação</button>
       </p>
       <p>Resolução CNJ nº 630/2025 (Sisperjud) · 2ª Turma Recursal — SJRJ | Gabinete 3</p>
     </footer>

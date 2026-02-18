@@ -142,6 +142,23 @@ header p {
   font-size: .85rem
 }
 
+.header-portaria-link {
+  color: rgba(236, 244, 255, .9);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+}
+
+.header-portaria-link:hover {
+  color: #fff;
+}
+
+.header-portaria-link:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, .82);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
 .app-mode-switch {
   margin: 14px auto 0;
   display: inline-flex;
@@ -2100,7 +2117,23 @@ input:checked+.toggle-switch::after {
 }
 
 .jc-social-item .jc-field-title {
-  font-size: .7rem
+  font-size: .7rem;
+  text-align: center
+}
+
+.jc-social-item .jc-segmented {
+  display: flex;
+  width: max-content;
+  justify-content: center;
+  margin: 0 auto
+}
+
+#jcImpedimentoButtons,
+#jcHasAtivMedButtons {
+  display: flex;
+  width: max-content;
+  justify-content: center;
+  margin: 0 auto
 }
 
 @media(max-width:900px) {
@@ -3041,6 +3074,27 @@ footer {
   height: .9em;
 }
 
+.footer-text-link {
+  margin-left: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text3);
+  font: 600 .72rem/1.2 'DM Sans', sans-serif;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.footer-text-link:hover {
+  color: var(--text2);
+}
+
+.footer-text-link:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--blue) 58%, white);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
 .portaria-modal {
   width: min(1000px, calc(100vw - 32px));
   max-height: calc(100vh - 38px);
@@ -3122,6 +3176,12 @@ footer {
     display: inline-flex;
     margin-left: 0;
     margin-top: 6px;
+  }
+
+  .footer-text-link {
+    display: inline-block;
+    margin-left: 0;
+    margin-top: 4px;
   }
 
   .portaria-modal {
