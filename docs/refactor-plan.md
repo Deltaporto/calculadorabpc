@@ -50,6 +50,12 @@ Reduzir acoplamento e risco de regressão do front-end da calculadora, saindo do
 - [x] Extrair geração da minuta de texto do controle judicial para `judicial-text.js`.
 - [x] Expandir cobertura de testes unitários para `tabelaConclusiva` e cálculo por domínio.
 
+### Fase 4 (concluída)
+- [x] Redesign visual institucional premium (camada de override em `src/styles/main.css`) sem alterar regras de negócio.
+- [x] Revisão de tipografia, espaçamento, hierarquia e contraste para reduzir aparência genérica/amadora.
+- [x] Refinos responsivos desktop/mobile para painéis, toolbar, ações e fluxo de Controle Judicial.
+- [x] Inclusão de microinterações visuais discretas respeitando `prefers-reduced-motion`.
+
 ## Critérios de Aceite
 - A aplicação carrega com CSS e JS externos.
 - Fluxos principais continuam operacionais sem quebra funcional.
@@ -82,3 +88,5 @@ Reduzir acoplamento e risco de regressão do front-end da calculadora, saindo do
 - 2026-02-18 11:01 -03 — Codex — [Correção de regressão] — Ajustado `setUIMode`/`renderModeVisibility` para exibir `#textoSection` no modo Simulador e renderizar a minuta padrão ao alternar de modo — Restaurar fluxo “texto padrão + copiar” no simulador.
 - 2026-02-18 11:01 -03 — Codex — [Qualidade de logs] — Ajustado `scripts/serve.js` para responder `/favicon.ico` com `204` e reduzido ruído de console no smoke local — Melhorar legibilidade de diagnóstico.
 - 2026-02-18 11:01 -03 — Codex — [Smoke test] — Validação com Playwright CLI (fluxo Simulador + Controle Judicial), `npm test` e `tests/verify_trace.spec.js` — Confirmar comportamento após ajustes de execução/local UI.
+- 2026-02-18 12:43 -03 — Codex — [Fase 4] — Implementado redesign visual premium em camada de override CSS (tokens, header, cards, tabela, decisão, controle judicial e responsividade) — Elevar qualidade visual preservando compatibilidade funcional.
+- 2026-02-18 12:43 -03 — Codex — [Validação] — Reexecução de `npm test`, `npx playwright test tests/verify_trace.spec.js --reporter=line` e capturas desktop/mobile pós-redesign — Confirmar ausência de regressão com novo visual.
