@@ -27,49 +27,92 @@ export function buildJudicialControlText({
 
   const est = b.corpoReconhecimentoInss.estruturasReconhecidas;
   const prog = b.corpoReconhecimentoInss.prognosticoReconhecido;
-  let reconhecimento;
+  let reconhecimentoPhrase = '';
   if (est && prog) {
-    reconhecimento = 'Na avaliação administrativa, foram reconhecidas alterações em Estruturas do Corpo que configuram maiores limitações do que as observadas em Funções do Corpo, bem como prognóstico desfavorável.';
+    reconhecimentoPhrase = 'O INSS havia reconhecido tanto as alterações em Estruturas do Corpo quanto o prognóstico desfavorável. ';
   } else if (est && !prog) {
-    reconhecimento = 'Na avaliação administrativa, foram reconhecidas alterações em Estruturas do Corpo que configuram maiores limitações do que as observadas em Funções do Corpo, sem registro de prognóstico desfavorável.';
+    reconhecimentoPhrase = 'O INSS havia reconhecido alterações em Estruturas do Corpo, mas não prognóstico desfavorável. ';
   } else if (!est && prog) {
-    reconhecimento = 'Na avaliação administrativa, não foram reconhecidas alterações em Estruturas do Corpo que configurassem maiores limitações do que as observadas em Funções do Corpo, porém houve registro de prognóstico desfavorável.';
-  } else {
-    reconhecimento = 'Na avaliação administrativa, não foram reconhecidas alterações em Estruturas do Corpo que configurassem maiores limitações do que as observadas em Funções do Corpo, nem prognóstico desfavorável.';
+    reconhecimentoPhrase = 'O INSS havia reconhecido prognóstico desfavorável, mas não alterações em Estruturas do Corpo. ';
   }
 
   const corpoPart = corpoFlow.mode === 'mantido'
-    ? `manutenção de Funções do Corpo com ${qCorpo(corpoFlow.q)}`
-    : `requalificação de Funções do Corpo para ${qCorpo(corpoFlow.q)}`;
+    ? `manteve Funções do Corpo com ${qCorpo(corpoFlow.q)}`
+    : `requalificou Funções do Corpo para ${qCorpo(corpoFlow.q)}`;
 
   const ativPart = (m.hasAtivMed && ativMedResolved != null)
-    ? ` e requalificação médica de Atividades e Participação para ${qAtiv(ativMedResolved)}`
-    : ', mantendo-se inalterados os demais componentes';
+    ? ` e requalificou Atividades e Participação para ${qAtiv(ativMedResolved)}`
+    : '';
 
-  let paragrafo2 = '';
+  const paragraphs = [baseIntro];
+
   if (triage.status === 'dispensa') {
     if (triage.route === 'sem_impedimento_lp' || m.impedimentoLP === false) {
-      paragrafo2 = 'A perícia médica judicial não reconheceu impedimento de longo prazo, o que torna dispensável a renovação da avaliação social em juízo.';
+      paragraphs.push(
+        'A perícia médica judicial não reconheceu o impedimento de longo prazo. ' +
+        'Ausente esse pressuposto, a avaliação social não precisa ser renovada em juízo — ' +
+        'a prova técnica é suficiente para a definição do requisito biopsicossocial.'
+      );
     } else if (triage.route === 'verificacao_administrativa_positiva' || triage.testeA) {
-      paragrafo2 = `A perícia médica judicial reconheceu impedimento de longo prazo, com ${corpoPart}${ativPart}. Aplicada essa reclassificação na verificação com manutenção de Fatores Ambientais e Atividades e Participação administrativas, a Tabela Conclusiva (Anexo IV da Portaria Conjunta MDS/INSS nº 2/2015, item ${testeAItem}) passou a resultado positivo, suficiente para o enquadramento sem necessidade de nova avaliação social no caso.`;
+      paragraphs.push(
+        (`A perícia médica judicial reconheceu o impedimento de longo prazo e ${corpoPart}${ativPart}. ${reconhecimentoPhrase}`).trimEnd()
+      );
+      paragraphs.push(
+        `Verificada a Tabela Conclusiva (item ${testeAItem} do Anexo IV da Portaria Conjunta ` +
+        `MDS/INSS nº 2/2015) com os dados da perícia médica e os demais qualificadores ` +
+        `administrativos preservados, o resultado foi positivo. A prova médica judicial é, ` +
+        `portanto, suficiente para o enquadramento no requisito biopsicossocial, dispensando ` +
+        `a renovação da avaliação social em juízo.`
+      );
     } else if (triage.route === 'corpo_nl_irrelevante') {
-      paragrafo2 = `A perícia médica judicial reconheceu impedimento de longo prazo, porém Funções do Corpo permaneceu com ${qCorpo(corpoFlow.q)}. Nessa configuração, a reclassificação de Atividades e Participação não altera o desfecho da Tabela Conclusiva (item ${testeAItem}), tornando dispensável a renovação da avaliação social em juízo.`;
+      paragraphs.push(
+        (`A perícia médica judicial reconheceu o impedimento de longo prazo; Funções do Corpo, contudo, permaneceu com ${qCorpo(corpoFlow.q)}. ${reconhecimentoPhrase}`).trimEnd()
+      );
+      paragraphs.push(
+        `Com esse nível funcional, a Tabela Conclusiva (item ${testeAItem} do Anexo IV ` +
+        `da Portaria Conjunta MDS/INSS nº 2/2015) não comporta resultado positivo ` +
+        `independentemente do qualificador de Atividades e Participação, tornando dispensável ` +
+        `a renovação da avaliação social em juízo.`
+      );
     } else {
-      paragrafo2 = `A perícia médica judicial reconheceu impedimento de longo prazo, com ${corpoPart}${ativPart}. Na verificação com manutenção de Fatores Ambientais e Atividades e Participação administrativas (item ${testeAItem}), o resultado permaneceu negativo; contudo, na verificação com reclassificação médica de Atividades e Participação (item ${testeBItem}), houve resultado positivo, suficiente para o enquadramento sem necessidade de nova avaliação social no caso.`;
+      // default dispensa: Teste B positivo
+      paragraphs.push(
+        (`A perícia médica judicial reconheceu o impedimento de longo prazo, ${corpoPart} e requalificou Atividades e Participação para ${qAtiv(ativMedResolved)}. ${reconhecimentoPhrase}`).trimEnd()
+      );
+      paragraphs.push(
+        `Na Tabela Conclusiva, a verificação com os qualificadores administrativos de ` +
+        `Atividades e Participação (item ${testeAItem}) apresentou resultado negativo; ` +
+        `a verificação que incorpora a reclassificação médica de Atividades (item ${testeBItem}), ` +
+        `porém, obteve resultado positivo. A prova médica judicial é, portanto, suficiente ` +
+        `para o enquadramento no requisito biopsicossocial, dispensando a renovação da ` +
+        `avaliação social em juízo.`
+      );
     }
   } else {
+    // necessaria
     if (m.hasAtivMed && ativMedResolved != null) {
-      paragrafo2 = `A perícia médica judicial reconheceu impedimento de longo prazo, mas a reclassificação de Funções do Corpo, isoladamente, não produziu resultado positivo na verificação com manutenção de Fatores Ambientais e Atividades e Participação administrativas (item ${testeAItem}). Também não houve resultado positivo na verificação com reclassificação médica de Atividades e Participação (item ${testeBItem}), de modo que a prova médica, por si só, não foi suficiente para alterar o desfecho administrativo.`;
+      paragraphs.push(
+        `A perícia médica judicial reconheceu o impedimento de longo prazo, ` +
+        `${corpoPart} e requalificou Atividades e Participação para ${qAtiv(ativMedResolved)}. ` +
+        `${reconhecimentoPhrase}` +
+        `Verificada a Tabela Conclusiva, o resultado permaneceu negativo tanto com os ` +
+        `qualificadores administrativos (item ${testeAItem}) quanto com a reclassificação ` +
+        `médica de Atividades e Participação (item ${testeBItem}). A prova médica, por si só, ` +
+        `não foi suficiente para o enquadramento no requisito biopsicossocial; a renovação ` +
+        `da avaliação social em juízo é necessária para completar a instrução probatória.`
+      );
     } else {
-      paragrafo2 = `A perícia médica judicial reconheceu impedimento de longo prazo, mas a reclassificação de Funções do Corpo, isoladamente, não produziu resultado positivo na verificação com manutenção de Fatores Ambientais e Atividades e Participação administrativas (item ${testeAItem}). Também não houve elementos médicos para reclassificação de Atividades e Participação, de modo que a prova médica, por si só, não foi suficiente para alterar o desfecho administrativo.`;
+      paragraphs.push(
+        `A perícia médica judicial reconheceu o impedimento de longo prazo e ` +
+        `${corpoPart}, sem trazer elementos para reclassificação de Atividades e Participação. ` +
+        `${reconhecimentoPhrase}` +
+        `Verificada a Tabela Conclusiva (item ${testeAItem}), o resultado permaneceu negativo, ` +
+        `e a prova médica, por si só, não foi suficiente para o enquadramento no requisito ` +
+        `biopsicossocial; a renovação da avaliação social em juízo é necessária para completar ` +
+        `a instrução probatória.`
+      );
     }
   }
 
-  const paragrafo3 = triage.status === 'dispensa'
-    ? triage.route === 'sem_impedimento_lp'
-      ? 'Ausente o impedimento de longo prazo, a prova médica judicial é suficiente para definição do requisito biopsicossocial, dispensando a renovação da avaliação social em juízo.'
-      : 'Diante disso, a prova médica judicial é suficiente para definição do requisito biopsicossocial, dispensando a renovação da avaliação social em juízo.'
-    : 'Diante disso, a renovação da avaliação social em juízo é necessária para possibilitar a requalificação de Fatores Ambientais e Atividades e Participação e permitir cognição probatória completa sobre o requisito biopsicossocial.';
-
-  return [baseIntro, reconhecimento, paragrafo2, paragrafo3].filter(Boolean).join('\n\n');
+  return paragraphs.join('\n\n');
 }
