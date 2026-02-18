@@ -492,7 +492,15 @@ function focusJudicialTarget(targetId, options = {}) {
   if (!options.force && (target.classList.contains('hidden') || target.closest('.hidden'))) return false;
 
   const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+  const rect = target.getBoundingClientRect();
+  const visibilityPadding = options.force ? 0 : 72;
+  const withinViewport = rect.top >= visibilityPadding && rect.bottom <= (window.innerHeight - visibilityPadding);
+  if (options.force || !withinViewport) {
+    target.scrollIntoView({
+      behavior: reduceMotion ? 'auto' : 'smooth',
+      block: options.force ? 'center' : 'nearest'
+    });
+  }
   const focusable = getGuidanceFocusElement(target);
   if (focusable) {
     try {
