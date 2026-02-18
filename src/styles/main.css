@@ -1,3 +1,9 @@
+@property --jc-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false
+}
+
 *,
 *::before,
 *::after {
@@ -1430,7 +1436,22 @@ input:checked+.toggle-switch::after {
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 8px;
-  background: var(--surface)
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px
+}
+
+.jc-qual-item .jc-field-title {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 0
+}
+
+.jc-qual-item .jc-q-buttons {
+  justify-content: center;
+  margin: 0 auto
 }
 
 .jc-field-title {
@@ -1447,12 +1468,14 @@ input:checked+.toggle-switch::after {
   flex-wrap: wrap
 }
 
+/* ---- Rotating border for pending/invalid fields ---- */
 .jc-q-buttons.jc-invalid {
-  border: 1.5px solid #EF4444;
+  border: 1.5px solid transparent;
   border-radius: 9px;
   padding: 6px;
   background: #FEF2F2;
-  animation: jc-invalid-pulse 2s ease-in-out infinite
+  position: relative;
+  overflow: hidden
 }
 
 [data-theme="dark"] .jc-q-buttons.jc-invalid {
@@ -1460,59 +1483,104 @@ input:checked+.toggle-switch::after {
 }
 
 .jc-segmented.jc-invalid,
-.jc-select.jc-invalid,
 .jc-mini-textarea.jc-invalid,
 .jc-reduction-alert.jc-invalid,
 .jc-autofill-btn.jc-invalid,
 .btn.jc-invalid {
+  border-color: transparent !important;
+  position: relative;
+  overflow: hidden
+}
+
+/* select can't host ::before, so keep a static red border */
+.jc-select.jc-invalid {
   border-color: #EF4444 !important;
-  animation: jc-invalid-pulse 2s ease-in-out infinite
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.18)
 }
 
-[data-theme="dark"] .jc-segmented.jc-invalid,
-[data-theme="dark"] .jc-select.jc-invalid,
-[data-theme="dark"] .jc-mini-textarea.jc-invalid,
-[data-theme="dark"] .jc-reduction-alert.jc-invalid,
-[data-theme="dark"] .jc-autofill-btn.jc-invalid,
-[data-theme="dark"] .btn.jc-invalid {
-  animation: jc-invalid-pulse-dark 2s ease-in-out infinite
+/* The rotating conic-gradient pseudo-element */
+.jc-q-buttons.jc-invalid::before,
+.jc-segmented.jc-invalid::before,
+.jc-mini-textarea.jc-invalid::before,
+.jc-reduction-alert.jc-invalid::before,
+.jc-autofill-btn.jc-invalid::before,
+.btn.jc-invalid::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: conic-gradient(from var(--jc-angle),
+      transparent 0%,
+      #EF4444 10%,
+      transparent 20%,
+      transparent 100%);
+  animation: jc-border-spin 2.5s linear infinite;
+  z-index: 0;
+  pointer-events: none
 }
 
-@keyframes jc-invalid-pulse {
-
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.45)
-  }
-
-  50% {
-    box-shadow: 0 0 0 5px rgba(239, 68, 68, 0)
-  }
+/* Inner mask: creates the "border only" illusion */
+.jc-q-buttons.jc-invalid::after,
+.jc-segmented.jc-invalid::after,
+.jc-mini-textarea.jc-invalid::after,
+.jc-reduction-alert.jc-invalid::after,
+.jc-autofill-btn.jc-invalid::after,
+.btn.jc-invalid::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: inherit;
+  background: inherit;
+  z-index: 0;
+  pointer-events: none
 }
 
-@keyframes jc-invalid-pulse-dark {
+/* Ensure child content sits above the pseudo-elements */
+.jc-q-buttons.jc-invalid>*,
+.jc-segmented.jc-invalid>*,
+.jc-mini-textarea.jc-invalid>*,
+.jc-reduction-alert.jc-invalid>*,
+.jc-autofill-btn.jc-invalid>*,
+.btn.jc-invalid>* {
+  position: relative;
+  z-index: 1
+}
 
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 rgba(248, 113, 113, 0.5)
-  }
+/* Dark mode: use a lighter red for better contrast */
+[data-theme="dark"] .jc-q-buttons.jc-invalid::before,
+[data-theme="dark"] .jc-segmented.jc-invalid::before,
+[data-theme="dark"] .jc-mini-textarea.jc-invalid::before,
+[data-theme="dark"] .jc-reduction-alert.jc-invalid::before,
+[data-theme="dark"] .jc-autofill-btn.jc-invalid::before,
+[data-theme="dark"] .btn.jc-invalid::before {
+  background: conic-gradient(from var(--jc-angle),
+      transparent 0%,
+      #F87171 10%,
+      transparent 20%,
+      transparent 100%)
+}
 
-  50% {
-    box-shadow: 0 0 0 5px rgba(248, 113, 113, 0)
+[data-theme="dark"] .jc-select.jc-invalid {
+  border-color: #F87171 !important;
+  box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.22)
+}
+
+@keyframes jc-border-spin {
+  to {
+    --jc-angle: 360deg
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
 
-  .jc-segmented.jc-invalid,
-  .jc-select.jc-invalid,
-  .jc-mini-textarea.jc-invalid,
-  .jc-reduction-alert.jc-invalid,
-  .jc-autofill-btn.jc-invalid,
-  .btn.jc-invalid,
-  .jc-q-buttons.jc-invalid {
+  .jc-q-buttons.jc-invalid::before,
+  .jc-segmented.jc-invalid::before,
+  .jc-mini-textarea.jc-invalid::before,
+  .jc-reduction-alert.jc-invalid::before,
+  .jc-autofill-btn.jc-invalid::before,
+  .btn.jc-invalid::before {
     animation: none;
-    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.35)
+    background: #EF4444
   }
 }
 
