@@ -56,6 +56,12 @@ Reduzir acoplamento e risco de regressão do front-end da calculadora, saindo do
 - [x] Refinos responsivos desktop/mobile para painéis, toolbar, ações e fluxo de Controle Judicial.
 - [x] Inclusão de microinterações visuais discretas respeitando `prefers-reduced-motion`.
 
+### Fase 5 (concluída)
+- [x] Implementar guia de preenchimento por etapa no Controle Judicial (resumo de pendências e CTA para próximo campo).
+- [x] Trocar scroll genérico para direcionamento ao próximo campo pendente após cada interação relevante.
+- [x] Destacar visualmente campos pendentes na etapa ativa para reduzir dúvida operacional de usuários leigos.
+- [x] Adicionar cobertura E2E para o fluxo de orientação progressiva (`tests/judicial_guidance.spec.js`).
+
 ## Critérios de Aceite
 - A aplicação carrega com CSS e JS externos.
 - Fluxos principais continuam operacionais sem quebra funcional.
@@ -90,3 +96,5 @@ Reduzir acoplamento e risco de regressão do front-end da calculadora, saindo do
 - 2026-02-18 11:01 -03 — Codex — [Smoke test] — Validação com Playwright CLI (fluxo Simulador + Controle Judicial), `npm test` e `tests/verify_trace.spec.js` — Confirmar comportamento após ajustes de execução/local UI.
 - 2026-02-18 12:43 -03 — Codex — [Fase 4] — Implementado redesign visual premium em camada de override CSS (tokens, header, cards, tabela, decisão, controle judicial e responsividade) — Elevar qualidade visual preservando compatibilidade funcional.
 - 2026-02-18 12:43 -03 — Codex — [Validação] — Reexecução de `npm test`, `npx playwright test tests/verify_trace.spec.js --reporter=line` e capturas desktop/mobile pós-redesign — Confirmar ausência de regressão com novo visual.
+- 2026-02-18 13:18 -03 — Codex — [Fase 5] — Implementado motor de orientação progressiva no Controle Judicial (`index.html`, `src/js/main.js`, `src/js/events.js`, `src/styles/main.css`) com resumo por etapa, próximo campo e marcação de pendências — Guiar o usuário para o próximo passo, evitando scroll confuso para o topo.
+- 2026-02-18 13:18 -03 — Codex — [Validação] — Nova suíte E2E `tests/judicial_guidance.spec.js` para validar foco automático no próximo campo e liberação da etapa de texto — Prevenir regressões no fluxo de orientação.

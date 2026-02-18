@@ -81,6 +81,14 @@ const judicialControl = createJudicialControl(JC_CORPO_RECLASS_DOMAINS, JC_ATIV_
 let currentAmbTab = 0;
 const childDomainBackup = {};
 const userFilledDomains = new Set();
+let pendingJudicialInteraction = null;
+
+const JC_STEP_GUIDANCE = {
+  admin: { box: 'jcAdminGuidance', text: 'jcAdminGuidanceText', button: 'jcAdminGuidanceBtn' },
+  med: { box: 'jcMedGuidance', text: 'jcMedGuidanceText', button: 'jcMedGuidanceBtn' },
+  triagem: { box: 'jcTriagemGuidance', text: 'jcTriagemGuidanceText', button: 'jcTriagemGuidanceBtn' },
+  texto: { box: 'jcTextoGuidance', text: 'jcTextoGuidanceText', button: 'jcTextoGuidanceBtn' }
+};
 
 // ============ CALCULATION ============
 function calcAmbiente() {
@@ -452,6 +460,195 @@ function setWhyBlocked(message = '') {
   text.textContent = message;
 }
 
+function notifyJudicialInteraction(sourceId) {
+  pendingJudicialInteraction = { sourceId, at: Date.now() };
+}
+
+function uniquePendingTargetIds(items = []) {
+  return [...new Set(items.map(item => item.invalidId || item.targetId).filter(Boolean))];
+}
+
+function clearJudicialInvalidHighlights() {
+  document.querySelectorAll('.jc-invalid').forEach(el => el.classList.remove('jc-invalid'));
+}
+
+function markJudicialInvalidTargets(targetIds = []) {
+  targetIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('jc-invalid');
+  });
+}
+
+function getGuidanceFocusElement(target) {
+  if (!target) return null;
+  if (target.matches('button, select, textarea, input, [tabindex]:not([tabindex="-1"])')) return target;
+  return target.querySelector('button:not([disabled]), select:not([disabled]), textarea:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])');
+}
+
+function focusJudicialTarget(targetId, options = {}) {
+  if (!targetId) return false;
+  const target = document.getElementById(targetId);
+  if (!target) return false;
+  if (!options.force && (target.classList.contains('hidden') || target.closest('.hidden'))) return false;
+
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+  const focusable = getGuidanceFocusElement(target);
+  if (focusable) {
+    try {
+      focusable.focus({ preventScroll: true });
+    } catch {
+      focusable.focus();
+    }
+  }
+  target.classList.add('jc-next-target');
+  window.setTimeout(() => target.classList.remove('jc-next-target'), 1200);
+  return true;
+}
+
+function maybeAdvanceToNextPending(nextTargetId) {
+  const interaction = pendingJudicialInteraction;
+  pendingJudicialInteraction = null;
+  if (!interaction || !nextTargetId) return;
+  if (interaction.sourceId === nextTargetId) return;
+  focusJudicialTarget(nextTargetId);
+}
+
+function setStepGuidance(stepKey, {
+  tone = 'pending',
+  text = '',
+  targetId = '',
+  actionLabel = 'Ir para próximo campo'
+} = {}) {
+  const cfg = JC_STEP_GUIDANCE[stepKey];
+  if (!cfg) return;
+  const box = document.getElementById(cfg.box);
+  const textEl = document.getElementById(cfg.text);
+  const button = document.getElementById(cfg.button);
+  if (!box || !textEl || !button) return;
+
+  box.className = `jc-step-guidance ${tone}`;
+  textEl.textContent = text;
+  if (targetId) {
+    button.classList.remove('hidden');
+    button.dataset.target = targetId;
+    button.textContent = actionLabel;
+  } else {
+    button.classList.add('hidden');
+    button.dataset.target = '';
+  }
+}
+
+function buildPendingGuidanceText(items, doneText) {
+  if (!items.length) return doneText;
+  if (items.length === 1) return `Falta 1 definição: ${items[0].label}`;
+  return `Faltam ${items.length} definições. Próxima: ${items[0].label}`;
+}
+
+function bindStepGuidanceButtons() {
+  Object.values(JC_STEP_GUIDANCE).forEach(({ button }) => {
+    const el = document.getElementById(button);
+    if (!el || el.dataset.bound === '1') return;
+    el.dataset.bound = '1';
+    el.addEventListener('click', () => {
+      const targetId = el.dataset.target || '';
+      if (!targetId) return;
+      focusJudicialTarget(targetId, { force: true });
+    });
+  });
+}
+
+function getAdminPendingItems() {
+  const d = judicialControl.adminDraft;
+  const items = [];
+  if (d.amb == null) items.push({ label: 'selecione Fatores Ambientais (final)', targetId: 'jcAdminAmbButtons' });
+  if (d.ativ == null) items.push({ label: 'selecione Atividades e Participação (final)', targetId: 'jcAdminAtivButtons' });
+  if (d.corpo == null) items.push({ label: 'selecione Funções do Corpo (final)', targetId: 'jcAdminCorpoButtons' });
+  if (d.corpoReconhecimentoInss.estruturasReconhecidas == null) {
+    items.push({ label: 'informe se o INSS reconheceu estruturas mais limitantes', targetId: 'jcAdminEstruturasRecButtons' });
+  }
+  if (d.corpoReconhecimentoInss.prognosticoReconhecido == null) {
+    items.push({ label: 'informe se o INSS reconheceu prognóstico desfavorável', targetId: 'jcAdminProgRecButtons' });
+  }
+  const draftReady = items.length === 0;
+  const draftDirty = isAdminDraftDirty();
+  if (draftReady && (!judicialControl.adminBase || draftDirty)) {
+    items.push({
+      label: draftDirty ? 'clique em "Fixar base administrativa" para revalidar a base' : 'clique em "Fixar base administrativa"',
+      targetId: 'btnFixarBaseAdmin'
+    });
+  }
+  return items;
+}
+
+function getMedPendingItems(corpoFlow, ativContext) {
+  const m = judicialControl.med;
+  const items = [];
+
+  if (m.impedimentoLP == null) {
+    items.push({ label: 'informe impedimento de longo prazo', targetId: 'jcImpedimentoButtons' });
+  }
+
+  if (m.corpoKeepAdmin == null) {
+    items.push({ label: 'defina se mantém ou altera Funções do Corpo', targetId: 'jcCorpoKeepButtons' });
+  } else if (m.corpoKeepAdmin === false) {
+    if (!m.corpoChangeReason) {
+      items.push({ label: 'selecione o motivo da alteração de Funções do Corpo', targetId: 'jcCorpoReasonSelect' });
+    } else if (m.corpoChangeReason === 'dominio_max') {
+      const hasAnyDomain = JC_CORPO_RECLASS_DOMAINS.some(id => m.corpoAdminDomains[id] != null);
+      if (!hasAnyDomain) {
+        items.push({
+          label: 'informe ao menos um domínio b1-b8 em Funções do Corpo',
+          targetId: 'jcCorpoB1Buttons',
+          invalidId: 'jcCorpoDomainWrap'
+        });
+      }
+    } else if (m.corpoChangeReason === 'rebaixamento' && m.corpoJudManual == null) {
+      items.push({ label: 'informe o qualificador judicial manual de Funções do Corpo', targetId: 'jcCorpoManualButtons' });
+    }
+
+    const hasReduction = judicialControl.adminBase && corpoFlow.q != null && corpoFlow.q < judicialControl.adminBase.corpo;
+    if (hasReduction && !m.corpoAlertReductionConfirmed) {
+      items.push({
+        label: 'confirme a redução de Funções do Corpo com prova superveniente',
+        targetId: 'jcCorpoReductionConfirm',
+        invalidId: 'jcCorpoReductionAlert'
+      });
+    }
+  }
+
+  if (ativContext.showQuestion) {
+    if (m.hasAtivMed == null) {
+      items.push({
+        label: 'informe se a perícia trouxe elementos para requalificar Atividades e Participação',
+        targetId: 'jcHasAtivMedButtons'
+      });
+    } else if (m.hasAtivMed === true) {
+      if (!m.ativMode) {
+        items.push({ label: 'escolha o modo de requalificação de Atividades e Participação', targetId: 'jcAtivModeButtons' });
+      } else if (m.ativMode === 'simples') {
+        if (m.ativMedSimple == null) {
+          items.push({ label: 'informe o qualificador final de Atividades e Participação', targetId: 'jcAtivMedSimpleButtons' });
+        }
+        if (!m.ativMedJustification.trim()) {
+          items.push({ label: 'preencha a justificativa médica do modo simples', targetId: 'jcAtivMedJustification' });
+        }
+      } else if (m.ativMode === 'completa') {
+        JC_ATIV_RECLASS_DOMAINS.forEach(id => {
+          if (m.ativMedDomains[id] == null) {
+            items.push({
+              label: `preencha ${id.toUpperCase()} em Atividades e Participação`,
+              targetId: `jcAtiv${id.toUpperCase()}Buttons`
+            });
+          }
+        });
+      }
+    }
+  }
+
+  return items;
+}
+
 function syncModeSwitcher() {
   document.querySelectorAll('#modeSwitcher .mode-btn').forEach(btn => {
     const isActive = btn.dataset.mode === uiMode;
@@ -686,7 +883,9 @@ function applyCurrentQualifiersAsAdminDraft() {
 
 function fixAdminBaseFromDraft() {
   if (!getAdminDraftComplete()) {
+    notifyJudicialInteraction('btnFixarBaseAdmin');
     alert('Preencha os três qualificadores finais da base administrativa e os reconhecimentos do INSS em Funções do Corpo.');
+    renderJudicialControl();
     return;
   }
   judicialControl.adminBase = {
@@ -709,11 +908,12 @@ function fixAdminBaseFromDraft() {
   document.getElementById('btnClearComp').classList.remove('hidden');
   updateComparison(calcAmbiente(), calcAtividades(), calcCorpo());
   clearJudicialTextArea();
+  notifyJudicialInteraction('btnFixarBaseAdmin');
   renderJudicialControl();
-  document.getElementById('judicialControlSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function resetJudicialControl() {
+  pendingJudicialInteraction = null;
   judicialControl.adminDraft = {
     amb: null,
     ativ: null,
@@ -845,6 +1045,7 @@ function renderJudicialControl() {
     summary.textContent = `Cálculo automático: (Σ × 2,777...) − 0,1 = ${computed.pct}% · Σ=${computed.sum} · qualificador final de Atividades e Participação = ${Q_LABELS[computed.q]} (${Q_NAMES[computed.q]}).`;
   }
   renderAdminFixedSummary();
+  clearJudicialInvalidHighlights();
 
   const adminDone = !!judicialControl.adminBase;
   const adminDraftReady = getAdminDraftComplete();
@@ -852,33 +1053,102 @@ function renderJudicialControl() {
   const adminStateClass = !adminDone ? 'pending' : (adminDirty ? 'pending' : 'done');
   const adminStateText = !adminDone ? (adminDraftReady ? 'Pronta para fixar' : 'Pendente') : (adminDirty ? 'Revalidar base' : 'Concluída');
   setStepState('jcAdminState', adminStateClass, adminStateText);
+  const adminPendingItems = getAdminPendingItems();
+  setStepGuidance('admin', adminPendingItems.length
+    ? {
+        tone: 'pending',
+        text: buildPendingGuidanceText(adminPendingItems, 'Etapa 1 pronta para fixação da base administrativa.'),
+        targetId: adminPendingItems[0].targetId,
+        actionLabel: 'Ir para próximo campo'
+      }
+    : {
+        tone: 'done',
+        text: 'Etapa 1 concluída. Base administrativa fixada.',
+        targetId: '',
+        actionLabel: ''
+      });
 
   if (!adminDone) {
     const blockReason = 'Etapa 2 bloqueada: primeiro fixe a base administrativa na etapa 1.';
+    const nextTargetId = adminPendingItems[0]?.targetId || '';
     judicialControl.ui.blockReason = blockReason;
     setStepState('jcMedState', 'blocked', 'Bloqueada');
     setStepState('jcTriagemState', 'pending', 'Pendente');
     setStepState('jcTextoState', 'blocked', 'Aguardando triagem');
+    setStepGuidance('med', {
+      tone: 'blocked',
+      text: 'Etapa 2 bloqueada até fixar a base administrativa.',
+      targetId: nextTargetId,
+      actionLabel: 'Continuar etapa 1'
+    });
+    setStepGuidance('triagem', {
+      tone: 'blocked',
+      text: 'Triagem bloqueada até concluir as etapas 1 e 2.',
+      targetId: nextTargetId,
+      actionLabel: 'Continuar etapa 1'
+    });
+    setStepGuidance('texto', {
+      tone: 'blocked',
+      text: 'A minuta da decisão será liberada após a triagem.',
+      targetId: nextTargetId,
+      actionLabel: 'Continuar etapa 1'
+    });
     setStatusBadge('pending', `${iconMarkup('alert', 'ui-icon sm')} Preencha as etapas 1 e 2 para liberar a conclusão probatória.`);
     document.getElementById('jcTrace').innerHTML = `<div class="jc-trace-line">Etapa 1: fixe a base administrativa do INSS para iniciar o controle judicial.</div>`;
     setWhyBlocked(blockReason);
     renderJudicialProgress();
+    markJudicialInvalidTargets(uniquePendingTargetIds(adminPendingItems));
+    maybeAdvanceToNextPending(nextTargetId);
     return;
   }
 
   const medDone = getMedComplete();
+  const medPendingItems = getMedPendingItems(corpoFlow, ativContext);
   setStepState('jcMedState', medDone ? 'done' : 'pending', medDone ? 'Concluída' : 'Pendente');
+  setStepGuidance('med', medPendingItems.length
+    ? {
+        tone: 'pending',
+        text: buildPendingGuidanceText(medPendingItems, 'Etapa 2 concluída.'),
+        targetId: medPendingItems[0].targetId,
+        actionLabel: 'Ir para próximo campo'
+      }
+    : {
+        tone: 'done',
+        text: 'Etapa 2 concluída. Triagem pronta para análise.',
+        targetId: '',
+        actionLabel: ''
+      });
   const triage = computeJudicialTriage();
   judicialControl.triage = triage;
 
   if (!triage.ready) {
+    const nextTargetId = medPendingItems[0]?.targetId || adminPendingItems[0]?.targetId || '';
     judicialControl.ui.blockReason = triage.reason;
     setStepState('jcTriagemState', 'pending', 'Pendente');
     setStepState('jcTextoState', 'blocked', 'Aguardando triagem');
+    setStepGuidance('triagem', {
+      tone: 'pending',
+      text: triage.reason,
+      targetId: nextTargetId,
+      actionLabel: 'Ir para pendência'
+    });
+    setStepGuidance('texto', {
+      tone: 'blocked',
+      text: 'A minuta será liberada após a conclusão da triagem probatória.',
+      targetId: nextTargetId,
+      actionLabel: 'Resolver pendência'
+    });
     setStatusBadge('pending', `${iconMarkup('alert', 'ui-icon sm')} ${triage.reason}`);
     document.getElementById('jcTrace').innerHTML = `<div class="jc-trace-line">${triage.reason}</div>`;
     setWhyBlocked(triage.reason);
     renderJudicialProgress();
+    const activeStep = getActiveJudicialStep();
+    if (activeStep === 1) {
+      markJudicialInvalidTargets(uniquePendingTargetIds(adminPendingItems));
+    } else if (activeStep === 2) {
+      markJudicialInvalidTargets(uniquePendingTargetIds(medPendingItems));
+    }
+    maybeAdvanceToNextPending(nextTargetId);
     return;
   }
 
@@ -936,8 +1206,40 @@ function renderJudicialControl() {
   } else {
     setStatusBadge('necessaria', `${iconMarkup('alert', 'ui-icon sm')} <strong>Avaliação social judicial necessária</strong>`);
   }
+  setStepGuidance('triagem', {
+    tone: 'done',
+    text: triage.status === 'dispensa'
+      ? 'Triagem concluída: avaliação social judicial dispensável.'
+      : 'Triagem concluída: avaliação social judicial necessária.',
+    targetId: '',
+    actionLabel: ''
+  });
+  const hasDecisionText = !!document.getElementById('textoControleJudicial').value.trim();
+  setStepGuidance('texto', hasDecisionText
+    ? {
+        tone: 'done',
+        text: 'Minuta disponível. Você pode copiar o texto ou gerar novamente.',
+        targetId: 'btnCopiarControleTexto',
+        actionLabel: 'Copiar texto'
+      }
+    : {
+        tone: 'pending',
+        text: 'Triagem concluída. Gere a minuta padronizada para finalizar a etapa 4.',
+        targetId: 'btnGerarControleTexto',
+        actionLabel: 'Gerar texto'
+      });
   setWhyBlocked('');
   renderJudicialProgress();
+  const activeStep = getActiveJudicialStep();
+  if (activeStep === 1) {
+    markJudicialInvalidTargets(uniquePendingTargetIds(adminPendingItems));
+  } else if (activeStep === 2) {
+    markJudicialInvalidTargets(uniquePendingTargetIds(medPendingItems));
+  }
+  const nextTargetId = activeStep === 4 && !hasDecisionText
+    ? 'btnGerarControleTexto'
+    : '';
+  maybeAdvanceToNextPending(nextTargetId);
 }
 
 function renderJudicialControlText() {
@@ -950,6 +1252,7 @@ function renderJudicialControlText() {
     ativMedResolved: resolveAtivMed(),
     getItemNumber
   });
+  renderJudicialControl();
 }
 
 async function copyToClipboard(area, feedback) {
@@ -982,12 +1285,14 @@ function generateAndCopyJudicialText() {
 }
 
 function sendScenarioToJudicialDraft() {
+  setUIMode('controle', { scrollToJudicial: false });
+  notifyJudicialInteraction('btnLevarParaControle');
   applyCurrentQualifiersAsAdminDraft();
-  setUIMode('controle', { scrollToJudicial: true });
   document.getElementById('copyFeedbackControle').textContent = 'Rascunho preenchido. Revise os reconhecimentos do INSS e clique em "Fixar base administrativa".';
 }
 
 function handleUseCurrentAsBase() {
+  notifyJudicialInteraction('btnUseCurrentAsBase');
   applyCurrentQualifiersAsAdminDraft();
   document.getElementById('copyFeedbackControle').textContent = 'Rascunho preenchido com os qualificadores atuais da Calculadora. Revise e clique em "Fixar base administrativa".';
 }
@@ -1101,8 +1406,11 @@ bindJudicialControlEvents({
   renderJudicialControlText,
   generateAndCopyJudicialText,
   copyJudicialControlText,
-  clearJudicialMedicalAndTriage
+  clearJudicialMedicalAndTriage,
+  notifyInteraction: notifyJudicialInteraction
 });
+
+bindStepGuidanceButtons();
 
 // ============ INIT ============
 // A11y & Tooltips for static buttons

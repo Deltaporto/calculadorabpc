@@ -1370,6 +1370,61 @@ input:checked+.toggle-switch::after {
   line-height: 1.35
 }
 
+.jc-step-guidance {
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface);
+  color: var(--text2);
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 0 10px
+}
+
+.jc-step-guidance.pending {
+  border-color: #F59E0B;
+  background: #FEF3C7;
+  color: #92400E
+}
+
+.jc-step-guidance.done {
+  border-color: #10B981;
+  background: #D1FAE5;
+  color: #065F46
+}
+
+.jc-step-guidance.blocked {
+  border-color: var(--border);
+  background: var(--surface);
+  color: var(--text3)
+}
+
+.jc-step-guidance-text {
+  font-size: .74rem;
+  line-height: 1.35;
+  flex: 1 1 auto
+}
+
+.jc-guidance-btn {
+  flex: 0 0 auto;
+  padding: 7px 10px;
+  font-size: .74rem
+}
+
+[data-theme="dark"] .jc-step-guidance.pending {
+  background: #451A03;
+  color: #FCD34D;
+  border-color: #F59E0B
+}
+
+[data-theme="dark"] .jc-step-guidance.done {
+  background: #064E3B;
+  color: #6EE7B7;
+  border-color: #10B981
+}
+
 .jc-qual-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(170px, 1fr));
@@ -1396,6 +1451,17 @@ input:checked+.toggle-switch::after {
   display: flex;
   gap: 6px;
   flex-wrap: wrap
+}
+
+.jc-q-buttons.jc-invalid {
+  border: 1.5px dashed #EF4444;
+  border-radius: 9px;
+  padding: 6px;
+  background: #FEF2F2
+}
+
+[data-theme="dark"] .jc-q-buttons.jc-invalid {
+  background: #450A0A
 }
 
 .jc-q-btn {
@@ -1595,6 +1661,25 @@ input:checked+.toggle-switch::after {
   color: var(--text3);
   margin-top: 6px;
   line-height: 1.35
+}
+
+.jc-segmented.jc-invalid,
+.jc-select.jc-invalid,
+.jc-mini-textarea.jc-invalid,
+.jc-reduction-alert.jc-invalid,
+.jc-autofill-btn.jc-invalid,
+.btn.jc-invalid {
+  border-color: #EF4444 !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, #EF4444 22%, transparent)
+}
+
+[data-theme="dark"] .jc-segmented.jc-invalid,
+[data-theme="dark"] .jc-select.jc-invalid,
+[data-theme="dark"] .jc-mini-textarea.jc-invalid,
+[data-theme="dark"] .jc-reduction-alert.jc-invalid,
+[data-theme="dark"] .jc-autofill-btn.jc-invalid,
+[data-theme="dark"] .btn.jc-invalid {
+  box-shadow: 0 0 0 2px color-mix(in srgb, #F87171 26%, transparent)
 }
 
 .jc-ativ-mode-block {
@@ -1803,6 +1888,25 @@ input:checked+.toggle-switch::after {
   color: #FCD34D
 }
 
+.jc-next-target {
+  animation: jc-next-target-pulse .95s ease
+}
+
+@keyframes jc-next-target-pulse {
+
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--blue) 40%, transparent)
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px transparent
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 transparent
+  }
+}
+
 .jc-social-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(180px, 1fr));
@@ -1962,6 +2066,11 @@ input:checked+.toggle-switch::after {
   .jc-step-note {
     font-size: .81rem;
     line-height: 1.45
+  }
+
+  .jc-step-guidance-text,
+  .jc-guidance-btn {
+    font-size: .8rem
   }
 
   .jc-field-title {
@@ -2671,7 +2780,8 @@ header .badge {
 .jc-step-note,
 .jc-step-helper,
 .jc-field-helper,
-.jc-inline-note {
+.jc-inline-note,
+.jc-step-guidance-text {
   line-height: 1.45;
 }
 
@@ -2882,6 +2992,16 @@ footer {
 
   .jc-progress-head {
     flex-wrap: wrap;
+  }
+
+  .jc-step-guidance {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .jc-guidance-btn {
+    width: 100%;
+    justify-content: center;
   }
 
   .jc-actions-main .btn,

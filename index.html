@@ -311,6 +311,10 @@
           </div>
           <p class="jc-step-helper">Informe os qualificadores finais da fase administrativa e os reconhecimentos prévios do INSS para Funções do Corpo.</p>
           <p class="jc-step-note">O que fazer: escolha os 3 qualificadores finais administrativos, informe os reconhecimentos administrativos de Funções do Corpo e clique em <strong>Fixar base administrativa</strong>. Se necessário, use o atalho opcional para preencher os qualificadores a partir da Calculadora.</p>
+          <div class="jc-step-guidance pending" id="jcAdminGuidance" role="status" aria-live="polite">
+            <span class="jc-step-guidance-text" id="jcAdminGuidanceText">Pendências da etapa aparecerão aqui.</span>
+            <button type="button" class="btn btn-outline jc-guidance-btn hidden" id="jcAdminGuidanceBtn">Ir para próximo campo</button>
+          </div>
           <div class="jc-qual-grid">
             <div class="jc-qual-item">
               <div class="jc-field-title">Fatores Ambientais (final)</div>
@@ -402,6 +406,10 @@
           </div>
           <p class="jc-step-helper">Preencha os campos mínimos da perícia médica para liberar a triagem probatória.</p>
           <p class="jc-step-note">O que fazer: informe impedimento de longo prazo, decida se mantém Funções do Corpo administrativas e, se necessário, requalifique com motivo fechado.</p>
+          <div class="jc-step-guidance blocked" id="jcMedGuidance" role="status" aria-live="polite">
+            <span class="jc-step-guidance-text" id="jcMedGuidanceText">Etapa 2 bloqueada até fixar a base administrativa.</span>
+            <button type="button" class="btn btn-outline jc-guidance-btn hidden" id="jcMedGuidanceBtn">Ir para próximo campo</button>
+          </div>
           <div class="jc-med-grid">
             <div class="jc-field">
               <div class="jc-field-title">Impedimento de longo prazo</div>
@@ -665,6 +673,10 @@
             <span class="jc-step-state pending" id="jcTriagemState">Pendente</span>
           </div>
           <p class="jc-step-note">O que isso mostra: resultado das verificações probatórias e a razão objetiva para dispensar ou exigir avaliação social.</p>
+          <div class="jc-step-guidance pending" id="jcTriagemGuidance" role="status" aria-live="polite">
+            <span class="jc-step-guidance-text" id="jcTriagemGuidanceText">Conclua as etapas anteriores para liberar a triagem.</span>
+            <button type="button" class="btn btn-outline jc-guidance-btn hidden" id="jcTriagemGuidanceBtn">Ir para próximo campo</button>
+          </div>
           <div class="jc-status-badge pending" id="jcStatusBadge">Preencha as etapas 1 e 2 para liberar a conclusão probatória.</div>
           <div class="jc-trace" id="jcTrace"></div>
         </section>
@@ -676,6 +688,10 @@
           </div>
           <p class="jc-step-helper">Gere texto padronizado com a trilha de raciocínio da triagem para colar na decisão.</p>
           <p class="jc-step-note">O que fazer: gere e copie a minuta apenas após a triagem estar concluída.</p>
+          <div class="jc-step-guidance blocked" id="jcTextoGuidance" role="status" aria-live="polite">
+            <span class="jc-step-guidance-text" id="jcTextoGuidanceText">A minuta será liberada após a triagem.</span>
+            <button type="button" class="btn btn-outline jc-guidance-btn hidden" id="jcTextoGuidanceBtn">Ir para próximo campo</button>
+          </div>
           <div class="standard-text-actions">
             <span class="copy-feedback" id="copyFeedbackControle"></span>
             <button class="btn btn-outline" id="btnGerarControleTexto"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-document"></use></svg>Gerar texto</button>
