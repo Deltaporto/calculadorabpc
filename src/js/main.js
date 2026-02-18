@@ -84,10 +84,10 @@ const userFilledDomains = new Set();
 let pendingJudicialInteraction = null;
 
 const JC_STEP_GUIDANCE = {
-  admin: { box: 'jcAdminGuidance', text: 'jcAdminGuidanceText', button: 'jcAdminGuidanceBtn' },
-  med: { box: 'jcMedGuidance', text: 'jcMedGuidanceText', button: 'jcMedGuidanceBtn' },
-  triagem: { box: 'jcTriagemGuidance', text: 'jcTriagemGuidanceText', button: 'jcTriagemGuidanceBtn' },
-  texto: { box: 'jcTextoGuidance', text: 'jcTextoGuidanceText', button: 'jcTextoGuidanceBtn' }
+  admin: { box: 'jcAdminGuidance', text: 'jcAdminGuidanceText' },
+  med: { box: 'jcMedGuidance', text: 'jcMedGuidanceText' },
+  triagem: { box: 'jcTriagemGuidance', text: 'jcTriagemGuidanceText' },
+  texto: { box: 'jcTextoGuidance', text: 'jcTextoGuidanceText' }
 };
 
 // ============ CALCULATION ============
@@ -524,27 +524,16 @@ function maybeAdvanceToNextPending(nextTargetId) {
 
 function setStepGuidance(stepKey, {
   tone = 'pending',
-  text = '',
-  targetId = '',
-  actionLabel = 'Ir para próximo campo'
+  text = ''
 } = {}) {
   const cfg = JC_STEP_GUIDANCE[stepKey];
   if (!cfg) return;
   const box = document.getElementById(cfg.box);
   const textEl = document.getElementById(cfg.text);
-  const button = document.getElementById(cfg.button);
-  if (!box || !textEl || !button) return;
+  if (!box || !textEl) return;
 
   box.className = `jc-step-guidance ${tone}`;
   textEl.textContent = text;
-  if (targetId) {
-    button.classList.remove('hidden');
-    button.dataset.target = targetId;
-    button.textContent = actionLabel;
-  } else {
-    button.classList.add('hidden');
-    button.dataset.target = '';
-  }
 }
 
 function buildPendingGuidanceText(items, doneText) {
@@ -553,18 +542,7 @@ function buildPendingGuidanceText(items, doneText) {
   return `Faltam ${items.length} definições. Próxima: ${items[0].label}`;
 }
 
-function bindStepGuidanceButtons() {
-  Object.values(JC_STEP_GUIDANCE).forEach(({ button }) => {
-    const el = document.getElementById(button);
-    if (!el || el.dataset.bound === '1') return;
-    el.dataset.bound = '1';
-    el.addEventListener('click', () => {
-      const targetId = el.dataset.target || '';
-      if (!targetId) return;
-      focusJudicialTarget(targetId, { force: true });
-    });
-  });
-}
+
 
 function getAdminPendingItems() {
   const d = judicialControl.adminDraft;
@@ -1087,15 +1065,11 @@ function renderJudicialControl() {
   setStepGuidance('admin', adminPendingItems.length
     ? {
       tone: 'pending',
-      text: buildPendingGuidanceText(adminPendingItems, 'Etapa 1 pronta para fixação da base administrativa.'),
-      targetId: adminPendingItems[0].targetId,
-      actionLabel: 'Ir para próximo campo'
+      text: buildPendingGuidanceText(adminPendingItems, 'Etapa 1 pronta para fixação da base administrativa.')
     }
     : {
       tone: 'done',
-      text: 'Etapa 1 concluída. Base administrativa fixada.',
-      targetId: '',
-      actionLabel: ''
+      text: 'Etapa 1 concluída. Base administrativa fixada.'
     });
 
   if (!adminDone) {
@@ -1107,21 +1081,15 @@ function renderJudicialControl() {
     setStepState('jcTextoState', 'blocked', 'Aguardando triagem');
     setStepGuidance('med', {
       tone: 'blocked',
-      text: 'Etapa 2 bloqueada até fixar a base administrativa.',
-      targetId: nextTargetId,
-      actionLabel: 'Continuar etapa 1'
+      text: 'Etapa 2 bloqueada até fixar a base administrativa.'
     });
     setStepGuidance('triagem', {
       tone: 'blocked',
-      text: 'Triagem bloqueada até concluir as etapas 1 e 2.',
-      targetId: nextTargetId,
-      actionLabel: 'Continuar etapa 1'
+      text: 'Triagem bloqueada até concluir as etapas 1 e 2.'
     });
     setStepGuidance('texto', {
       tone: 'blocked',
-      text: 'A minuta da decisão será liberada após a triagem.',
-      targetId: nextTargetId,
-      actionLabel: 'Continuar etapa 1'
+      text: 'A minuta da decisão será liberada após a triagem.'
     });
     setStatusBadge('pending', `${iconMarkup('alert', 'ui-icon sm')} Preencha as etapas 1 e 2 para liberar a conclusão probatória.`);
     document.getElementById('jcTrace').innerHTML = `<div class="jc-trace-line">Etapa 1: fixe a base administrativa do INSS para iniciar o controle judicial.</div>`;
@@ -1138,15 +1106,11 @@ function renderJudicialControl() {
   setStepGuidance('med', medPendingItems.length
     ? {
       tone: 'pending',
-      text: buildPendingGuidanceText(medPendingItems, 'Etapa 2 concluída.'),
-      targetId: medPendingItems[0].targetId,
-      actionLabel: 'Ir para próximo campo'
+      text: buildPendingGuidanceText(medPendingItems, 'Etapa 2 concluída.')
     }
     : {
       tone: 'done',
-      text: 'Etapa 2 concluída. Triagem pronta para análise.',
-      targetId: '',
-      actionLabel: ''
+      text: 'Etapa 2 concluída. Triagem pronta para análise.'
     });
   const triage = computeJudicialTriage();
   judicialControl.triage = triage;
@@ -1158,15 +1122,11 @@ function renderJudicialControl() {
     setStepState('jcTextoState', 'blocked', 'Aguardando triagem');
     setStepGuidance('triagem', {
       tone: 'pending',
-      text: triage.reason,
-      targetId: nextTargetId,
-      actionLabel: 'Ir para pendência'
+      text: triage.reason
     });
     setStepGuidance('texto', {
       tone: 'blocked',
-      text: 'A minuta será liberada após a conclusão da triagem probatória.',
-      targetId: nextTargetId,
-      actionLabel: 'Resolver pendência'
+      text: 'A minuta será liberada após a conclusão da triagem probatória.'
     });
     setStatusBadge('pending', `${iconMarkup('alert', 'ui-icon sm')} ${triage.reason}`);
     document.getElementById('jcTrace').innerHTML = `<div class="jc-trace-line">${triage.reason}</div>`;
@@ -1241,23 +1201,17 @@ function renderJudicialControl() {
     tone: 'done',
     text: triage.status === 'dispensa'
       ? 'Triagem concluída: avaliação social judicial dispensável.'
-      : 'Triagem concluída: avaliação social judicial necessária.',
-    targetId: '',
-    actionLabel: ''
+      : 'Triagem concluída: avaliação social judicial necessária.'
   });
   const hasDecisionText = !!document.getElementById('textoControleJudicial').value.trim();
   setStepGuidance('texto', hasDecisionText
     ? {
       tone: 'done',
-      text: 'Minuta disponível. Você pode copiar o texto ou gerar novamente.',
-      targetId: 'btnCopiarControleTexto',
-      actionLabel: 'Copiar texto'
+      text: 'Minuta disponível. Você pode copiar o texto ou gerar novamente.'
     }
     : {
       tone: 'pending',
-      text: 'Triagem concluída. Gere a minuta padronizada para finalizar a etapa 4.',
-      targetId: 'btnGerarControleTexto',
-      actionLabel: 'Gerar texto'
+      text: 'Triagem concluída. Gere a minuta padronizada para finalizar a etapa 4.'
     });
   setWhyBlocked('');
   renderJudicialProgress();
@@ -1441,7 +1395,7 @@ bindJudicialControlEvents({
   notifyInteraction: notifyJudicialInteraction
 });
 
-bindStepGuidanceButtons();
+
 
 // ============ INIT ============
 // A11y & Tooltips for static buttons

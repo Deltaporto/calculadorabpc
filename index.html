@@ -112,7 +112,9 @@
       </symbol>
     </svg>
     <header>
-      <span class="badge"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-balance"></use></svg>BPC / LOAS</span>
+      <span class="badge"><svg class="ui-icon sm" aria-hidden="true">
+          <use href="#i-balance"></use>
+        </svg>BPC / LOAS</span>
       <h1>Calculadora Biopsicossocial</h1>
       <p>Portaria Conjunta MDS/INSS nº 2/2015 · Tabela Conclusiva (Anexo IV)</p>
       <div class="app-mode-switch" id="modeSwitcher" aria-label="Modo da aplicação">
@@ -120,8 +122,12 @@
         <button class="mode-btn" data-mode="controle">Controle Judicial</button>
       </div>
       <div class="header-row">
-        <label><input type="checkbox" id="toggleDark"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-moon"></use></svg>Modo escuro</label>
-        <label><input type="checkbox" id="toggleMenor16"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-child"></use></svg>Idade inferior a 16 anos</label>
+        <label><input type="checkbox" id="toggleDark"><svg class="ui-icon sm" aria-hidden="true">
+            <use href="#i-moon"></use>
+          </svg>Modo escuro</label>
+        <label><input type="checkbox" id="toggleMenor16"><svg class="ui-icon sm" aria-hidden="true">
+            <use href="#i-child"></use>
+          </svg>Idade inferior a 16 anos</label>
         <span class="idade-input hidden" id="idadeWrap">
           <label for="inputIdade">Idade:</label>
           <input type="number" id="inputIdade" min="0" max="15" step="1" value="15" inputmode="numeric">
@@ -139,139 +145,164 @@
       <summary class="simulador-summary">Calculadora (consulta rápida)</summary>
       <div class="simulador-body">
         <div class="toolbar">
-          <button class="btn btn-gold" id="btnPadrao"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-chart"></use></svg>Aplicar Padrão Médio Social</button>
-          <button class="btn btn-outline" id="btnLimpar"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-trash"></use></svg>Limpar</button>
+          <button class="btn btn-gold" id="btnPadrao"><svg class="ui-icon sm" aria-hidden="true">
+              <use href="#i-chart"></use>
+            </svg>Aplicar Padrão Médio Social</button>
+          <button class="btn btn-outline" id="btnLimpar"><svg class="ui-icon sm" aria-hidden="true">
+              <use href="#i-trash"></use>
+            </svg>Limpar</button>
           <label class="toggle-label">
-            <input type="checkbox" id="togglePadraoOverwrite"><span class="toggle-switch"></span><svg class="ui-icon sm" aria-hidden="true"><use href="#i-swap"></use></svg>
+            <input type="checkbox" id="togglePadraoOverwrite"><span class="toggle-switch"></span><svg class="ui-icon sm"
+              aria-hidden="true">
+              <use href="#i-swap"></use>
+            </svg>
             Sobrescrever domínios preenchidos
           </label>
           <label class="toggle-label">
-            <input type="checkbox" id="toggleImpedimento"><span class="toggle-switch"></span><svg class="ui-icon sm" aria-hidden="true"><use href="#i-alert"></use></svg>
+            <input type="checkbox" id="toggleImpedimento"><span class="toggle-switch"></span><svg class="ui-icon sm"
+              aria-hidden="true">
+              <use href="#i-alert"></use>
+            </svg>
             Impedimento &lt; 2 anos
           </label>
         </div>
 
         <main class="calculator">
-      <!-- Panel Ambiente -->
-      <section class="panel" style="--panel-color:#2563EB">
-        <div class="panel-header">
-          <div class="panel-icon"><svg class="ui-icon" aria-hidden="true"><use href="#i-home"></use></svg></div>
-          <div>
-            <h2>Fatores Ambientais</h2>
-            <div class="sub">Avaliação Social · 5 domínios (e1–e5)</div>
-          </div>
-        </div>
-        <div class="domains" id="domAmb"></div>
-        <div class="panel-result">
-          <div class="formula" id="fAmb"></div>
-          <div class="result-bar">
-            <div class="result-fill" id="barAmb"></div>
-          </div>
-          <div class="panel-result-row"><span class="qual-name" id="nameAmb">Nenhuma Barreira</span>
-            <div class="qualifier-badge" id="qAmb" data-q="N">N</div>
-          </div>
-        </div>
-      </section>
-      <!-- Panel Corpo -->
-      <section class="panel" style="--panel-color:#DC2626">
-        <div class="panel-header">
-          <div class="panel-icon"><svg class="ui-icon" aria-hidden="true"><use href="#i-stethoscope"></use></svg></div>
-          <div>
-            <h2>Funções do Corpo</h2>
-            <div class="sub">Avaliação Médica · 8 domínios (b1–b8)</div>
-          </div>
-        </div>
-        <div class="domains" id="domCorpo"></div>
-        <div class="majoracao-toggles">
-          <label class="toggle-label"><input type="checkbox" id="toggleProg"><span
-              class="toggle-switch"></span>Prognóstico desfavorável</label>
-          <label class="toggle-label"><input type="checkbox" id="toggleEstr"><span
-              class="toggle-switch"></span>Estrutura do Corpo &gt; Função</label>
-        </div>
-        <div class="panel-result">
-          <div class="formula" id="fCorpo"></div>
-          <div class="panel-result-row"><span class="qual-name" id="nameCorpo">Nenhuma Alteração</span>
-            <div class="qualifier-badge" id="qCorpo" data-q="N">N</div>
-          </div>
-        </div>
-      </section>
-      <!-- Panel Atividades -->
-      <section class="panel" style="--panel-color:#7C3AED">
-        <div class="panel-header">
-          <div class="panel-icon"><svg class="ui-icon" aria-hidden="true"><use href="#i-network"></use></svg></div>
-          <div>
-            <h2>Atividades e Participação</h2>
-            <div class="sub">Misto · 9 domínios (d1–d9)</div>
-          </div>
-        </div>
-        <div class="domains">
-          <div class="section-label"><span class="badge-m">Perito Médico</span> d1–d5</div>
-          <div id="domAtivM"></div>
-          <div class="section-label"><span class="badge-s">Assistente Social</span> d6–d9</div>
-          <div id="domAtivS"></div>
-        </div>
-        <div class="panel-result">
-          <div class="formula" id="fAtiv"></div>
-          <div class="result-bar">
-            <div class="result-fill" id="barAtiv"></div>
-          </div>
-          <div class="panel-result-row"><span class="qual-name" id="nameAtiv">Nenhuma Dificuldade</span>
-            <div class="qualifier-badge" id="qAtiv" data-q="N">N</div>
-          </div>
-        </div>
-      </section>
+          <!-- Panel Ambiente -->
+          <section class="panel" style="--panel-color:#2563EB">
+            <div class="panel-header">
+              <div class="panel-icon"><svg class="ui-icon" aria-hidden="true">
+                  <use href="#i-home"></use>
+                </svg></div>
+              <div>
+                <h2>Fatores Ambientais</h2>
+                <div class="sub">Avaliação Social · 5 domínios (e1–e5)</div>
+              </div>
+            </div>
+            <div class="domains" id="domAmb"></div>
+            <div class="panel-result">
+              <div class="formula" id="fAmb"></div>
+              <div class="result-bar">
+                <div class="result-fill" id="barAmb"></div>
+              </div>
+              <div class="panel-result-row"><span class="qual-name" id="nameAmb">Nenhuma Barreira</span>
+                <div class="qualifier-badge" id="qAmb" data-q="N">N</div>
+              </div>
+            </div>
+          </section>
+          <!-- Panel Corpo -->
+          <section class="panel" style="--panel-color:#DC2626">
+            <div class="panel-header">
+              <div class="panel-icon"><svg class="ui-icon" aria-hidden="true">
+                  <use href="#i-stethoscope"></use>
+                </svg></div>
+              <div>
+                <h2>Funções do Corpo</h2>
+                <div class="sub">Avaliação Médica · 8 domínios (b1–b8)</div>
+              </div>
+            </div>
+            <div class="domains" id="domCorpo"></div>
+            <div class="majoracao-toggles">
+              <label class="toggle-label"><input type="checkbox" id="toggleProg"><span
+                  class="toggle-switch"></span>Prognóstico desfavorável</label>
+              <label class="toggle-label"><input type="checkbox" id="toggleEstr"><span
+                  class="toggle-switch"></span>Estrutura do Corpo &gt; Função</label>
+            </div>
+            <div class="panel-result">
+              <div class="formula" id="fCorpo"></div>
+              <div class="panel-result-row"><span class="qual-name" id="nameCorpo">Nenhuma Alteração</span>
+                <div class="qualifier-badge" id="qCorpo" data-q="N">N</div>
+              </div>
+            </div>
+          </section>
+          <!-- Panel Atividades -->
+          <section class="panel" style="--panel-color:#7C3AED">
+            <div class="panel-header">
+              <div class="panel-icon"><svg class="ui-icon" aria-hidden="true">
+                  <use href="#i-network"></use>
+                </svg></div>
+              <div>
+                <h2>Atividades e Participação</h2>
+                <div class="sub">Misto · 9 domínios (d1–d9)</div>
+              </div>
+            </div>
+            <div class="domains">
+              <div class="section-label"><span class="badge-m">Perito Médico</span> d1–d5</div>
+              <div id="domAtivM"></div>
+              <div class="section-label"><span class="badge-s">Assistente Social</span> d6–d9</div>
+              <div id="domAtivS"></div>
+            </div>
+            <div class="panel-result">
+              <div class="formula" id="fAtiv"></div>
+              <div class="result-bar">
+                <div class="result-fill" id="barAtiv"></div>
+              </div>
+              <div class="panel-result-row"><span class="qual-name" id="nameAtiv">Nenhuma Dificuldade</span>
+                <div class="qualifier-badge" id="qAtiv" data-q="N">N</div>
+              </div>
+            </div>
+          </section>
         </main>
 
         <section class="resultado" id="resultado">
-      <h2>Resultado da Avaliação</h2>
-      <div class="qualifiers-row">
-        <div class="qual-card"><span class="qual-label">Fatores Ambientais</span>
-          <div class="qualifier-badge large" id="rAmb" data-q="N">N</div><span class="qual-desc"
-            id="dAmb">Nenhuma</span>
-        </div>
-        <span class="qual-sep">×</span>
-        <div class="qual-card"><span class="qual-label">Atividades e Participação</span>
-          <div class="qualifier-badge large" id="rAtiv" data-q="N">N</div><span class="qual-desc"
-            id="dAtiv">Nenhuma</span>
-        </div>
-        <span class="qual-sep">×</span>
-        <div class="qual-card"><span class="qual-label">Funções do Corpo</span>
-          <div class="qualifier-badge large" id="rCorpo" data-q="N">N</div><span class="qual-desc"
-            id="dCorpo">Nenhuma</span>
-        </div>
-      </div>
-      <div class="tabela-section">
-        <h3>Tabela Conclusiva — Anexo IV, Portaria 2/2015</h3>
-        <div class="amb-tabs"><span class="amb-tab-label">Fatores Ambientais:</span><button class="amb-tab active"
-            data-a="0">N</button><button class="amb-tab" data-a="1">L</button><button class="amb-tab"
-            data-a="2">M</button><button class="amb-tab" data-a="3">G</button><button class="amb-tab"
-            data-a="4">C</button></div>
-        <div class="tabela-axis-label">↓ Funções do Corpo × Atividades e Participação →</div>
-        <div class="tabela-grid" id="tGrid"></div>
-        <div class="tabela-labels"><span><span class="dot g"></span> Deferido (Sim)</span><span><span
-              class="dot r"></span> Indeferido (Não)</span></div>
-      </div>
-      <div class="decision indeferido" id="decision">
-        <div class="decision-icon" id="decIcon"><svg class="ui-icon lg" aria-hidden="true"><use href="#i-alert"></use></svg></div>
-        <div class="decision-label" id="decLabel">AGUARDANDO DADOS</div>
-        <span class="decision-reason" id="decReason">Insira as notas nos domínios acima</span>
-        <span class="decision-item" id="decItem"></span>
-      </div>
+          <h2>Resultado da Avaliação</h2>
+          <div class="qualifiers-row">
+            <div class="qual-card"><span class="qual-label">Fatores Ambientais</span>
+              <div class="qualifier-badge large" id="rAmb" data-q="N">N</div><span class="qual-desc"
+                id="dAmb">Nenhuma</span>
+            </div>
+            <span class="qual-sep">×</span>
+            <div class="qual-card"><span class="qual-label">Atividades e Participação</span>
+              <div class="qualifier-badge large" id="rAtiv" data-q="N">N</div><span class="qual-desc"
+                id="dAtiv">Nenhuma</span>
+            </div>
+            <span class="qual-sep">×</span>
+            <div class="qual-card"><span class="qual-label">Funções do Corpo</span>
+              <div class="qualifier-badge large" id="rCorpo" data-q="N">N</div><span class="qual-desc"
+                id="dCorpo">Nenhuma</span>
+            </div>
+          </div>
+          <div class="tabela-section">
+            <h3>Tabela Conclusiva — Anexo IV, Portaria 2/2015</h3>
+            <div class="amb-tabs"><span class="amb-tab-label">Fatores Ambientais:</span><button class="amb-tab active"
+                data-a="0">N</button><button class="amb-tab" data-a="1">L</button><button class="amb-tab"
+                data-a="2">M</button><button class="amb-tab" data-a="3">G</button><button class="amb-tab"
+                data-a="4">C</button></div>
+            <div class="tabela-axis-label">↓ Funções do Corpo × Atividades e Participação →</div>
+            <div class="tabela-grid" id="tGrid"></div>
+            <div class="tabela-labels"><span><span class="dot g"></span> Deferido (Sim)</span><span><span
+                  class="dot r"></span> Indeferido (Não)</span></div>
+          </div>
+          <div class="decision indeferido" id="decision">
+            <div class="decision-icon" id="decIcon"><svg class="ui-icon lg" aria-hidden="true">
+                <use href="#i-alert"></use>
+              </svg></div>
+            <div class="decision-label" id="decLabel">AGUARDANDO DADOS</div>
+            <span class="decision-reason" id="decReason">Insira as notas nos domínios acima</span>
+            <span class="decision-item" id="decItem"></span>
+          </div>
         </section>
       </div>
     </details>
 
     <div class="footer-actions">
-      <button class="btn btn-gold" id="btnLevarParaControle"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-balance"></use></svg>Levar cenário para Controle Judicial</button>
-      <button class="btn btn-red hidden" id="btnClearComp"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-close"></use></svg>Limpar comparação</button>
+      <button class="btn btn-gold" id="btnLevarParaControle"><svg class="ui-icon sm" aria-hidden="true">
+          <use href="#i-balance"></use>
+        </svg>Levar cenário para Controle Judicial</button>
+      <button class="btn btn-red hidden" id="btnClearComp"><svg class="ui-icon sm" aria-hidden="true">
+          <use href="#i-close"></use>
+        </svg>Limpar comparação</button>
     </div>
     <div class="standard-text hidden" id="textoSection">
       <h3>Minuta Padronizada para Decisão</h3>
-      <p class="helper">Texto automático para copiar e colar na fundamentação sobre o enquadramento da parte autora no conceito de pessoa com deficiência para fins de BPC/LOAS.</p>
+      <p class="helper">Texto automático para copiar e colar na fundamentação sobre o enquadramento da parte autora no
+        conceito de pessoa com deficiência para fins de BPC/LOAS.</p>
       <textarea id="textoPadrao" readonly></textarea>
       <div class="standard-text-actions">
         <span class="copy-feedback" id="copyFeedback"></span>
-        <button class="btn btn-outline" id="btnCopiarTexto"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-clipboard"></use></svg>Copiar texto</button>
+        <button class="btn btn-outline" id="btnCopiarTexto"><svg class="ui-icon sm" aria-hidden="true">
+            <use href="#i-clipboard"></use>
+          </svg>Copiar texto</button>
       </div>
     </div>
     <div class="comparison hidden" id="compSection">
@@ -291,8 +322,11 @@
       <div class="comp-change" id="compChange"></div>
     </div>
     <div class="judicial-control" id="judicialControlSection">
-      <h3><svg class="ui-icon sm" aria-hidden="true"><use href="#i-balance"></use></svg>Controle Judicial</h3>
-      <p class="helper">Fluxo probatório para decidir se basta perícia médica judicial ou se também é necessária avaliação social.</p>
+      <h3><svg class="ui-icon sm" aria-hidden="true">
+          <use href="#i-balance"></use>
+        </svg>Controle Judicial</h3>
+      <p class="helper">Fluxo probatório para decidir se basta perícia médica judicial ou se também é necessária
+        avaliação social.</p>
       <div class="jc-progress-wrap" id="jcProgressWrap">
         <div class="jc-progress-head">
           <span id="jcProgressLabel">Etapa 1 de 4 · Base administrativa</span>
@@ -302,18 +336,22 @@
           <div class="jc-progress-bar" id="jcProgressBar"></div>
         </div>
       </div>
-      <div class="jc-why-blocked hidden" id="jcWhyBlocked"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-alert"></use></svg><span></span></div>
+      <div class="jc-why-blocked hidden" id="jcWhyBlocked"><svg class="ui-icon sm" aria-hidden="true">
+          <use href="#i-alert"></use>
+        </svg><span></span></div>
       <div class="jc-workflow">
         <section class="jc-step" id="stepAdmin">
           <div class="jc-step-header">
             <div class="jc-step-title"><span class="jc-step-index">1</span>Fixar avaliação administrativa (INSS)</div>
             <span class="jc-step-state pending" id="jcAdminState">Pendente</span>
           </div>
-          <p class="jc-step-helper">Informe os qualificadores finais da fase administrativa e os reconhecimentos prévios do INSS para Funções do Corpo.</p>
-          <p class="jc-step-note">O que fazer: escolha os 3 qualificadores finais administrativos, informe os reconhecimentos administrativos de Funções do Corpo e clique em <strong>Fixar base administrativa</strong>. Se necessário, use o atalho opcional para preencher os qualificadores a partir da Calculadora.</p>
+          <p class="jc-step-helper">Informe os qualificadores finais da fase administrativa e os reconhecimentos prévios
+            do INSS para Funções do Corpo.</p>
+          <p class="jc-step-note">O que fazer: escolha os 3 qualificadores finais administrativos, informe os
+            reconhecimentos administrativos de Funções do Corpo e clique em <strong>Fixar base administrativa</strong>.
+            Se necessário, use o atalho opcional para preencher os qualificadores a partir da Calculadora.</p>
           <div class="jc-step-guidance pending" id="jcAdminGuidance" role="status" aria-live="polite">
             <span class="jc-step-guidance-text" id="jcAdminGuidanceText">Pendências da etapa aparecerão aqui.</span>
-            <button type="button" class="btn btn-outline jc-guidance-btn hidden" id="jcAdminGuidanceBtn">Ir para próximo campo</button>
           </div>
           <div class="jc-qual-grid">
             <div class="jc-qual-item">
@@ -349,10 +387,12 @@
           </div>
           <div class="jc-admin-rec-wrap">
             <div class="jc-field-title">Reconhecimentos administrativos do INSS (Funções do Corpo)</div>
-            <p class="jc-field-helper">Essas respostas controlam os motivos permitidos na requalificação judicial de Funções do Corpo.</p>
+            <p class="jc-field-helper">Essas respostas controlam os motivos permitidos na requalificação judicial de
+              Funções do Corpo.</p>
             <div class="jc-social-grid">
               <div class="jc-social-item">
-                <div class="jc-field-title">INSS reconheceu alterações em estruturas do corpo que configurem maiores limitações ou restrições ao avaliado do que as alterações observadas em Funções do Corpo?</div>
+                <div class="jc-field-title">INSS reconheceu alterações em estruturas do corpo que configurem maiores
+                  limitações ou restrições ao avaliado do que as alterações observadas em Funções do Corpo?</div>
                 <div class="jc-segmented" id="jcAdminEstruturasRecButtons">
                   <button class="jc-seg-btn" data-value="sim">Sim</button>
                   <button class="jc-seg-btn" data-value="nao">Não</button>
@@ -371,17 +411,28 @@
               <div class="jc-help-grid">
                 <article class="jc-help-item">
                   <div class="jc-help-title">Estruturas do corpo mais limitantes que Funções do Corpo</div>
-                  <p>Use esta resposta para registrar se o INSS já reconheceu, na fase administrativa, alterações anatômicas (órgãos, membros ou estruturas) com impacto maior do que o captado no qualificador de Funções do Corpo.</p>
-                  <p><strong>Marque “Sim”</strong> quando o próprio material administrativo do INSS já apontar esse descompasso.</p>
-                  <p><strong>Exemplos de “Sim”:</strong> amputação extensa, deformidade estrutural grave ou lesão anatômica permanente que imponha restrição superior à indicada no qualificador final de Funções do Corpo.</p>
-                  <p><strong>Exemplos de “Não”:</strong> quando o INSS não reconheceu esse ponto, ou quando as alterações estruturais já estão proporcionais ao qualificador de Funções do Corpo atribuído.</p>
+                  <p>Use esta resposta para registrar se o INSS já reconheceu, na fase administrativa, alterações
+                    anatômicas (órgãos, membros ou estruturas) com impacto maior do que o captado no qualificador de
+                    Funções do Corpo.</p>
+                  <p><strong>Marque “Sim”</strong> quando o próprio material administrativo do INSS já apontar esse
+                    descompasso.</p>
+                  <p><strong>Exemplos de “Sim”:</strong> amputação extensa, deformidade estrutural grave ou lesão
+                    anatômica permanente que imponha restrição superior à indicada no qualificador final de Funções do
+                    Corpo.</p>
+                  <p><strong>Exemplos de “Não”:</strong> quando o INSS não reconheceu esse ponto, ou quando as
+                    alterações estruturais já estão proporcionais ao qualificador de Funções do Corpo atribuído.</p>
                 </article>
                 <article class="jc-help-item">
                   <div class="jc-help-title">Prognóstico desfavorável</div>
-                  <p>A Portaria pergunta apenas se as alterações configuram prognóstico desfavorável, sem exigir literalmente “piora” em todos os casos.</p>
-                  <p><strong>Manutenção isolada não basta automaticamente.</strong> Marque “Sim” quando o INSS tiver reconhecido, de forma técnica, curso funcional desfavorável: tendência de piora <strong>ou</strong> persistência relevante sem expectativa concreta de recuperação funcional significativa.</p>
-                  <p><strong>Exemplos de “Sim”:</strong> doença progressiva com perda funcional contínua; quadro crônico grave/irreversível com limitação importante e sem perspectiva real de reabilitação relevante.</p>
-                  <p><strong>Exemplos de “Não”:</strong> quadro estável com possibilidade real de melhora funcional; ou situação em que o INSS não tenha feito esse reconhecimento no ato administrativo.</p>
+                  <p>A Portaria pergunta apenas se as alterações configuram prognóstico desfavorável, sem exigir
+                    literalmente “piora” em todos os casos.</p>
+                  <p><strong>Manutenção isolada não basta automaticamente.</strong> Marque “Sim” quando o INSS tiver
+                    reconhecido, de forma técnica, curso funcional desfavorável: tendência de piora <strong>ou</strong>
+                    persistência relevante sem expectativa concreta de recuperação funcional significativa.</p>
+                  <p><strong>Exemplos de “Sim”:</strong> doença progressiva com perda funcional contínua; quadro crônico
+                    grave/irreversível com limitação importante e sem perspectiva real de reabilitação relevante.</p>
+                  <p><strong>Exemplos de “Não”:</strong> quadro estável com possibilidade real de melhora funcional; ou
+                    situação em que o INSS não tenha feito esse reconhecimento no ato administrativo.</p>
                 </article>
               </div>
             </details>
@@ -390,12 +441,17 @@
             <summary>Atalho opcional: preencher rascunho com a Calculadora</summary>
             <div class="jc-autofill-body">
               <p class="jc-autofill-hint" id="jcAutoFillHint"></p>
-              <button class="btn jc-autofill-btn" id="btnUseCurrentAsBase"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-swap"></use></svg>Preencher automaticamente com a Calculadora</button>
+              <button class="btn jc-autofill-btn" id="btnUseCurrentAsBase"><svg class="ui-icon sm" aria-hidden="true">
+                  <use href="#i-swap"></use>
+                </svg>Preencher automaticamente com a Calculadora</button>
             </div>
           </details>
           <div class="jc-inline-note" id="jcAdminFixedSummary">Base administrativa ainda não fixada.</div>
           <div class="jc-actions-main">
-            <button class="btn btn-gold jc-primary-btn" id="btnFixarBaseAdmin"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-save"></use></svg>Fixar base administrativa</button>
+            <button class="btn btn-gold jc-primary-btn" id="btnFixarBaseAdmin"><svg class="ui-icon sm"
+                aria-hidden="true">
+                <use href="#i-save"></use>
+              </svg>Fixar base administrativa</button>
           </div>
         </section>
 
@@ -405,10 +461,11 @@
             <span class="jc-step-state blocked" id="jcMedState">Bloqueada</span>
           </div>
           <p class="jc-step-helper">Preencha os campos mínimos da perícia médica para liberar a triagem probatória.</p>
-          <p class="jc-step-note">O que fazer: informe impedimento de longo prazo, decida se mantém Funções do Corpo administrativas e, se necessário, requalifique com motivo fechado.</p>
+          <p class="jc-step-note">O que fazer: informe impedimento de longo prazo, decida se mantém Funções do Corpo
+            administrativas e, se necessário, requalifique com motivo fechado.</p>
           <div class="jc-step-guidance blocked" id="jcMedGuidance" role="status" aria-live="polite">
-            <span class="jc-step-guidance-text" id="jcMedGuidanceText">Etapa 2 bloqueada até fixar a base administrativa.</span>
-            <button type="button" class="btn btn-outline jc-guidance-btn hidden" id="jcMedGuidanceBtn">Ir para próximo campo</button>
+            <span class="jc-step-guidance-text" id="jcMedGuidanceText">Etapa 2 bloqueada até fixar a base
+              administrativa.</span>
           </div>
           <div class="jc-med-grid">
             <div class="jc-field">
@@ -424,7 +481,8 @@
                 <button class="jc-seg-btn" data-value="sim">Manter qualificador administrativo</button>
                 <button class="jc-seg-btn" data-value="nao">Alterar na fase judicial</button>
               </div>
-              <p class="jc-field-helper">Se optar por alterar, escolha um motivo fechado. O sistema aplicará a regra correspondente para definir o qualificador judicial.</p>
+              <p class="jc-field-helper">Se optar por alterar, escolha um motivo fechado. O sistema aplicará a regra
+                correspondente para definir o qualificador judicial.</p>
               <div class="jc-ativ-mode-block hidden" id="jcCorpoChangeWrap">
                 <label class="jc-field-title" for="jcCorpoReasonSelect">Motivo da alteração (seleção única)</label>
                 <select id="jcCorpoReasonSelect" class="jc-select">
@@ -437,7 +495,8 @@
                 <p class="jc-field-helper" id="jcCorpoReasonHint"></p>
                 <div class="jc-ativ-mode-block hidden" id="jcCorpoDomainWrap">
                   <div class="jc-field-title">Pontuação administrativa dos domínios b1–b8</div>
-                  <p class="jc-field-helper">Informe o(s) domínio(s) necessário(s). Para este motivo, vale o domínio administrativo mais grave entre os informados.</p>
+                  <p class="jc-field-helper">Informe o(s) domínio(s) necessário(s). Para este motivo, vale o domínio
+                    administrativo mais grave entre os informados.</p>
                   <div class="jc-complete-grid">
                     <div class="jc-complete-item">
                       <div class="jc-field-title">b1 · Funções Mentais</div>
@@ -532,14 +591,18 @@
                   </div>
                 </div>
                 <div class="jc-reduction-alert hidden" id="jcCorpoReductionAlert">
-                  <strong>Atenção:</strong> o qualificador judicial ficou inferior ao administrativo. Confirme para prosseguir.
-                  <label><input type="checkbox" id="jcCorpoReductionConfirm"> Confirmo a redução com base na prova superveniente</label>
+                  <strong>Atenção:</strong> o qualificador judicial ficou inferior ao administrativo. Confirme para
+                  prosseguir.
+                  <label><input type="checkbox" id="jcCorpoReductionConfirm"> Confirmo a redução com base na prova
+                    superveniente</label>
                 </div>
               </div>
-              <div class="jc-inline-note" id="jcCorpoResultSummary">Resultado de Funções do Corpo aguardando definição.</div>
+              <div class="jc-inline-note" id="jcCorpoResultSummary">Resultado de Funções do Corpo aguardando definição.
+              </div>
             </div>
             <div class="jc-field" id="jcHasAtivMedField">
-              <div class="jc-field-title">Perícia médica trouxe elementos para requalificar Atividades e Participação?</div>
+              <div class="jc-field-title">Perícia médica trouxe elementos para requalificar Atividades e Participação?
+              </div>
               <div class="jc-segmented" id="jcHasAtivMedButtons">
                 <button class="jc-seg-btn" data-value="sim">Sim</button>
                 <button class="jc-seg-btn" data-value="nao">Não</button>
@@ -553,7 +616,9 @@
                 <button class="jc-seg-btn" data-value="simples">Simples</button>
                 <button class="jc-seg-btn" data-value="completa">Completa (d1–d9)</button>
               </div>
-              <p class="jc-field-helper">No modo simples, informe apenas o qualificador final de Atividades e Participação com justificativa. No modo completo, informe d1–d9 e o sistema calcula o final pela fórmula normativa.</p>
+              <p class="jc-field-helper">No modo simples, informe apenas o qualificador final de Atividades e
+                Participação com justificativa. No modo completo, informe d1–d9 e o sistema calcula o final pela fórmula
+                normativa.</p>
               <div class="jc-ativ-mode-block hidden" id="jcAtivModeSimpleWrap">
                 <div class="jc-field-title">Atividades e Participação (final, modo simples)</div>
                 <div class="jc-q-buttons" id="jcAtivMedSimpleButtons">
@@ -563,12 +628,15 @@
                   <button class="jc-q-btn" data-value="3">G</button>
                   <button class="jc-q-btn" data-value="4">C</button>
                 </div>
-                <label class="jc-field-title jc-field-title-margin" for="jcAtivMedJustification">Justificativa médica (obrigatória no modo simples)</label>
-                <textarea id="jcAtivMedJustification" class="jc-mini-textarea" placeholder="Descreva, de forma objetiva, o fundamento técnico para o qualificador final de Atividades e Participação."></textarea>
+                <label class="jc-field-title jc-field-title-margin" for="jcAtivMedJustification">Justificativa médica
+                  (obrigatória no modo simples)</label>
+                <textarea id="jcAtivMedJustification" class="jc-mini-textarea"
+                  placeholder="Descreva, de forma objetiva, o fundamento técnico para o qualificador final de Atividades e Participação."></textarea>
               </div>
               <div class="jc-ativ-mode-block hidden" id="jcAtivModeCompleteWrap">
                 <div class="jc-field-title">Domínios d1–d9 (modo completo)</div>
-                <p class="jc-field-helper">Preencha todos os domínios para calcular automaticamente o qualificador final de Atividades e Participação.</p>
+                <p class="jc-field-helper">Preencha todos os domínios para calcular automaticamente o qualificador final
+                  de Atividades e Participação.</p>
                 <div class="jc-complete-grid">
                   <div class="jc-complete-item">
                     <div class="jc-field-title">d1 · Aprendizagem</div>
@@ -661,7 +729,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="jc-inline-note" id="jcAtivComputedSummary">Preencha d1–d9 para calcular o qualificador final de Atividades e Participação.</div>
+                <div class="jc-inline-note" id="jcAtivComputedSummary">Preencha d1–d9 para calcular o qualificador final
+                  de Atividades e Participação.</div>
               </div>
             </div>
           </div>
@@ -672,12 +741,14 @@
             <div class="jc-step-title"><span class="jc-step-index">3</span>Triagem probatória</div>
             <span class="jc-step-state pending" id="jcTriagemState">Pendente</span>
           </div>
-          <p class="jc-step-note">O que isso mostra: resultado das verificações probatórias e a razão objetiva para dispensar ou exigir avaliação social.</p>
+          <p class="jc-step-note">O que isso mostra: resultado das verificações probatórias e a razão objetiva para
+            dispensar ou exigir avaliação social.</p>
           <div class="jc-step-guidance pending" id="jcTriagemGuidance" role="status" aria-live="polite">
-            <span class="jc-step-guidance-text" id="jcTriagemGuidanceText">Conclua as etapas anteriores para liberar a triagem.</span>
-            <button type="button" class="btn btn-outline jc-guidance-btn hidden" id="jcTriagemGuidanceBtn">Ir para próximo campo</button>
+            <span class="jc-step-guidance-text" id="jcTriagemGuidanceText">Conclua as etapas anteriores para liberar a
+              triagem.</span>
           </div>
-          <div class="jc-status-badge pending" id="jcStatusBadge">Preencha as etapas 1 e 2 para liberar a conclusão probatória.</div>
+          <div class="jc-status-badge pending" id="jcStatusBadge">Preencha as etapas 1 e 2 para liberar a conclusão
+            probatória.</div>
           <div class="jc-trace" id="jcTrace"></div>
         </section>
 
@@ -686,18 +757,26 @@
             <div class="jc-step-title"><span class="jc-step-index">4</span>Texto para decisão</div>
             <span class="jc-step-state blocked" id="jcTextoState">Aguardando triagem</span>
           </div>
-          <p class="jc-step-helper">Gere texto padronizado com a trilha de raciocínio da triagem para colar na decisão.</p>
+          <p class="jc-step-helper">Gere texto padronizado com a trilha de raciocínio da triagem para colar na decisão.
+          </p>
           <p class="jc-step-note">O que fazer: gere e copie a minuta apenas após a triagem estar concluída.</p>
           <div class="jc-step-guidance blocked" id="jcTextoGuidance" role="status" aria-live="polite">
             <span class="jc-step-guidance-text" id="jcTextoGuidanceText">A minuta será liberada após a triagem.</span>
-            <button type="button" class="btn btn-outline jc-guidance-btn hidden" id="jcTextoGuidanceBtn">Ir para próximo campo</button>
           </div>
           <div class="standard-text-actions">
             <span class="copy-feedback" id="copyFeedbackControle"></span>
-            <button class="btn btn-outline" id="btnGerarControleTexto"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-document"></use></svg>Gerar texto</button>
-            <button class="btn btn-gold" id="btnGerarCopiarControleTexto"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-clipboard"></use></svg>Gerar e copiar texto da decisão</button>
-            <button class="btn btn-outline" id="btnCopiarControleTexto"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-clipboard"></use></svg>Somente copiar</button>
-            <button class="btn btn-red" id="btnLimparControleJudicial"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-close"></use></svg>Limpar controle judicial</button>
+            <button class="btn btn-outline" id="btnGerarControleTexto"><svg class="ui-icon sm" aria-hidden="true">
+                <use href="#i-document"></use>
+              </svg>Gerar texto</button>
+            <button class="btn btn-gold" id="btnGerarCopiarControleTexto"><svg class="ui-icon sm" aria-hidden="true">
+                <use href="#i-clipboard"></use>
+              </svg>Gerar e copiar texto da decisão</button>
+            <button class="btn btn-outline" id="btnCopiarControleTexto"><svg class="ui-icon sm" aria-hidden="true">
+                <use href="#i-clipboard"></use>
+              </svg>Somente copiar</button>
+            <button class="btn btn-red" id="btnLimparControleJudicial"><svg class="ui-icon sm" aria-hidden="true">
+                <use href="#i-close"></use>
+              </svg>Limpar controle judicial</button>
           </div>
           <textarea id="textoControleJudicial" class="jc-textarea" readonly></textarea>
         </section>
