@@ -1,3 +1,9 @@
+export function sanitizeAtivReason(reason = '') {
+  return String(reason || '')
+    .replace(/^Pergunta não aplicável:\s*/i, '')
+    .trim();
+}
+
 export function createCorpoFlowTraceLineElement({ corpoFlow, adminBase, med, reasonLabels, qLabels, createTraceLine }) {
   if (!adminBase) {
     return createTraceLine('<strong>Funções do Corpo</strong>: base administrativa não fixada.');
@@ -31,7 +37,8 @@ export function createAtivMedTraceLineElement({
   createTraceLine
 }) {
   if (ativContext && !ativContext.showQuestion) {
-    return createTraceLine(`<strong>Reclassificação médica de Atividades e Participação</strong>: não aplicável. ${ativContext.reason}`);
+    const reason = sanitizeAtivReason(ativContext.reason);
+    return createTraceLine(`<strong>Reclassificação médica de Atividades e Participação</strong>: não aplicável. Motivo-base: ${reason}`);
   }
   if (med.hasAtivMed !== true) {
     return createTraceLine('<strong>Origem da reclassificação médica de Atividades e Participação</strong>: não aplicada (sem elementos médicos para requalificar Atividades e Participação).');

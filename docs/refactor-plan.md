@@ -62,6 +62,12 @@ Reduzir acoplamento e risco de regressão do front-end da calculadora, saindo do
 - [x] Destacar visualmente campos pendentes na etapa ativa para reduzir dúvida operacional de usuários leigos.
 - [x] Adicionar cobertura E2E para o fluxo de orientação progressiva (`tests/judicial_guidance.spec.js`).
 
+### Fase 6 (concluída)
+- [x] Deduplicar mensagens redundantes no rastreio da etapa 3, preservando a mesma estrutura de linhas.
+- [x] Padronizar texto de causa-base para casos “não aplicável” em reclassificação médica de Atividades e Participação.
+- [x] Aplicar referência curta na minuta quando a causa-base já foi explicitada no parágrafo anterior.
+- [x] Adicionar cobertura E2E para garantir ausência de frase redundante e preservação de rastreabilidade.
+
 ## Critérios de Aceite
 - A aplicação carrega com CSS e JS externos.
 - Fluxos principais continuam operacionais sem quebra funcional.
@@ -98,3 +104,5 @@ Reduzir acoplamento e risco de regressão do front-end da calculadora, saindo do
 - 2026-02-18 12:43 -03 — Codex — [Validação] — Reexecução de `npm test`, `npx playwright test tests/verify_trace.spec.js --reporter=line` e capturas desktop/mobile pós-redesign — Confirmar ausência de regressão com novo visual.
 - 2026-02-18 13:18 -03 — Codex — [Fase 5] — Implementado motor de orientação progressiva no Controle Judicial (`index.html`, `src/js/main.js`, `src/js/events.js`, `src/styles/main.css`) com resumo por etapa, próximo campo e marcação de pendências — Guiar o usuário para o próximo passo, evitando scroll confuso para o topo.
 - 2026-02-18 13:18 -03 — Codex — [Validação] — Nova suíte E2E `tests/judicial_guidance.spec.js` para validar foco automático no próximo campo e liberação da etapa de texto — Prevenir regressões no fluxo de orientação.
+- 2026-02-18 13:45 -03 — Codex — [Fase 6] — Ajuste de copy no rastreio e na minuta para remover redundância em mensagens “não aplicável” (`src/js/main.js`, `src/js/judicial-trace.js`, `src/js/judicial-text.js`) — Melhorar clareza para usuário leigo sem alterar regras decisórias.
+- 2026-02-18 13:45 -03 — Codex — [Validação] — Inclusão da suíte E2E `tests/judicial_copy_dedup.spec.js` para validar deduplicação textual do rastreio e da minuta — Evitar regressão do padrão de texto.

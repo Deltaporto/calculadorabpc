@@ -657,6 +657,28 @@ function getMedPendingItems(corpoFlow, ativContext) {
   return items;
 }
 
+function getTracePrimaryCauseCode(med, ativContext) {
+  if (!ativContext) return 'OTHER';
+  if (med.impedimentoLP === false || ativContext.code === 'sem_impedimento_lp') return 'NO_LONG_TERM_IMPEDIMENT';
+  if (ativContext.code === 'corpo_nl') return 'BODY_NL_IRRELEVANT';
+  if (ativContext.code === 'verificacao_adm_positiva') return 'ADMIN_CHECK_ALREADY_POSITIVE';
+  if (med.hasAtivMed === false) return 'NO_MED_ELEMENTS';
+  return 'OTHER';
+}
+
+function getTraceSecondaryReferenceSentence(causeCode) {
+  if (causeCode === 'NO_LONG_TERM_IMPEDIMENT') {
+    return 'não aplicável (mesmo motivo-base da linha de reclassificação: ausência de impedimento de longo prazo).';
+  }
+  if (causeCode === 'BODY_NL_IRRELEVANT') {
+    return 'não aplicável (mesmo motivo-base da linha de reclassificação: Funções do Corpo judiciais em N/L).';
+  }
+  if (causeCode === 'ADMIN_CHECK_ALREADY_POSITIVE') {
+    return 'não aplicável (mesmo motivo-base da linha de reclassificação: manutenção administrativa já positiva).';
+  }
+  return 'não aplicável (mesmo motivo-base da linha de reclassificação).';
+}
+
 function syncModeSwitcher() {
   document.querySelectorAll('#modeSwitcher .mode-btn').forEach(btn => {
     const isActive = btn.dataset.mode === uiMode;
@@ -838,7 +860,7 @@ function renderAdminFixedSummary() {
     return;
   }
   const b = judicialControl.adminBase;
-  const reconhecimentoText = ` Reconhecimento INSS em Funções do Corpo: estruturas mais graves = ${b.corpoReconhecimentoInss.estruturasReconhecidas ? 'Sim' : 'Não'}; prognóstico desfavorável = ${b.corpoReconhecimentoInss.prognosticoReconhecido ? 'Sim' : 'Não'}.`;
+  const reconhecimentoText = ` Reconhecimento INSS: estruturas mais graves ${b.corpoReconhecimentoInss.estruturasReconhecidas ? 'reconhecidas' : 'não reconhecidas'}, prognóstico desfavorável ${b.corpoReconhecimentoInss.prognosticoReconhecido ? 'reconhecido' : 'não reconhecido'}.`;
   const dirtyText = isAdminDraftDirty() ? ' Existem alterações no rascunho; clique em "Fixar base administrativa" para atualizar a base vigente.' : '';
   summary.textContent = `Base fixada: Fatores Ambientais ${Q_LABELS[b.amb]} (${Q_NAMES[b.amb]}), Atividades e Participação ${Q_LABELS[b.ativ]} (${Q_NAMES[b.ativ]}), Funções do Corpo ${Q_LABELS[b.corpo]} (${Q_NAMES[b.corpo]}).${reconhecimentoText}${dirtyText}`;
 }
@@ -1064,17 +1086,17 @@ function renderJudicialControl() {
   const adminPendingItems = getAdminPendingItems();
   setStepGuidance('admin', adminPendingItems.length
     ? {
-        tone: 'pending',
-        text: buildPendingGuidanceText(adminPendingItems, 'Etapa 1 pronta para fixação da base administrativa.'),
-        targetId: adminPendingItems[0].targetId,
-        actionLabel: 'Ir para próximo campo'
-      }
+      tone: 'pending',
+      text: buildPendingGuidanceText(adminPendingItems, 'Etapa 1 pronta para fixação da base administrativa.'),
+      targetId: adminPendingItems[0].targetId,
+      actionLabel: 'Ir para próximo campo'
+    }
     : {
-        tone: 'done',
-        text: 'Etapa 1 concluída. Base administrativa fixada.',
-        targetId: '',
-        actionLabel: ''
-      });
+      tone: 'done',
+      text: 'Etapa 1 concluída. Base administrativa fixada.',
+      targetId: '',
+      actionLabel: ''
+    });
 
   if (!adminDone) {
     const blockReason = 'Etapa 2 bloqueada: primeiro fixe a base administrativa na etapa 1.';
@@ -1115,17 +1137,17 @@ function renderJudicialControl() {
   setStepState('jcMedState', medDone ? 'done' : 'pending', medDone ? 'Concluída' : 'Pendente');
   setStepGuidance('med', medPendingItems.length
     ? {
-        tone: 'pending',
-        text: buildPendingGuidanceText(medPendingItems, 'Etapa 2 concluída.'),
-        targetId: medPendingItems[0].targetId,
-        actionLabel: 'Ir para próximo campo'
-      }
+      tone: 'pending',
+      text: buildPendingGuidanceText(medPendingItems, 'Etapa 2 concluída.'),
+      targetId: medPendingItems[0].targetId,
+      actionLabel: 'Ir para próximo campo'
+    }
     : {
-        tone: 'done',
-        text: 'Etapa 2 concluída. Triagem pronta para análise.',
-        targetId: '',
-        actionLabel: ''
-      });
+      tone: 'done',
+      text: 'Etapa 2 concluída. Triagem pronta para análise.',
+      targetId: '',
+      actionLabel: ''
+    });
   const triage = computeJudicialTriage();
   judicialControl.triage = triage;
 
@@ -1182,17 +1204,18 @@ function renderJudicialControl() {
   // Line 4
   const ativLine = getAtivMedTraceLineElement(ativContext);
   if (ativLine) traceContainer.appendChild(ativLine);
+  const traceCauseCode = getTracePrimaryCauseCode(m, ativContext);
 
   // Line 5 (Test A)
   if (m.impedimentoLP) {
     traceContainer.appendChild(createTraceLine(`<strong>Verificação com manutenção de Atividades e Participação administrativas</strong>: tabela(Fatores Ambientais ${Q_LABELS[b.amb]}, Atividades e Participação ${Q_LABELS[b.ativ]}, Funções do Corpo judiciais ${Q_LABELS[corpoFlow.q]}) = <strong>${triage.testeA ? 'Sim' : 'Não'}</strong>.`));
   } else {
-    traceContainer.appendChild(createTraceLine('<strong>Verificação com manutenção de Atividades e Participação administrativas</strong>: não aplicável, pois não houve reconhecimento de impedimento de longo prazo.'));
+    traceContainer.appendChild(createTraceLine(`<strong>Verificação com manutenção de Atividades e Participação administrativas</strong>: ${getTraceSecondaryReferenceSentence(traceCauseCode)}`));
   }
 
   // Line 6 (Test B)
   if (!ativContext.showQuestion) {
-    traceContainer.appendChild(createTraceLine(`<strong>Verificação com reclassificação médica de Atividades e Participação</strong>: não aplicável. ${ativContext.reason}`));
+    traceContainer.appendChild(createTraceLine(`<strong>Verificação com reclassificação médica de Atividades e Participação</strong>: ${getTraceSecondaryReferenceSentence(traceCauseCode)}`));
   } else if (m.hasAtivMed && ativMedResolved != null) {
     traceContainer.appendChild(createTraceLine(`<strong>Verificação com reclassificação médica de Atividades e Participação</strong>: tabela(Fatores Ambientais ${Q_LABELS[b.amb]}, Atividades e Participação médicas ${Q_LABELS[ativMedResolved]}, Funções do Corpo judiciais ${Q_LABELS[corpoFlow.q]}) = <strong>${triage.testeB ? 'Sim' : 'Não'}</strong>.`));
   } else if (m.hasAtivMed === false) {
@@ -1225,17 +1248,17 @@ function renderJudicialControl() {
   const hasDecisionText = !!document.getElementById('textoControleJudicial').value.trim();
   setStepGuidance('texto', hasDecisionText
     ? {
-        tone: 'done',
-        text: 'Minuta disponível. Você pode copiar o texto ou gerar novamente.',
-        targetId: 'btnCopiarControleTexto',
-        actionLabel: 'Copiar texto'
-      }
+      tone: 'done',
+      text: 'Minuta disponível. Você pode copiar o texto ou gerar novamente.',
+      targetId: 'btnCopiarControleTexto',
+      actionLabel: 'Copiar texto'
+    }
     : {
-        tone: 'pending',
-        text: 'Triagem concluída. Gere a minuta padronizada para finalizar a etapa 4.',
-        targetId: 'btnGerarControleTexto',
-        actionLabel: 'Gerar texto'
-      });
+      tone: 'pending',
+      text: 'Triagem concluída. Gere a minuta padronizada para finalizar a etapa 4.',
+      targetId: 'btnGerarControleTexto',
+      actionLabel: 'Gerar texto'
+    });
   setWhyBlocked('');
   renderJudicialProgress();
   const activeStep = getActiveJudicialStep();
