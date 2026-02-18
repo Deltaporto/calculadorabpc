@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxograma — Controle Judicial BPC/LOAS</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, Arial, sans-serif;
+            background: #f0f4f8;
+            color: #1e293b;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 1.75rem;
+            padding: 1.5rem 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            border-top: 4px solid #1d4ed8;
+        }
+
+        .page-header h1 {
+            font-size: 1.55rem;
+            color: #1e3a5f;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            letter-spacing: -0.01em;
+        }
+
+        .page-header p {
+            color: #64748b;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .controls {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 0.6rem 1.4rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: background 0.15s, transform 0.1s;
+            letter-spacing: 0.01em;
+        }
+
+        button:active { transform: scale(0.97); }
+
+        .btn-download {
+            background: #1d4ed8;
+            color: white;
+        }
+        .btn-download:hover { background: #1e40af; }
+
+        .btn-print {
+            background: #475569;
+            color: white;
+        }
+        .btn-print:hover { background: #334155; }
+
+        .diagram-container {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem 1.5rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            min-height: 200px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 800px) {
+            .info-grid { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+
+        .card h3 {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #64748b;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+        }
+
+        .legend-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            font-size: 0.85rem;
+            line-height: 1.45;
+        }
+
+        .legend-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+            flex-shrink: 0;
+            margin-top: 2px;
+            border: 2px solid transparent;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        th, td {
+            padding: 0.55rem 0.75rem;
+            border: 1px solid #e2e8f0;
+            text-align: left;
+            line-height: 1.45;
+        }
+
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.8rem;
+        }
+
+        tr:nth-child(even) { background: #f8fafc; }
+
+        .text-pos { color: #16a34a; font-weight: 700; }
+        .text-neg { color: #dc2626; font-weight: 700; }
+
+        .motivos-card {
+            margin-bottom: 1.5rem;
+        }
+
+        .motivos-card td:first-child {
+            width: 40px;
+            text-align: center;
+            font-weight: 700;
+            color: #1e3a5f;
+        }
+
+        .footnote {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 0.75rem;
+            line-height: 1.5;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.78rem;
+            color: #94a3b8;
+            margin-top: 0.5rem;
+            padding: 1rem 0;
+        }
+
+        @media print {
+            button, .controls { display: none !important; }
+            body { background: white; padding: 0.5rem; font-size: 12px; }
+            .card, .diagram-container, .page-header {
+                box-shadow: none;
+                border: 1px solid #e2e8f0;
+                border-radius: 6px;
+            }
+            .page-header { border-top: 4px solid #1d4ed8; }
+            .info-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <h1>Fluxograma — Controle Judicial · BPC/LOAS</h1>
+    <p>
+        Análise da prova técnica médica para decisão judicial sobre<br>
+        a necessidade de renovação da avaliação social pericial
+    </p>
+</div>
+
+<div class="controls">
+    <button class="btn-download" onclick="downloadSVG()">⬇ Baixar SVG</button>
+    <button class="btn-print" onclick="window.print()">🖨 Imprimir</button>
+</div>
+
+<div class="diagram-container">
+    <div class="mermaid" id="flowchart">
+flowchart TB
+    START(["INÍCIO"])
+
+    ADMIN["① BASE ADMINISTRATIVA<br/>Inserir qualificadores: Amb · Ativ · Corpo<br/>Escala: N = Nenhuma · L = Leve · M = Moderada · G = Grave · C = Completa<br/>INSS reconheceu Estruturas do Corpo?<br/>INSS reconheceu Prognóstico desfavorável?"]
+
+    START --> ADMIN --> ILP
+
+    ILP{"Perícia reconhece<br/>Impedimento de<br/>Longo Prazo?"}
+
+    ILP -- "NÃO" --> D1
+    ILP -- "SIM" --> SEC2
+
+    D1(["✅ DISPENSA — Motivo 1<br/>Sem Impedimento LP reconhecido,<br/>o requisito biopsicossocial<br/>não está em discussão"])
+
+    SEC2["② PERÍCIA MÉDICA"]
+
+    SEC2 --> CORPO_ALTERAR
+
+    CORPO_ALTERAR{"Perícia traz novos elementos<br/>sobre Funções do Corpo<br/>em relação à avaliação adm.?"}
+
+    CORPO_ALTERAR -- "NÃO - Manter" --> CORPO_EQ
+    CORPO_ALTERAR -- "SIM - Alterar" --> CORPO_MOTIVO
+
+    CORPO_EQ["Corpo Judicial<br/>= Corpo Administrativo"]
+
+    CORPO_MOTIVO["Motivo da alteração do Corpo Judicial:<br/>· Estruturas não reconhecidas → Adm + 1 grau (máx C)<br/>· Prognóstico não reconhecido → Adm + 1 grau (máx C)<br/>· Domínio b1-b8 mais grave → máx entre domínios<br/>· Rebaixamento por prova → qualificador manual"]
+
+    CORPO_EQ --> CORPO_NL
+    CORPO_MOTIVO --> CORPO_NL
+
+    CORPO_NL{"Corpo Judicial<br/>= N ou L?"}
+
+    CORPO_NL -- "SIM" --> D2
+    CORPO_NL -- "NÃO (M, G ou C)" --> ATIV_REQUALIF
+
+    D2(["✅ DISPENSA — Motivo 2<br/>Com Corpo N ou L, requalificar Atividades<br/>não altera o resultado da Tabela Conclusiva"])
+
+    ATIV_REQUALIF{"Perícia trouxe elementos para<br/>requalificar Atividades?"}
+
+    ATIV_REQUALIF -- "NÃO" --> ATIV_EQ
+    ATIV_REQUALIF -- "SIM" --> ATIV_MODO
+
+    ATIV_EQ["Atividades Judicial<br/>= Atividades Administrativas"]
+
+    ATIV_MODO["Modo de requalificação das Atividades:<br/>· Simples: qualificador direto + justificativa<br/>· Completo: domínios d1-d9 → qualificador calculado"]
+
+    ATIV_EQ --> SEC3
+    ATIV_MODO --> SEC3
+
+    SEC3["③ TRIAGEM PROBATÓRIA<br/>Processamento automático"]
+
+    SEC3 --> TESTE_A
+
+    TESTE_A{"TESTE A<br/>Amb Adm. + Ativ Adm. + Corpo Judicial<br/>→ Tabela Conclusiva<br/>Resultado POSITIVO?"}
+
+    TESTE_A -- "SIM" --> D3
+    TESTE_A -- "NÃO" --> TESTE_B
+
+    D3(["✅ DISPENSA — Motivo 3<br/>Com dados adm. + Corpo judicial,<br/>o resultado já é favorável ao beneficiário"])
+
+    TESTE_B{"TESTE B<br/>Amb Adm. + Ativ Médica + Corpo Judicial<br/>→ Tabela Conclusiva<br/>Resultado POSITIVO?"}
+
+    TESTE_B -- "SIM" --> D4
+    TESTE_B -- "NÃO" --> ASN
+
+    D4(["✅ DISPENSA — Motivo 4<br/>Com Atividades médicas requalificadas<br/>+ Corpo judicial, resultado é favorável"])
+
+    ASN(["❌ AVALIAÇÃO SOCIAL NECESSÁRIA<br/>A prova técnica não é suficiente<br/>para dispensar a avaliação social"])
+
+    D1 --> TEXTO
+    D2 --> TEXTO
+    D3 --> TEXTO
+    D4 --> TEXTO
+    ASN --> TEXTO
+
+    TEXTO["④ TEXTO DA DECISÃO<br/>Gerado automaticamente pelo sistema"]
+
+    classDef startNode fill:#e0e7ff,stroke:#6366f1,stroke-width:3px,color:#312e81,font-weight:bold
+    classDef sectionNode fill:#e2e8f0,stroke:#64748b,stroke-width:2px,color:#0f172a,font-weight:bold
+    classDef input fill:#dbeafe,stroke:#3b82f6,stroke-width:1.5px,color:#1e3a5f
+    classDef decision fill:#fef9c3,stroke:#d97706,stroke-width:1.5px,color:#78350f
+    classDef dispensa fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d,font-weight:bold
+    classDef negativo fill:#fee2e2,stroke:#dc2626,stroke-width:2.5px,color:#7f1d1d,font-weight:bold
+    classDef auto fill:#f1f5f9,stroke:#94a3b8,stroke-width:1.5px,color:#334155
+
+    class START startNode
+    class SEC2,SEC3 sectionNode
+    class ADMIN,CORPO_EQ,CORPO_MOTIVO,ATIV_EQ,ATIV_MODO input
+    class ILP,CORPO_ALTERAR,CORPO_NL,ATIV_REQUALIF,TESTE_A,TESTE_B decision
+    class D1,D2,D3,D4 dispensa
+    class ASN negativo
+    class TEXTO auto
+    </div>
+</div>
+
+<div class="info-grid">
+    <div class="card">
+        <h3>Legenda — Tipos de Nós</h3>
+        <ul class="legend-list">
+            <li class="legend-item">
+                <div class="legend-dot" style="background:#e0e7ff;border-color:#6366f1"></div>
+                <span><strong>Início</strong> — Ponto de entrada do fluxo</span>
+            </li>
+            <li class="legend-item">
+                <div class="legend-dot" style="background:#e2e8f0;border-color:#64748b"></div>
+                <span><strong>Seção</strong> — Marcador de etapa principal do processo</span>
+            </li>
+            <li class="legend-item">
+                <div class="legend-dot" style="background:#dbeafe;border-color:#3b82f6"></div>
+                <span><strong>Input / Informação</strong> — Dados inseridos ou fixados pelo sistema</span>
+            </li>
+            <li class="legend-item">
+                <div class="legend-dot" style="background:#fef9c3;border-color:#d97706"></div>
+                <span><strong>Decisão</strong> — Ponto de bifurcação do fluxo (losango)</span>
+            </li>
+            <li class="legend-item">
+                <div class="legend-dot" style="background:#dcfce7;border-color:#16a34a"></div>
+                <span><strong>DISPENSA</strong> — Avaliação social não necessária</span>
+            </li>
+            <li class="legend-item">
+                <div class="legend-dot" style="background:#fee2e2;border-color:#dc2626"></div>
+                <span><strong>AVALIAÇÃO SOCIAL NECESSÁRIA</strong> — Prova técnica insuficiente</span>
+            </li>
+            <li class="legend-item">
+                <div class="legend-dot" style="background:#f1f5f9;border-color:#94a3b8"></div>
+                <span><strong>Automático</strong> — Processamento ou saída gerada pelo sistema</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h3>Tabela Conclusiva — Lógica de Decisão</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Condição verificada</th>
+                    <th>Resultado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Corpo ≤ L (Nenhuma ou Leve)</td>
+                    <td class="text-neg">Negativo</td>
+                </tr>
+                <tr>
+                    <td>Atividades ≤ L (Nenhuma ou Leve)</td>
+                    <td class="text-neg">Negativo</td>
+                </tr>
+                <tr>
+                    <td>Corpo ≥ G (Grave ou Completa)</td>
+                    <td class="text-pos">Positivo</td>
+                </tr>
+                <tr>
+                    <td>Atividades ≥ G (Grave ou Completa)</td>
+                    <td class="text-pos">Positivo</td>
+                </tr>
+                <tr>
+                    <td>Ambos = M (Moderada) <strong>e</strong> Ambiente ≥ G</td>
+                    <td class="text-pos">Positivo</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="footnote">
+            * Condições avaliadas em ordem; a primeira verdadeira determina o resultado.<br>
+            Escala crescente: N &lt; L &lt; M &lt; G &lt; C · Amb = Ambiente · Ativ = Atividades
+        </p>
+    </div>
+</div>
+
+<div class="card motivos-card">
+    <h3>Motivos de Dispensa — Detalhamento</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Situação que gera a dispensa</th>
+                <th>Por que a avaliação social é dispensada?</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Impedimento de LP não reconhecido pela perícia</td>
+                <td>Sem impedimento de longo prazo, o requisito biopsicossocial do BPC não está em discussão — a avaliação social seria desnecessária</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Corpo Judicial = N ou L</td>
+                <td>Com Corpo N ou L, o resultado da Tabela Conclusiva já seria Negativo independentemente do qualificador de Atividades — não há o que requalificar que mude o desfecho</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Teste A positivo</td>
+                <td>Com os dados administrativos (Amb + Ativ) acrescidos apenas do Corpo judicial, o resultado já é favorável ao beneficiário — a avaliação social confirmaria o benefício sem acrescentar nada decisivo</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Teste B positivo</td>
+                <td>Com as Atividades requalificadas pela perícia médica + Corpo judicial, o resultado é favorável — a prova técnica isolada é suficiente para o deferimento judicial</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<footer>
+    Calculadora BPC/LOAS · Controle Judicial &nbsp;·&nbsp; Gerado em <span id="dataAtual"></span>
+</footer>
+
+<script>
+    // Data atual no rodapé
+    document.getElementById('dataAtual').textContent =
+        new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+    // Inicialização do Mermaid
+    mermaid.initialize({
+        startOnLoad: true,
+        theme: 'default',
+        flowchart: {
+            useMaxWidth: false,
+            htmlLabels: true,
+            curve: 'linear',
+            padding: 20
+        },
+        securityLevel: 'loose',
+        fontFamily: 'Segoe UI, system-ui, Arial, sans-serif',
+        fontSize: 13
+    });
+
+    // Download SVG
+    async function downloadSVG() {
+        // Garante que o Mermaid terminou de renderizar
+        await new Promise(r => setTimeout(r, 400));
+
+        const svgEl = document.querySelector('#flowchart svg');
+        if (!svgEl) {
+            alert('O diagrama ainda não foi renderizado. Aguarde e tente novamente.');
+            return;
+        }
+
+        const clone = svgEl.cloneNode(true);
+        clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+        clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+
+        // Fundo branco explícito
+        const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        bg.setAttribute('x', '0');
+        bg.setAttribute('y', '0');
+        bg.setAttribute('width', clone.getAttribute('width') || '100%');
+        bg.setAttribute('height', clone.getAttribute('height') || '100%');
+        bg.setAttribute('fill', 'white');
+        clone.insertBefore(bg, clone.firstChild);
+
+        const svgStr = new XMLSerializer().serializeToString(clone);
+        const blob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'fluxograma-controle-judicial-bpc.svg';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+</script>
+</body>
+</html>
