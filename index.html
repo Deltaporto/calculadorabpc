@@ -756,6 +756,11 @@
       flex-shrink: 0
     }
 
+    .toggle-label input[type=checkbox]:focus-visible + .toggle-switch {
+      outline: 2px solid var(--blue);
+      outline-offset: 2px
+    }
+
     .toggle-switch::after {
       content: '';
       position: absolute;
@@ -2289,9 +2294,10 @@
       <div class="header-row">
         <label><input type="checkbox" id="toggleDark"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-moon"></use></svg>Modo escuro</label>
         <label><input type="checkbox" id="toggleMenor16"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-child"></use></svg>Idade inferior a 16 anos</label>
-        <span class="idade-input hidden" id="idadeWrap">Idade:
+        <span class="idade-input hidden" id="idadeWrap">
+          <label for="inputIdade">Idade:</label>
           <input type="number" id="inputIdade" min="0" max="15" step="1" value="15" inputmode="numeric">
-          <select id="inputIdadeUnidade">
+          <select id="inputIdadeUnidade" aria-label="Unidade de tempo">
             <option value="anos" selected>anos</option>
             <option value="meses">meses</option>
           </select>
@@ -3016,8 +3022,11 @@
       return n;
     }
 
-    function escapeHtml(str = '') {
-      return String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    function createTraceLine(html) {
+      const div = document.createElement('div');
+      div.className = 'jc-trace-line';
+      div.innerHTML = html;
+      return div;
     }
 
     function computeAtivFromDomains(domains) {
@@ -3214,18 +3223,18 @@
       return { ready: false, q: null, reason: 'Motivo de alteração de Funções do Corpo inválido.', mode: 'invalid' };
     }
 
-    function getCorpoFlowTraceLine(corpoFlow) {
+    function getCorpoFlowTraceLineElement(corpoFlow) {
       const base = judicialControl.adminBase;
       const m = judicialControl.med;
-      if (!base) return `<div class="jc-trace-line"><strong>Funções do Corpo</strong>: base administrativa não fixada.</div>`;
-      if (m.corpoKeepAdmin == null) return `<div class="jc-trace-line"><strong>Funções do Corpo</strong>: aguardando decisão sobre manter ou alterar o qualificador administrativo.</div>`;
-      if (m.corpoKeepAdmin) return `<div class="jc-trace-line"><strong>Funções do Corpo</strong>: qualificador administrativo mantido em <strong>${Q_LABELS[base.corpo]}</strong>.</div>`;
-      if (!m.corpoChangeReason) return `<div class="jc-trace-line"><strong>Funções do Corpo</strong>: aguardando seleção do motivo da alteração.</div>`;
-      if (!corpoFlow.ready && corpoFlow.q == null) return `<div class="jc-trace-line"><strong>Funções do Corpo</strong>: ${corpoFlow.reason}</div>`;
+      if (!base) return createTraceLine('<strong>Funções do Corpo</strong>: base administrativa não fixada.');
+      if (m.corpoKeepAdmin == null) return createTraceLine('<strong>Funções do Corpo</strong>: aguardando decisão sobre manter ou alterar o qualificador administrativo.');
+      if (m.corpoKeepAdmin) return createTraceLine(`<strong>Funções do Corpo</strong>: qualificador administrativo mantido em <strong>${Q_LABELS[base.corpo]}</strong>.`);
+      if (!m.corpoChangeReason) return createTraceLine('<strong>Funções do Corpo</strong>: aguardando seleção do motivo da alteração.');
+      if (!corpoFlow.ready && corpoFlow.q == null) return createTraceLine(`<strong>Funções do Corpo</strong>: ${corpoFlow.reason}`);
       const motivo = JC_CORPO_REASON_LABELS[m.corpoChangeReason] || 'Motivo não identificado';
       const details = corpoFlow.mode === 'dominio_max' && corpoFlow.domainsText ? ` Domínios: ${corpoFlow.domainsText}.` : '';
       const pendencia = !corpoFlow.ready ? ` Pendência: ${corpoFlow.reason}` : '';
-      return `<div class="jc-trace-line"><strong>Funções do Corpo</strong>: motivo "${motivo}". ${corpoFlow.reason} Resultado judicial: <strong>${Q_LABELS[corpoFlow.q]}</strong>.${details}${pendencia}</div>`;
+      return createTraceLine(`<strong>Funções do Corpo</strong>: motivo "${motivo}". ${corpoFlow.reason} Resultado judicial: <strong>${Q_LABELS[corpoFlow.q]}</strong>.${details}${pendencia}`);
     }
 
     // ============ DOM BUILDERS ============
@@ -3243,21 +3252,25 @@
         container.appendChild(row);
       });
     }
+    let lastAmbTabForGrid = null;
     function buildTabelaGrid() {
+      if (lastAmbTabForGrid === currentAmbTab) return;
+      lastAmbTabForGrid = currentAmbTab;
       const g = document.getElementById('tGrid');
-      g.innerHTML = '';
+      let html = '';
       // Corner
-      g.innerHTML += '<div class="tc corner"></div>';
+      html += '<div class="tc corner"></div>';
       // Header row (Atividades)
-      Q_LABELS.forEach(l => g.innerHTML += `<div class="tc header">${l}</div>`);
+      Q_LABELS.forEach(l => html += `<div class="tc header">${l}</div>`);
       // Rows (Corpo)
       for (let c = 0; c < 5; c++) {
-        g.innerHTML += `<div class="tc row-header">${Q_LABELS[c]}</div>`;
+        html += `<div class="tc row-header">${Q_LABELS[c]}</div>`;
         for (let a = 0; a < 5; a++) {
           const yes = tabelaConclusiva(currentAmbTab, a, c);
-          g.innerHTML += `<div class="tc ${yes ? 'yes' : 'no'}" data-c="${c}" data-a="${a}">${yes ? 'Sim' : 'Não'}</div>`;
+          html += `<div class="tc ${yes ? 'yes' : 'no'}" data-c="${c}" data-a="${a}">${yes ? 'Sim' : 'Não'}</div>`;
         }
       }
+      g.innerHTML = html;
     }
 
     // ============ UI UPDATE ============
@@ -3329,10 +3342,11 @@
       el.textContent = Q_LABELS[q]; el.dataset.q = Q_LABELS[q];
     }
     function highlightActiveCell(ativQ, corpoQ) {
-      document.querySelectorAll('.tc.active-cell').forEach(c => c.classList.remove('active-cell'));
-      document.querySelectorAll('.tc[data-c]').forEach(c => {
-        if (+c.dataset.c === corpoQ && +c.dataset.a === ativQ) c.classList.add('active-cell');
-      });
+      const active = document.querySelector('.tc.active-cell');
+      if (active) active.classList.remove('active-cell');
+
+      const target = document.querySelector(`.tc[data-c="${corpoQ}"][data-a="${ativQ}"]`);
+      if (target) target.classList.add('active-cell');
     }
 
     // ============ EVENT HANDLERS ============
@@ -3564,7 +3578,9 @@
 
     function syncModeSwitcher() {
       document.querySelectorAll('#modeSwitcher .mode-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.mode === uiMode);
+        const isActive = btn.dataset.mode === uiMode;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', isActive);
       });
     }
 
@@ -3718,32 +3734,36 @@
       return !getMedBlockingReason();
     }
 
-    function getAtivMedTraceLine(ativContext = null) {
+    function getAtivMedTraceLineElement(ativContext = null) {
       const m = judicialControl.med;
       if (ativContext && !ativContext.showQuestion) {
-        return `<div class="jc-trace-line"><strong>Reclassificação médica de Atividades e Participação</strong>: não aplicável. ${ativContext.reason}</div>`;
+        return createTraceLine(`<strong>Reclassificação médica de Atividades e Participação</strong>: não aplicável. ${ativContext.reason}`);
       }
       if (m.hasAtivMed !== true) {
-        return `<div class="jc-trace-line"><strong>Origem da reclassificação médica de Atividades e Participação</strong>: não aplicada (sem elementos médicos para requalificar Atividades e Participação).</div>`;
+        return createTraceLine('<strong>Origem da reclassificação médica de Atividades e Participação</strong>: não aplicada (sem elementos médicos para requalificar Atividades e Participação).');
       }
 
       const ativMedResolved = resolveAtivMed();
       if (m.ativMode === 'simples') {
         const raw = m.ativMedJustification.trim();
         const preview = raw.length > 160 ? `${raw.slice(0, 157)}...` : raw;
-        return `<div class="jc-trace-line"><strong>Origem da reclassificação médica de Atividades e Participação</strong>: modo simples, qualificador final de Atividades e Participação em <strong>${Q_LABELS[ativMedResolved]}</strong>; justificativa médica: "${escapeHtml(preview)}".</div>`;
+        const line = document.createElement('div');
+        line.className = 'jc-trace-line';
+        line.innerHTML = `<strong>Origem da reclassificação médica de Atividades e Participação</strong>: modo simples, qualificador final de Atividades e Participação em <strong>${Q_LABELS[ativMedResolved]}</strong>; justificativa médica: `;
+        line.appendChild(document.createTextNode(`"${preview}".`));
+        return line;
       }
 
       if (m.ativMode === 'completa') {
         const computed = m.ativMedComputed || computeAtivFromDomains(m.ativMedDomains);
         const details = JC_ATIV_RECLASS_DOMAINS.map(id => `${id.toUpperCase()}=${Q_LABELS[m.ativMedDomains[id]]}`).join(' · ');
         if (!computed) {
-          return `<div class="jc-trace-line"><strong>Origem da reclassificação médica de Atividades e Participação</strong>: modo completo (d1–d9) ainda incompleto.</div>`;
+          return createTraceLine('<strong>Origem da reclassificação médica de Atividades e Participação</strong>: modo completo (d1–d9) ainda incompleto.');
         }
-        return `<div class="jc-trace-line"><strong>Origem da reclassificação médica de Atividades e Participação</strong>: modo completo (${details}); Σ=${computed.sum}, %=${computed.pct}, qualificador final de Atividades e Participação em <strong>${Q_LABELS[computed.q]}</strong>.</div>`;
+        return createTraceLine(`<strong>Origem da reclassificação médica de Atividades e Participação</strong>: modo completo (${details}); Σ=${computed.sum}, %=${computed.pct}, qualificador final de Atividades e Participação em <strong>${Q_LABELS[computed.q]}</strong>.`);
       }
 
-      return `<div class="jc-trace-line"><strong>Origem da reclassificação médica de Atividades e Participação</strong>: modo não definido.</div>`;
+      return createTraceLine('<strong>Origem da reclassificação médica de Atividades e Participação</strong>: modo não definido.');
     }
 
     function computeJudicialTriage() {
@@ -4089,32 +4109,48 @@
       const b = judicialControl.adminBase;
       const m = judicialControl.med;
       const ativMedResolved = resolveAtivMed();
-      const testALine = m.impedimentoLP
-        ? `<div class="jc-trace-line"><strong>Verificação com manutenção de Atividades e Participação administrativas</strong>: tabela(Fatores Ambientais ${Q_LABELS[b.amb]}, Atividades e Participação ${Q_LABELS[b.ativ]}, Funções do Corpo judiciais ${Q_LABELS[corpoFlow.q]}) = <strong>${triage.testeA ? 'Sim' : 'Não'}</strong>.</div>`
-        : `<div class="jc-trace-line"><strong>Verificação com manutenção de Atividades e Participação administrativas</strong>: não aplicável, pois não houve reconhecimento de impedimento de longo prazo.</div>`;
-      let testBLine = '';
-      if (!ativContext.showQuestion) {
-        testBLine = `<div class="jc-trace-line"><strong>Verificação com reclassificação médica de Atividades e Participação</strong>: não aplicável. ${ativContext.reason}</div>`;
-      } else if (m.hasAtivMed && ativMedResolved != null) {
-        testBLine = `<div class="jc-trace-line"><strong>Verificação com reclassificação médica de Atividades e Participação</strong>: tabela(Fatores Ambientais ${Q_LABELS[b.amb]}, Atividades e Participação médicas ${Q_LABELS[ativMedResolved]}, Funções do Corpo judiciais ${Q_LABELS[corpoFlow.q]}) = <strong>${triage.testeB ? 'Sim' : 'Não'}</strong>.</div>`;
-      } else if (m.hasAtivMed === false) {
-        testBLine = '<div class="jc-trace-line"><strong>Verificação com reclassificação médica de Atividades e Participação</strong>: não aplicada, pois a perícia médica não trouxe elementos para reclassificação.</div>';
+
+      const traceContainer = document.getElementById('jcTrace');
+      traceContainer.replaceChildren();
+
+      // Line 1
+      traceContainer.appendChild(createTraceLine(`<strong>Base administrativa fixada</strong>: Fatores Ambientais ${Q_LABELS[b.amb]} · Atividades e Participação ${Q_LABELS[b.ativ]} · Funções do Corpo ${Q_LABELS[b.corpo]}.`));
+
+      // Line 2
+      traceContainer.appendChild(createTraceLine(`<strong>Perícia médica judicial</strong>: impedimento de longo prazo = <strong>${m.impedimentoLP ? 'Sim' : 'Não'}</strong>.`));
+
+      // Line 3
+      traceContainer.appendChild(getCorpoFlowTraceLineElement(corpoFlow));
+
+      // Line 4
+      const ativLine = getAtivMedTraceLineElement(ativContext);
+      if (ativLine) traceContainer.appendChild(ativLine);
+
+      // Line 5 (Test A)
+      if (m.impedimentoLP) {
+        traceContainer.appendChild(createTraceLine(`<strong>Verificação com manutenção de Atividades e Participação administrativas</strong>: tabela(Fatores Ambientais ${Q_LABELS[b.amb]}, Atividades e Participação ${Q_LABELS[b.ativ]}, Funções do Corpo judiciais ${Q_LABELS[corpoFlow.q]}) = <strong>${triage.testeA ? 'Sim' : 'Não'}</strong>.`));
       } else {
-        testBLine = '<div class="jc-trace-line"><strong>Verificação com reclassificação médica de Atividades e Participação</strong>: aguardando definição sobre existência de elementos médicos.</div>';
+        traceContainer.appendChild(createTraceLine('<strong>Verificação com manutenção de Atividades e Participação administrativas</strong>: não aplicável, pois não houve reconhecimento de impedimento de longo prazo.'));
       }
-      const routeLine = triage.status === 'necessaria'
-        ? `<div class="jc-trace-line"><strong>Rotas de reversão pela avaliação social judicial</strong>: requalificação de <strong>Fatores Ambientais</strong> e/ou <strong>Atividades e Participação</strong>.</div>`
-        : '';
-      document.getElementById('jcTrace').innerHTML = [
-        `<div class="jc-trace-line"><strong>Base administrativa fixada</strong>: Fatores Ambientais ${Q_LABELS[b.amb]} · Atividades e Participação ${Q_LABELS[b.ativ]} · Funções do Corpo ${Q_LABELS[b.corpo]}.</div>`,
-        `<div class="jc-trace-line"><strong>Perícia médica judicial</strong>: impedimento de longo prazo = <strong>${m.impedimentoLP ? 'Sim' : 'Não'}</strong>.</div>`,
-        getCorpoFlowTraceLine(corpoFlow),
-        getAtivMedTraceLine(ativContext),
-        testALine,
-        testBLine,
-        `<div class="jc-trace-line">${triage.reason}</div>`,
-        routeLine
-      ].filter(Boolean).join('');
+
+      // Line 6 (Test B)
+      if (!ativContext.showQuestion) {
+        traceContainer.appendChild(createTraceLine(`<strong>Verificação com reclassificação médica de Atividades e Participação</strong>: não aplicável. ${ativContext.reason}`));
+      } else if (m.hasAtivMed && ativMedResolved != null) {
+        traceContainer.appendChild(createTraceLine(`<strong>Verificação com reclassificação médica de Atividades e Participação</strong>: tabela(Fatores Ambientais ${Q_LABELS[b.amb]}, Atividades e Participação médicas ${Q_LABELS[ativMedResolved]}, Funções do Corpo judiciais ${Q_LABELS[corpoFlow.q]}) = <strong>${triage.testeB ? 'Sim' : 'Não'}</strong>.`));
+      } else if (m.hasAtivMed === false) {
+        traceContainer.appendChild(createTraceLine('<strong>Verificação com reclassificação médica de Atividades e Participação</strong>: não aplicada, pois a perícia médica não trouxe elementos para reclassificação.'));
+      } else {
+        traceContainer.appendChild(createTraceLine('<strong>Verificação com reclassificação médica de Atividades e Participação</strong>: aguardando definição sobre existência de elementos médicos.'));
+      }
+
+      // Line 7 (Reason)
+      traceContainer.appendChild(createTraceLine(triage.reason));
+
+      // Line 8 (Route)
+      if (triage.status === 'necessaria') {
+        traceContainer.appendChild(createTraceLine('<strong>Rotas de reversão pela avaliação social judicial</strong>: requalificação de <strong>Fatores Ambientais</strong> e/ou <strong>Atividades e Participação</strong>.'));
+      }
 
       if (triage.status === 'dispensa') {
         setStatusBadge('dispensa', `${iconMarkup('check-circle', 'ui-icon sm')} <strong>Avaliação social judicial dispensável</strong>`);
@@ -4183,22 +4219,28 @@
       output.value = [baseIntro, reconhecimento, paragrafo2, paragrafo3].filter(Boolean).join('\n\n');
     }
 
-    async function copyJudicialControlText() {
-      const feedback = document.getElementById('copyFeedbackControle');
-      const area = document.getElementById('textoControleJudicial');
+    async function copyToClipboard(area, feedback) {
       if (!area.value.trim()) {
         feedback.textContent = 'Gere o texto antes de copiar.';
         return;
       }
       try {
+        if (!navigator.clipboard || !navigator.clipboard.writeText) {
+          throw new Error('Clipboard API not available');
+        }
         await navigator.clipboard.writeText(area.value);
         feedback.textContent = 'Texto copiado para a área de transferência.';
       } catch (err) {
         area.focus();
         area.select();
-        document.execCommand('copy');
         feedback.textContent = 'Não foi possível copiar automaticamente. Use Ctrl+C.';
       }
+    }
+
+    async function copyJudicialControlText() {
+      const feedback = document.getElementById('copyFeedbackControle');
+      const area = document.getElementById('textoControleJudicial');
+      await copyToClipboard(area, feedback);
     }
 
     function generateAndCopyJudicialText() {
@@ -4284,19 +4326,7 @@
     async function copyStandardText() {
       const feedback = document.getElementById('copyFeedback');
       const area = document.getElementById('textoPadrao');
-      if (!area.value.trim()) {
-        feedback.textContent = 'Gere o texto antes de copiar.';
-        return;
-      }
-      try {
-        await navigator.clipboard.writeText(area.value);
-        feedback.textContent = 'Texto copiado para a área de transferência.';
-      } catch (err) {
-        area.focus();
-        area.select();
-        document.execCommand('copy');
-        feedback.textContent = 'Texto copiado.';
-      }
+      await copyToClipboard(area, feedback);
     }
 
     document.getElementById('btnCopiarTexto').addEventListener('click', copyStandardText);
@@ -4431,6 +4461,15 @@
     document.getElementById('btnLimparControleJudicial').addEventListener('click', clearJudicialMedicalAndTriage);
 
     // ============ INIT ============
+    // A11y & Tooltips for static buttons
+    document.querySelectorAll('.jc-q-btn, .amb-tab').forEach(btn => {
+      const v = +(btn.dataset.value ?? btn.dataset.a);
+      if (Q_NAMES[v]) {
+        btn.setAttribute('aria-label', Q_NAMES[v]);
+        btn.setAttribute('title', Q_NAMES[v]);
+      }
+    });
+
     buildDomainRows(document.getElementById('domAmb'), DOM_AMB);
     buildDomainRows(document.getElementById('domCorpo'), DOM_CORPO);
     buildDomainRows(document.getElementById('domAtivM'), DOM_ATIV_M);
@@ -4441,19 +4480,6 @@
     renderJudicialControl();
     setUIMode('controle', { preserveAccordionState: false });
     buildTabelaGrid();
-
-    function initA11yLabels() {
-      const setLabels = (btn, idx) => {
-        if (Q_NAMES[idx]) {
-          const label = Q_NAMES[idx];
-          btn.setAttribute('aria-label', label);
-          btn.setAttribute('title', label);
-        }
-      };
-      document.querySelectorAll('.amb-tab').forEach(b => setLabels(b, +b.dataset.a));
-      document.querySelectorAll('.jc-q-btn').forEach(b => setLabels(b, +b.dataset.value));
-    }
-    initA11yLabels();
 
     update();
   </script>
