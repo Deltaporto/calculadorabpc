@@ -2289,9 +2289,10 @@
       <div class="header-row">
         <label><input type="checkbox" id="toggleDark"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-moon"></use></svg>Modo escuro</label>
         <label><input type="checkbox" id="toggleMenor16"><svg class="ui-icon sm" aria-hidden="true"><use href="#i-child"></use></svg>Idade inferior a 16 anos</label>
-        <span class="idade-input hidden" id="idadeWrap">Idade:
+        <span class="idade-input hidden" id="idadeWrap">
+          <label for="inputIdade">Idade:</label>
           <input type="number" id="inputIdade" min="0" max="15" step="1" value="15" inputmode="numeric">
-          <select id="inputIdadeUnidade">
+          <select id="inputIdadeUnidade" aria-label="Unidade de tempo">
             <option value="anos" selected>anos</option>
             <option value="meses">meses</option>
           </select>
@@ -4431,8 +4432,8 @@
 
     // ============ INIT ============
     // A11y & Tooltips for static buttons
-    document.querySelectorAll('.jc-q-btn').forEach(btn => {
-      const v = +btn.dataset.value;
+    document.querySelectorAll('.jc-q-btn, .amb-tab').forEach(btn => {
+      const v = +(btn.dataset.value ?? btn.dataset.a);
       if (Q_NAMES[v]) {
         btn.setAttribute('aria-label', Q_NAMES[v]);
         btn.setAttribute('title', Q_NAMES[v]);
