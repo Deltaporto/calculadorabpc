@@ -37,7 +37,7 @@ export const JC_ATIV_RECLASS_DOMAINS = [...DOM_ATIV_M, ...DOM_ATIV_S].map(d => d
 export const JC_CORPO_RECLASS_DOMAINS = DOM_CORPO.map(d => d.id);
 
 export const JC_CORPO_REASON_LABELS = {
-  estruturas: 'Estruturas do corpo mais graves (não reconhecidas pelo INSS)',
+  estruturas: 'Alterações em Estruturas do Corpo que configuram maiores limitações (não reconhecidas pelo INSS)',
   prognostico: 'Prognóstico desfavorável (não reconhecido pelo INSS)',
   dominio_max: 'Domínio administrativo b1–b8 mais grave',
   rebaixamento: 'Rebaixamento por prova superveniente'

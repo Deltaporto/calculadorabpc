@@ -89,6 +89,10 @@ const JC_STEP_GUIDANCE = {
   triagem: { box: 'jcTriagemGuidance', text: 'jcTriagemGuidanceText' },
   texto: { box: 'jcTextoGuidance', text: 'jcTextoGuidanceText' }
 };
+const PORTARIA_TEXT_PATH = 'docs/normas/portaria-conjunta-2-2015.txt';
+const PORTARIA_PDF_PATH = 'docs/normas/portaria-conjunta-2-2015.pdf';
+let portariaTextCache = null;
+let lastPortariaTrigger = null;
 
 // ============ CALCULATION ============
 function calcAmbiente() {
@@ -104,7 +108,7 @@ function calcCorpo() {
 }
 
 function getDecisionReason(ambQ, ativQ, corpoQ, yes) {
-  return getDecisionReasonFromScale(ambQ, ativQ, corpoQ, yes, Q_LABELS, Q_NAMES);
+  return getDecisionReasonFromScale(ambQ, ativQ, corpoQ, yes, Q_LABELS, Q_NAMES, Q_FULL);
 }
 function iconMarkup(name, cls = 'ui-icon') {
   return `<svg class="${cls}" aria-hidden="true"><use href="#i-${name}"></use></svg>`;
@@ -551,7 +555,7 @@ function getAdminPendingItems() {
   if (d.ativ == null) items.push({ label: 'selecione Atividades e Participação (final)', targetId: 'jcAdminAtivButtons' });
   if (d.corpo == null) items.push({ label: 'selecione Funções do Corpo (final)', targetId: 'jcAdminCorpoButtons' });
   if (d.corpoReconhecimentoInss.estruturasReconhecidas == null) {
-    items.push({ label: 'informe se o INSS reconheceu estruturas mais limitantes', targetId: 'jcAdminEstruturasRecButtons' });
+    items.push({ label: 'informe se o INSS reconheceu alterações em Estruturas do Corpo mais limitantes', targetId: 'jcAdminEstruturasRecButtons' });
   }
   if (d.corpoReconhecimentoInss.prognosticoReconhecido == null) {
     items.push({ label: 'informe se o INSS reconheceu prognóstico desfavorável', targetId: 'jcAdminProgRecButtons' });
@@ -838,7 +842,7 @@ function renderAdminFixedSummary() {
     return;
   }
   const b = judicialControl.adminBase;
-  const reconhecimentoText = ` Reconhecimento INSS: estruturas mais graves ${b.corpoReconhecimentoInss.estruturasReconhecidas ? 'reconhecidas' : 'não reconhecidas'}, prognóstico desfavorável ${b.corpoReconhecimentoInss.prognosticoReconhecido ? 'reconhecido' : 'não reconhecido'}.`;
+  const reconhecimentoText = ` Reconhecimento INSS: alterações em Estruturas do Corpo mais limitantes ${b.corpoReconhecimentoInss.estruturasReconhecidas ? 'reconhecidas' : 'não reconhecidas'}, prognóstico desfavorável ${b.corpoReconhecimentoInss.prognosticoReconhecido ? 'reconhecido' : 'não reconhecido'}.`;
   const dirtyText = isAdminDraftDirty() ? ' Existem alterações no rascunho; clique em "Fixar base administrativa" para atualizar a base vigente.' : '';
   summary.textContent = `Base fixada: Fatores Ambientais ${Q_LABELS[b.amb]} (${Q_NAMES[b.amb]}), Atividades e Participação ${Q_LABELS[b.ativ]} (${Q_NAMES[b.ativ]}), Funções do Corpo ${Q_LABELS[b.corpo]} (${Q_NAMES[b.corpo]}).${reconhecimentoText}${dirtyText}`;
 }
@@ -1330,7 +1334,7 @@ function renderStandardText(amb = calcAmbiente(), ativ = calcAtividades(), corpo
   let paragrafo2 = '';
 
   if (yes) {
-    paragrafo1 = `À luz do art. 20, §§ 2º e 10, da Lei nº 8.742/1993, e dos critérios da Portaria Conjunta MDS/INSS nº 2/2015 (Anexo IV), examina-se o enquadramento da parte autora como pessoa com deficiência para fins de BPC. ${contextoEtario} No caso concreto, os qualificadores finais apurados foram: Fatores Ambientais em grau ${qWord(amb.q)}, Atividades e Participação em grau ${qWord(ativ.q)} e Funções do Corpo em grau ${qWord(corpo.q)}, com reconhecimento de impedimento de longo prazo. A combinação desses qualificadores, confrontada com a Tabela Conclusiva da Portaria, conduz a resultado positivo para reconhecimento do requisito biopsicossocial legal.`;
+    paragrafo1 = `À luz do art. 20, §§ 2º e 10, da Lei nº 8.742/1993, e dos critérios da Portaria Conjunta MDS/INSS nº 2/2015 (Anexo IV), examina-se o enquadramento da parte autora como pessoa com deficiência para fins de BPC. ${contextoEtario} No caso, os qualificadores finais apurados foram: Fatores Ambientais em grau ${qWord(amb.q)}, Atividades e Participação em grau ${qWord(ativ.q)} e Funções do Corpo em grau ${qWord(corpo.q)}, com reconhecimento de impedimento de longo prazo. A combinação desses qualificadores, confrontada com a Tabela Conclusiva da Portaria, conduz a resultado positivo para reconhecimento do requisito biopsicossocial legal.`;
     paragrafo2 = 'Diante desse quadro técnico-normativo, reputo preenchido o requisito legal, motivo pelo qual a parte autora se enquadra no conceito de pessoa com deficiência para fins do benefício assistencial.';
   } else {
     if (impedimento) {
@@ -1353,6 +1357,83 @@ async function copyStandardText() {
 
 function handleModeSwitcherClick(mode) {
   setUIMode(mode, { scrollToJudicial: mode === 'controle' });
+}
+
+async function loadPortariaText() {
+  if (portariaTextCache != null) return portariaTextCache;
+  const response = await fetch(PORTARIA_TEXT_PATH, { cache: 'no-store' });
+  if (!response.ok) throw new Error(`Falha HTTP ${response.status}`);
+  portariaTextCache = await response.text();
+  return portariaTextCache;
+}
+
+function setPortariaStatus(statusEl, message, isError = false) {
+  statusEl.textContent = message;
+  statusEl.classList.toggle('error', isError);
+}
+
+function initPortariaModal() {
+  const openBtn = document.getElementById('openPortariaBtn');
+  const modal = document.getElementById('portariaModal');
+  const closeBtn = document.getElementById('closePortariaModalBtn');
+  const contentEl = document.getElementById('portariaContent');
+  const statusEl = document.getElementById('portariaStatus');
+  const pdfLink = document.getElementById('portariaPdfLink');
+  if (!openBtn || !modal || !contentEl || !statusEl || !pdfLink) return;
+
+  pdfLink.href = PORTARIA_PDF_PATH;
+
+  const closeModal = () => {
+    if (typeof modal.close === 'function') {
+      if (modal.open) modal.close();
+      return;
+    }
+    modal.removeAttribute('open');
+  };
+
+  const openModal = async () => {
+    lastPortariaTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : openBtn;
+    if (typeof modal.showModal === 'function') {
+      if (!modal.open) modal.showModal();
+    } else {
+      modal.setAttribute('open', '');
+    }
+    if (closeBtn) {
+      try {
+        closeBtn.focus({ preventScroll: true });
+      } catch {
+        closeBtn.focus();
+      }
+    }
+    setPortariaStatus(statusEl, 'Carregando texto da Portaria...');
+    contentEl.textContent = '';
+    try {
+      const text = await loadPortariaText();
+      contentEl.textContent = text;
+      contentEl.scrollTop = 0;
+      setPortariaStatus(statusEl, 'Texto da Portaria carregado.');
+    } catch {
+      contentEl.textContent = '';
+      setPortariaStatus(statusEl, 'Não foi possível carregar o texto. Use o botão "Abrir PDF oficial".', true);
+    }
+  };
+
+  openBtn.addEventListener('click', openModal);
+  modal.querySelectorAll('[data-portaria-close]').forEach(btn => {
+    btn.addEventListener('click', closeModal);
+  });
+  modal.addEventListener('click', event => {
+    if (event.target === modal) closeModal();
+  });
+  modal.addEventListener('close', () => {
+    if (lastPortariaTrigger && typeof lastPortariaTrigger.focus === 'function') {
+      try {
+        lastPortariaTrigger.focus({ preventScroll: true });
+      } catch {
+        lastPortariaTrigger.focus();
+      }
+    }
+  });
 }
 
 bindAppEvents({
@@ -1411,5 +1492,6 @@ resetJudicialControl();
 renderJudicialControl();
 setUIMode('controle', { preserveAccordionState: false });
 buildTabelaGrid();
+initPortariaModal();
 
 update();

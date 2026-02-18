@@ -785,9 +785,37 @@
 
     <footer>
       <p>Base normativa: Portaria Conjunta MDS/INSS nº 2/2015 (Anexo IV) · Portaria MDS/INSS nº 34/2025 (Art. 13, §7º)
+        <button type="button" class="footer-norm-link" id="openPortariaBtn"><svg class="ui-icon sm" aria-hidden="true">
+            <use href="#i-document"></use>
+          </svg>Consultar Portaria 2/2015</button>
       </p>
       <p>Resolução CNJ nº 630/2025 (Sisperjud) · 2ª Turma Recursal — SJRJ | Gabinete 3</p>
     </footer>
+
+    <dialog class="portaria-modal" id="portariaModal" aria-labelledby="portariaModalTitle">
+      <article class="portaria-modal-card">
+        <header class="portaria-modal-header">
+          <h2 id="portariaModalTitle">Portaria Conjunta MDS/INSS nº 2/2015</h2>
+          <button class="btn btn-red portaria-close-btn" id="closePortariaModalBtn" type="button"
+            data-portaria-close><svg class="ui-icon sm" aria-hidden="true">
+              <use href="#i-close"></use>
+            </svg>Fechar</button>
+        </header>
+        <p class="portaria-modal-helper">Texto integral para consulta rápida. O PDF oficial pode ser aberto no botão
+          abaixo.</p>
+        <div class="portaria-modal-status" id="portariaStatus" role="status" aria-live="polite"></div>
+        <pre class="portaria-modal-content" id="portariaContent"></pre>
+        <div class="portaria-modal-actions">
+          <a class="btn btn-outline" id="portariaPdfLink" href="docs/normas/portaria-conjunta-2-2015.pdf"
+            target="_blank" rel="noopener noreferrer"><svg class="ui-icon sm" aria-hidden="true">
+              <use href="#i-document"></use>
+            </svg>Abrir PDF oficial</a>
+          <button class="btn btn-gold" type="button" data-portaria-close><svg class="ui-icon sm" aria-hidden="true">
+              <use href="#i-close"></use>
+            </svg>Fechar leitura</button>
+        </div>
+      </article>
+    </dialog>
   </div>
 
   <script>

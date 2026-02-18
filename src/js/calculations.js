@@ -38,19 +38,22 @@ export function tabelaConclusiva(amb, ativ, corpo) {
   return amb >= 3;
 }
 
-export function getDecisionReason(ambQ, ativQ, corpoQ, yes, labels, names) {
+export function getDecisionReason(ambQ, ativQ, corpoQ, yes, labels, names, qFull) {
+  const fAmb = qFull ? qFull.amb[ambQ] : `${labels[ambQ]} (${names[ambQ]})`;
+  const fCorpo = qFull ? qFull.corpo[corpoQ] : `${labels[corpoQ]} (${names[corpoQ]})`;
+  const fAtiv = qFull ? qFull.ativ[ativQ] : `${labels[ativQ]} (${names[ativQ]})`;
   if (!yes) {
-    if (corpoQ <= 1) return `Funções do Corpo = ${labels[corpoQ]} (${names[corpoQ]}) — exige-se ≥ Moderada`;
-    if (ativQ <= 1) return `Atividades e Participação = ${labels[ativQ]} (${names[ativQ]}) — exige-se ≥ Moderada`;
-    return `Combinação M-M com Fatores Ambientais ${labels[ambQ]} — exige-se Fatores Ambientais ≥ Grave`;
+    if (corpoQ <= 1) return `Funções do Corpo com ${fCorpo.toLowerCase()} — exige-se alteração ≥ moderada`;
+    if (ativQ <= 1) return `Atividades e Participação com ${fAtiv.toLowerCase()} — exige-se dificuldade ≥ moderada`;
+    return `Combinação M-M com Fatores Ambientais com ${fAmb.toLowerCase()} — exige-se barreira ≥ grave`;
   }
   if (corpoQ >= 3 && ativQ >= 2) {
-    return `Funções do Corpo ${labels[corpoQ]} + Atividades e Participação ${labels[ativQ]} — deferimento independente de Fatores Ambientais`;
+    return `Funções do Corpo com ${fCorpo.toLowerCase()} + Atividades e Participação com ${fAtiv.toLowerCase()} — deferimento independente de Fatores Ambientais`;
   }
   if (ativQ >= 3 && corpoQ >= 2) {
-    return `Atividades e Participação ${labels[ativQ]} + Funções do Corpo ${labels[corpoQ]} — deferimento independente de Fatores Ambientais`;
+    return `Atividades e Participação com ${fAtiv.toLowerCase()} + Funções do Corpo com ${fCorpo.toLowerCase()} — deferimento independente de Fatores Ambientais`;
   }
-  return `Funções do Corpo M + Atividades e Participação M + Fatores Ambientais ${labels[ambQ]} (≥ G) — combinação deferida`;
+  return `Funções do Corpo com alteração moderada + Atividades e Participação com dificuldade moderada + Fatores Ambientais com ${fAmb.toLowerCase()} (≥ grave) — combinação deferida`;
 }
 
 export function computeAtivFromDomains(domains, ativDomainIds, pctToQFn = pctToQ) {

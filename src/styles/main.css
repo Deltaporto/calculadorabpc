@@ -3012,6 +3012,139 @@ footer {
   color: color-mix(in srgb, var(--text3) 82%, transparent);
 }
 
+.footer-norm-link {
+  margin-left: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: transparent;
+  color: var(--blue);
+  font: 600 .75rem/1.2 'DM Sans', sans-serif;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.footer-norm-link:hover {
+  color: color-mix(in srgb, var(--blue) 78%, var(--navy));
+}
+
+.footer-norm-link:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--blue) 58%, white);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.footer-norm-link .ui-icon {
+  width: .9em;
+  height: .9em;
+}
+
+.portaria-modal {
+  width: min(1000px, calc(100vw - 32px));
+  max-height: calc(100vh - 38px);
+  margin: auto;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 0;
+  color: var(--text);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+}
+
+.portaria-modal::backdrop {
+  background: rgba(8, 16, 29, .58);
+}
+
+.portaria-modal-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+}
+
+.portaria-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.portaria-modal-header h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.portaria-modal-helper {
+  margin: 0;
+  color: var(--text2);
+  font-size: .78rem;
+}
+
+.portaria-modal-status {
+  margin: 0;
+  font-size: .77rem;
+  color: var(--text3);
+}
+
+.portaria-modal-status.error {
+  color: var(--no);
+}
+
+.portaria-modal-content {
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-soft);
+  padding: 12px;
+  max-height: min(62vh, 620px);
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font: 500 .79rem/1.45 'Source Sans 3', sans-serif;
+  color: var(--text2);
+}
+
+.portaria-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+[data-theme="dark"] .portaria-modal::backdrop {
+  background: rgba(2, 7, 16, .74);
+}
+
+@media (max-width:680px) {
+  .footer-norm-link {
+    display: inline-flex;
+    margin-left: 0;
+    margin-top: 6px;
+  }
+
+  .portaria-modal {
+    width: calc(100vw - 18px);
+    max-height: calc(100vh - 20px);
+  }
+
+  .portaria-modal-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .portaria-close-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .portaria-modal-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 @media (prefers-reduced-motion:no-preference) {
 
   header,

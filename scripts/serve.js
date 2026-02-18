@@ -18,6 +18,7 @@ const MIME_TYPES = {
   '.gif': 'image/gif',
   '.ico': 'image/x-icon',
   '.txt': 'text/plain; charset=utf-8',
+  '.pdf': 'application/pdf',
   '.md': 'text/markdown; charset=utf-8',
   '.map': 'application/json; charset=utf-8'
 };

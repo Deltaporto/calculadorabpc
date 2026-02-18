@@ -74,7 +74,7 @@ export function isCorpoReasonBlocked({ base, reason }) {
 }
 
 export function getCorpoReasonBlockedMessage(reason) {
-  if (reason === 'estruturas') return 'Motivo indisponível: a base administrativa já registra reconhecimento de estruturas do corpo mais graves pelo INSS.';
+  if (reason === 'estruturas') return 'Motivo indisponível: a base administrativa já registra reconhecimento de alterações em Estruturas do Corpo que configuram maiores limitações do que as observadas em Funções do Corpo.';
   if (reason === 'prognostico') return 'Motivo indisponível: a base administrativa já registra reconhecimento de prognóstico desfavorável pelo INSS.';
   return 'Motivo indisponível para esta base administrativa.';
 }
@@ -114,7 +114,7 @@ export function resolveCorpoJudFlow({
       ready: true,
       q,
       mode: 'estruturas',
-      reason: 'Regra aplicada: majoração de +1 por estruturas do corpo mais graves não reconhecidas na fase administrativa.',
+      reason: 'Regra aplicada: majoração de +1 por alterações em Estruturas do Corpo que configuram maiores limitações do que as observadas em Funções do Corpo, não reconhecidas na fase administrativa.',
       decreased: q < base.corpo
     };
   }
@@ -250,7 +250,7 @@ export function computeJudicialTriage({
   if (testeA) {
     const modeLabel = corpoFlow.mode === 'mantido'
       ? 'mantendo-se Funções do Corpo no patamar administrativo'
-      : 'com reclassificação médica de Funções do Corpo';
+      : 'com reclassificação de Funções do Corpo';
     return {
       ready: true,
       status: 'dispensa',

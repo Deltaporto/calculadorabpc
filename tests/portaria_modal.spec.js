@@ -50,43 +50,24 @@ async function startStaticServer(rootDir) {
   };
 }
 
-test('Guidance advances focus to next pending judicial field', async ({ page }) => {
+test('Portaria can be opened in modal with PDF shortcut', async ({ page }) => {
   const rootDir = process.cwd();
   const { server, url } = await startStaticServer(rootDir);
 
   try {
     await page.goto(`${url}/index.html`);
-    await page.click('button[data-mode="controle"]');
 
-    await expect(page.locator('#jcAdminGuidanceText')).toContainText('Faltam');
-    await page.click('#jcAdminAmbButtons button[data-value="0"]');
-    await expect(page.locator('#jcAdminGuidanceText')).toContainText('Atividades e Participação');
+    await page.click('#openPortariaBtn');
+    await expect(page.locator('#portariaModal')).toBeVisible();
+    await expect(page.locator('#portariaStatus')).toContainText('Texto da Portaria carregado.');
+    await expect(page.locator('#portariaContent')).toContainText('PORTARIA CONJUNTA MDS/INSS');
+    await expect(page.locator('#portariaPdfLink')).toHaveAttribute('href', 'docs/normas/portaria-conjunta-2-2015.pdf');
 
-    await page.click('#jcAdminAtivButtons button[data-value="1"]');
-    await page.click('#jcAdminCorpoButtons button[data-value="2"]');
-    await page.click('#jcAdminEstruturasRecButtons button[data-value="nao"]');
-    await page.click('#jcAdminProgRecButtons button[data-value="nao"]');
-    await expect(page.locator('#jcAdminGuidanceText')).toContainText('Fixar base administrativa');
-
-    await page.click('#btnFixarBaseAdmin');
-    await expect.poll(async () => (
-      page.evaluate(() => {
-        const active = document.activeElement;
-        return !!active && !!active.closest('#jcImpedimentoButtons');
-      })
-    )).toBe(true);
-
-    await page.click('#jcImpedimentoButtons button[data-value="sim"]');
-    await page.click('#jcCorpoKeepButtons button[data-value="sim"]');
-    await page.click('#jcHasAtivMedButtons button[data-value="sim"]');
-    await page.click('#jcAtivModeButtons button[data-value="simples"]');
-    await page.click('#jcAtivMedSimpleButtons button[data-value="0"]');
-    await page.fill('#jcAtivMedJustification', 'Justificativa técnica para teste de orientação.');
-
+    await page.keyboard.press('Escape');
+    await expect(page.locator('#portariaModal')).toBeHidden();
     await expect.poll(async () => (
       page.evaluate(() => document.activeElement && document.activeElement.id)
-    )).toBe('btnGerarControleTexto');
-    await expect(page.locator('#jcTextoGuidanceText')).toContainText('Gere a minuta');
+    )).toBe('openPortariaBtn');
   } finally {
     await new Promise(resolve => server.close(resolve));
   }
