@@ -23,7 +23,7 @@ export function buildJudicialControlText({
   const qCorpo = q => Q_FULL.corpo[q]?.toLowerCase();
   const qAtiv = q => Q_FULL.ativ[q]?.toLowerCase();
 
-  const baseIntro = `No controle judicial da prova técnica, a base administrativa está fixada com Fatores Ambientais com ${qAmb(b.amb)}, Atividades e Participação com ${qAtiv(b.ativ)} e Funções do Corpo com ${qCorpo(b.corpo)}.`;
+  const baseIntro = `No controle judicial da prova técnica, a avaliação administrativa registra Fatores Ambientais com ${qAmb(b.amb)}, Atividades e Participação com ${qAtiv(b.ativ)} e Funções do Corpo com ${qCorpo(b.corpo)}.`;
 
   const est = b.corpoReconhecimentoInss.estruturasReconhecidas;
   const prog = b.corpoReconhecimentoInss.prognosticoReconhecido;
