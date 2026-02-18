@@ -1489,7 +1489,34 @@ input:checked+.toggle-switch::after {
 .btn.jc-invalid {
   border-color: transparent !important;
   position: relative;
-  overflow: hidden
+  overflow: hidden;
+  isolation: isolate
+}
+
+/* Segmented controls need inner spacing so the rotating border is not hidden by full-size buttons */
+.jc-segmented.jc-invalid {
+  padding: 2px;
+  background: var(--surface)
+}
+
+.jc-segmented.jc-invalid .jc-seg-btn {
+  border-radius: 7px
+}
+
+/* For wide segmented controls (e.g., "Manter" / "Alterar"), avoid the conic
+   sliver artifact between buttons and highlight the whole group container. */
+.jc-segmented-wide.jc-invalid {
+  border: 1.5px solid #EF4444 !important;
+  border-radius: 10px;
+  padding: 4px;
+  background: color-mix(in srgb, #FEF2F2 70%, var(--surface));
+  box-shadow: 0 0 0 0 rgba(239, 68, 68, .36);
+  animation: jc-segmented-wide-invalid-pulse 1.4s ease-out infinite;
+}
+
+.jc-segmented-wide.jc-invalid::before,
+.jc-segmented-wide.jc-invalid::after {
+  content: none;
 }
 
 /* select can't host ::before, so keep a static red border */
@@ -1546,6 +1573,20 @@ input:checked+.toggle-switch::after {
   z-index: 1
 }
 
+/* Buttons can contain plain text nodes (not wrapped elements).
+   Keep animated layers behind to avoid hiding label text. */
+.btn.jc-invalid {
+  z-index: 0
+}
+
+.btn.jc-invalid::before {
+  z-index: -2
+}
+
+.btn.jc-invalid::after {
+  z-index: -1
+}
+
 /* Dark mode: use a lighter red for better contrast */
 [data-theme="dark"] .jc-q-buttons.jc-invalid::before,
 [data-theme="dark"] .jc-segmented.jc-invalid::before,
@@ -1565,9 +1606,29 @@ input:checked+.toggle-switch::after {
   box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.22)
 }
 
+[data-theme="dark"] .jc-segmented-wide.jc-invalid {
+  border-color: #F87171 !important;
+  background: color-mix(in srgb, #450A0A 52%, var(--surface));
+  box-shadow: 0 0 0 0 rgba(248, 113, 113, .4);
+}
+
 @keyframes jc-border-spin {
   to {
     --jc-angle: 360deg
+  }
+}
+
+@keyframes jc-segmented-wide-invalid-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, .36);
+  }
+
+  70% {
+    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
   }
 }
 
@@ -1581,6 +1642,11 @@ input:checked+.toggle-switch::after {
   .btn.jc-invalid::before {
     animation: none;
     background: #EF4444
+  }
+
+  .jc-segmented-wide.jc-invalid {
+    animation: none;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, .2);
   }
 }
 
@@ -1671,7 +1737,8 @@ input:checked+.toggle-switch::after {
   color: var(--text2);
   font-weight: 700;
   cursor: pointer;
-  font-size: .78rem
+  font-size: .78rem;
+  outline: none
 }
 
 .jc-seg-btn:last-child {
@@ -1688,6 +1755,17 @@ input:checked+.toggle-switch::after {
   color: var(--text3);
   background: color-mix(in srgb, var(--border) 18%, var(--surface));
   opacity: .75
+}
+
+.jc-seg-btn:focus-visible {
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--blue) 72%, #fff 28%);
+}
+
+.jc-q-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--blue) 72%, #fff 28%);
 }
 
 .jc-segmented-wide {
