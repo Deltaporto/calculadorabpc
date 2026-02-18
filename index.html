@@ -17,6 +17,7 @@
 
 <body>
   <div class="app">
+    <a href="#judicialControlSection" class="skip-link">Pular para o Controle Judicial</a>
     <svg class="icon-sprite" aria-hidden="true">
       <symbol id="i-balance" viewBox="0 0 24 24">
         <path d="M4 7h16" />
@@ -120,7 +121,7 @@
           target="_blank" rel="noopener noreferrer"
           title="Abrir o PDF da Portaria Conjunta MDS/INSS nº 2/2015 em nova aba">Portaria Conjunta MDS/INSS nº
           2/2015</a></p>
-      <div class="app-mode-switch" id="modeSwitcher" aria-label="Modo da aplicação">
+      <div class="app-mode-switch" id="modeSwitcher" role="group" aria-label="Modo da aplicação">
         <button class="mode-btn" data-mode="controle">Controle Judicial</button>
         <button class="mode-btn" data-mode="simulador">Simulador</button>
       </div>
@@ -267,7 +268,7 @@
           </div>
           <div class="tabela-section">
             <h3>Tabela Conclusiva — Anexo IV, Portaria 2/2015</h3>
-            <div class="amb-tabs"><span class="amb-tab-label">Fatores Ambientais:</span><button class="amb-tab active"
+            <div class="amb-tabs" role="group" aria-label="Fatores Ambientais"><span class="amb-tab-label">Fatores Ambientais:</span><button class="amb-tab active"
                 data-a="0">N</button><button class="amb-tab" data-a="1">L</button><button class="amb-tab"
                 data-a="2">M</button><button class="amb-tab" data-a="3">G</button><button class="amb-tab"
                 data-a="4">C</button></div>
@@ -358,8 +359,8 @@
           </div>
           <div class="jc-qual-grid">
             <div class="jc-qual-item">
-              <div class="jc-field-title">Fatores Ambientais (final)</div>
-              <div class="jc-q-buttons" id="jcAdminAmbButtons">
+              <div class="jc-field-title" id="jcAdminAmbLabel">Fatores Ambientais (final)</div>
+              <div class="jc-q-buttons" id="jcAdminAmbButtons" role="group" aria-labelledby="jcAdminAmbLabel">
                 <button class="jc-q-btn" data-value="0">N</button>
                 <button class="jc-q-btn" data-value="1">L</button>
                 <button class="jc-q-btn" data-value="2">M</button>
@@ -368,8 +369,8 @@
               </div>
             </div>
             <div class="jc-qual-item">
-              <div class="jc-field-title">Atividades e Participação (final)</div>
-              <div class="jc-q-buttons" id="jcAdminAtivButtons">
+              <div class="jc-field-title" id="jcAdminAtivLabel">Atividades e Participação (final)</div>
+              <div class="jc-q-buttons" id="jcAdminAtivButtons" role="group" aria-labelledby="jcAdminAtivLabel">
                 <button class="jc-q-btn" data-value="0">N</button>
                 <button class="jc-q-btn" data-value="1">L</button>
                 <button class="jc-q-btn" data-value="2">M</button>
@@ -378,8 +379,8 @@
               </div>
             </div>
             <div class="jc-qual-item">
-              <div class="jc-field-title">Funções do Corpo (final)</div>
-              <div class="jc-q-buttons" id="jcAdminCorpoButtons">
+              <div class="jc-field-title" id="jcAdminCorpoLabel">Funções do Corpo (final)</div>
+              <div class="jc-q-buttons" id="jcAdminCorpoButtons" role="group" aria-labelledby="jcAdminCorpoLabel">
                 <button class="jc-q-btn" data-value="0">N</button>
                 <button class="jc-q-btn" data-value="1">L</button>
                 <button class="jc-q-btn" data-value="2">M</button>
@@ -394,16 +395,16 @@
               Funções do Corpo.</p>
             <div class="jc-social-grid">
               <div class="jc-social-item">
-                <div class="jc-field-title">INSS reconheceu alterações em estruturas do corpo que configurem maiores
+                <div class="jc-field-title" id="jcAdminEstruturasRecLabel">INSS reconheceu alterações em estruturas do corpo que configurem maiores
                   limitações ou restrições ao avaliado do que as alterações observadas em Funções do Corpo?</div>
-                <div class="jc-segmented" id="jcAdminEstruturasRecButtons">
+                <div class="jc-segmented" id="jcAdminEstruturasRecButtons" role="group" aria-labelledby="jcAdminEstruturasRecLabel">
                   <button class="jc-seg-btn" data-value="sim">Sim</button>
                   <button class="jc-seg-btn" data-value="nao">Não</button>
                 </div>
               </div>
               <div class="jc-social-item">
-                <div class="jc-field-title">INSS reconheceu prognóstico desfavorável?</div>
-                <div class="jc-segmented" id="jcAdminProgRecButtons">
+                <div class="jc-field-title" id="jcAdminProgRecLabel">INSS reconheceu prognóstico desfavorável?</div>
+                <div class="jc-segmented" id="jcAdminProgRecButtons" role="group" aria-labelledby="jcAdminProgRecLabel">
                   <button class="jc-seg-btn" data-value="sim">Sim</button>
                   <button class="jc-seg-btn" data-value="nao">Não</button>
                 </div>
@@ -472,15 +473,15 @@
           </div>
           <div class="jc-med-grid">
             <div class="jc-field">
-              <div class="jc-field-title">Impedimento de longo prazo</div>
-              <div class="jc-segmented" id="jcImpedimentoButtons">
+              <div class="jc-field-title" id="jcImpedimentoLabel">Impedimento de longo prazo</div>
+              <div class="jc-segmented" id="jcImpedimentoButtons" role="group" aria-labelledby="jcImpedimentoLabel">
                 <button class="jc-seg-btn" data-value="sim">Sim</button>
                 <button class="jc-seg-btn" data-value="nao">Não</button>
               </div>
             </div>
             <div class="jc-field jc-field-span-2">
-              <div class="jc-field-title">Funções do Corpo (judicial)</div>
-              <div class="jc-segmented jc-segmented-wide" id="jcCorpoKeepButtons">
+              <div class="jc-field-title" id="jcCorpoKeepLabel">Funções do Corpo (judicial)</div>
+              <div class="jc-segmented jc-segmented-wide" id="jcCorpoKeepButtons" role="group" aria-labelledby="jcCorpoKeepLabel">
                 <button class="jc-seg-btn" data-value="sim">Manter qualificador administrativo</button>
                 <button class="jc-seg-btn" data-value="nao">Alterar na fase judicial</button>
               </div>
@@ -502,8 +503,8 @@
                     administrativo mais grave entre os informados.</p>
                   <div class="jc-complete-grid">
                     <div class="jc-complete-item">
-                      <div class="jc-field-title">b1 · Funções Mentais</div>
-                      <div class="jc-q-buttons" id="jcCorpoB1Buttons">
+                      <div class="jc-field-title" id="jcCorpoB1Label">b1 · Funções Mentais</div>
+                      <div class="jc-q-buttons" id="jcCorpoB1Buttons" role="group" aria-labelledby="jcCorpoB1Label">
                         <button class="jc-q-btn" data-value="0">N</button>
                         <button class="jc-q-btn" data-value="1">L</button>
                         <button class="jc-q-btn" data-value="2">M</button>
@@ -512,8 +513,8 @@
                       </div>
                     </div>
                     <div class="jc-complete-item">
-                      <div class="jc-field-title">b2 · Visão</div>
-                      <div class="jc-q-buttons" id="jcCorpoB2Buttons">
+                      <div class="jc-field-title" id="jcCorpoB2Label">b2 · Visão</div>
+                      <div class="jc-q-buttons" id="jcCorpoB2Buttons" role="group" aria-labelledby="jcCorpoB2Label">
                         <button class="jc-q-btn" data-value="0">N</button>
                         <button class="jc-q-btn" data-value="1">L</button>
                         <button class="jc-q-btn" data-value="2">M</button>
@@ -522,8 +523,8 @@
                       </div>
                     </div>
                     <div class="jc-complete-item">
-                      <div class="jc-field-title">b3 · Audição</div>
-                      <div class="jc-q-buttons" id="jcCorpoB3Buttons">
+                      <div class="jc-field-title" id="jcCorpoB3Label">b3 · Audição</div>
+                      <div class="jc-q-buttons" id="jcCorpoB3Buttons" role="group" aria-labelledby="jcCorpoB3Label">
                         <button class="jc-q-btn" data-value="0">N</button>
                         <button class="jc-q-btn" data-value="1">L</button>
                         <button class="jc-q-btn" data-value="2">M</button>
@@ -532,8 +533,8 @@
                       </div>
                     </div>
                     <div class="jc-complete-item">
-                      <div class="jc-field-title">b4 · Dor e Sensações</div>
-                      <div class="jc-q-buttons" id="jcCorpoB4Buttons">
+                      <div class="jc-field-title" id="jcCorpoB4Label">b4 · Dor e Sensações</div>
+                      <div class="jc-q-buttons" id="jcCorpoB4Buttons" role="group" aria-labelledby="jcCorpoB4Label">
                         <button class="jc-q-btn" data-value="0">N</button>
                         <button class="jc-q-btn" data-value="1">L</button>
                         <button class="jc-q-btn" data-value="2">M</button>
@@ -542,8 +543,8 @@
                       </div>
                     </div>
                     <div class="jc-complete-item">
-                      <div class="jc-field-title">b5 · Voz e Fala</div>
-                      <div class="jc-q-buttons" id="jcCorpoB5Buttons">
+                      <div class="jc-field-title" id="jcCorpoB5Label">b5 · Voz e Fala</div>
+                      <div class="jc-q-buttons" id="jcCorpoB5Buttons" role="group" aria-labelledby="jcCorpoB5Label">
                         <button class="jc-q-btn" data-value="0">N</button>
                         <button class="jc-q-btn" data-value="1">L</button>
                         <button class="jc-q-btn" data-value="2">M</button>
@@ -552,8 +553,8 @@
                       </div>
                     </div>
                     <div class="jc-complete-item">
-                      <div class="jc-field-title">b6 · Cardiovascular / Respiratório</div>
-                      <div class="jc-q-buttons" id="jcCorpoB6Buttons">
+                      <div class="jc-field-title" id="jcCorpoB6Label">b6 · Cardiovascular / Respiratório</div>
+                      <div class="jc-q-buttons" id="jcCorpoB6Buttons" role="group" aria-labelledby="jcCorpoB6Label">
                         <button class="jc-q-btn" data-value="0">N</button>
                         <button class="jc-q-btn" data-value="1">L</button>
                         <button class="jc-q-btn" data-value="2">M</button>
@@ -562,8 +563,8 @@
                       </div>
                     </div>
                     <div class="jc-complete-item">
-                      <div class="jc-field-title">b7 · Digestivo / Metabólico</div>
-                      <div class="jc-q-buttons" id="jcCorpoB7Buttons">
+                      <div class="jc-field-title" id="jcCorpoB7Label">b7 · Digestivo / Metabólico</div>
+                      <div class="jc-q-buttons" id="jcCorpoB7Buttons" role="group" aria-labelledby="jcCorpoB7Label">
                         <button class="jc-q-btn" data-value="0">N</button>
                         <button class="jc-q-btn" data-value="1">L</button>
                         <button class="jc-q-btn" data-value="2">M</button>
@@ -572,8 +573,8 @@
                       </div>
                     </div>
                     <div class="jc-complete-item">
-                      <div class="jc-field-title">b8 · Neuromusculoesquelético</div>
-                      <div class="jc-q-buttons" id="jcCorpoB8Buttons">
+                      <div class="jc-field-title" id="jcCorpoB8Label">b8 · Neuromusculoesquelético</div>
+                      <div class="jc-q-buttons" id="jcCorpoB8Buttons" role="group" aria-labelledby="jcCorpoB8Label">
                         <button class="jc-q-btn" data-value="0">N</button>
                         <button class="jc-q-btn" data-value="1">L</button>
                         <button class="jc-q-btn" data-value="2">M</button>
@@ -584,8 +585,8 @@
                   </div>
                 </div>
                 <div class="jc-ativ-mode-block hidden" id="jcCorpoManualWrap">
-                  <div class="jc-field-title">Qualificador judicial manual (rebaixamento)</div>
-                  <div class="jc-q-buttons" id="jcCorpoManualButtons">
+                  <div class="jc-field-title" id="jcCorpoManualLabel">Qualificador judicial manual (rebaixamento)</div>
+                  <div class="jc-q-buttons" id="jcCorpoManualButtons" role="group" aria-labelledby="jcCorpoManualLabel">
                     <button class="jc-q-btn" data-value="0">N</button>
                     <button class="jc-q-btn" data-value="1">L</button>
                     <button class="jc-q-btn" data-value="2">M</button>
@@ -604,9 +605,9 @@
               </div>
             </div>
             <div class="jc-field" id="jcHasAtivMedField">
-              <div class="jc-field-title">Perícia médica trouxe elementos para requalificar Atividades e Participação?
+              <div class="jc-field-title" id="jcHasAtivMedLabel">Perícia médica trouxe elementos para requalificar Atividades e Participação?
               </div>
-              <div class="jc-segmented" id="jcHasAtivMedButtons">
+              <div class="jc-segmented" id="jcHasAtivMedButtons" role="group" aria-labelledby="jcHasAtivMedLabel">
                 <button class="jc-seg-btn" data-value="sim">Sim</button>
                 <button class="jc-seg-btn" data-value="nao">Não</button>
               </div>
@@ -614,8 +615,8 @@
             </div>
             <div class="jc-inline-note hidden" id="jcAtivNotApplicableNote"></div>
             <div class="jc-field hidden" id="jcAtivMedWrap">
-              <div class="jc-field-title">Modo de requalificação de Atividades e Participação (médico judicial)</div>
-              <div class="jc-segmented" id="jcAtivModeButtons">
+              <div class="jc-field-title" id="jcAtivModeLabel">Modo de requalificação de Atividades e Participação (médico judicial)</div>
+              <div class="jc-segmented" id="jcAtivModeButtons" role="group" aria-labelledby="jcAtivModeLabel">
                 <button class="jc-seg-btn" data-value="simples">Simples</button>
                 <button class="jc-seg-btn" data-value="completa">Completa (d1–d9)</button>
               </div>
@@ -623,8 +624,8 @@
                 Participação com justificativa. No modo completo, informe d1–d9 e o sistema calcula o final pela fórmula
                 normativa.</p>
               <div class="jc-ativ-mode-block hidden" id="jcAtivModeSimpleWrap">
-                <div class="jc-field-title">Atividades e Participação (final, modo simples)</div>
-                <div class="jc-q-buttons" id="jcAtivMedSimpleButtons">
+                <div class="jc-field-title" id="jcAtivMedSimpleLabel">Atividades e Participação (final, modo simples)</div>
+                <div class="jc-q-buttons" id="jcAtivMedSimpleButtons" role="group" aria-labelledby="jcAtivMedSimpleLabel">
                   <button class="jc-q-btn" data-value="0">N</button>
                   <button class="jc-q-btn" data-value="1">L</button>
                   <button class="jc-q-btn" data-value="2">M</button>
@@ -642,8 +643,8 @@
                   de Atividades e Participação.</p>
                 <div class="jc-complete-grid">
                   <div class="jc-complete-item">
-                    <div class="jc-field-title">d1 · Aprendizagem</div>
-                    <div class="jc-q-buttons" id="jcAtivD1Buttons">
+                    <div class="jc-field-title" id="jcAtivD1Label">d1 · Aprendizagem</div>
+                    <div class="jc-q-buttons" id="jcAtivD1Buttons" role="group" aria-labelledby="jcAtivD1Label">
                       <button class="jc-q-btn" data-value="0">N</button>
                       <button class="jc-q-btn" data-value="1">L</button>
                       <button class="jc-q-btn" data-value="2">M</button>
@@ -652,8 +653,8 @@
                     </div>
                   </div>
                   <div class="jc-complete-item">
-                    <div class="jc-field-title">d2 · Tarefas Gerais</div>
-                    <div class="jc-q-buttons" id="jcAtivD2Buttons">
+                    <div class="jc-field-title" id="jcAtivD2Label">d2 · Tarefas Gerais</div>
+                    <div class="jc-q-buttons" id="jcAtivD2Buttons" role="group" aria-labelledby="jcAtivD2Label">
                       <button class="jc-q-btn" data-value="0">N</button>
                       <button class="jc-q-btn" data-value="1">L</button>
                       <button class="jc-q-btn" data-value="2">M</button>
@@ -662,8 +663,8 @@
                     </div>
                   </div>
                   <div class="jc-complete-item">
-                    <div class="jc-field-title">d3 · Comunicação</div>
-                    <div class="jc-q-buttons" id="jcAtivD3Buttons">
+                    <div class="jc-field-title" id="jcAtivD3Label">d3 · Comunicação</div>
+                    <div class="jc-q-buttons" id="jcAtivD3Buttons" role="group" aria-labelledby="jcAtivD3Label">
                       <button class="jc-q-btn" data-value="0">N</button>
                       <button class="jc-q-btn" data-value="1">L</button>
                       <button class="jc-q-btn" data-value="2">M</button>
@@ -672,8 +673,8 @@
                     </div>
                   </div>
                   <div class="jc-complete-item">
-                    <div class="jc-field-title">d4 · Mobilidade</div>
-                    <div class="jc-q-buttons" id="jcAtivD4Buttons">
+                    <div class="jc-field-title" id="jcAtivD4Label">d4 · Mobilidade</div>
+                    <div class="jc-q-buttons" id="jcAtivD4Buttons" role="group" aria-labelledby="jcAtivD4Label">
                       <button class="jc-q-btn" data-value="0">N</button>
                       <button class="jc-q-btn" data-value="1">L</button>
                       <button class="jc-q-btn" data-value="2">M</button>
@@ -682,8 +683,8 @@
                     </div>
                   </div>
                   <div class="jc-complete-item">
-                    <div class="jc-field-title">d5 · Cuidado Pessoal</div>
-                    <div class="jc-q-buttons" id="jcAtivD5Buttons">
+                    <div class="jc-field-title" id="jcAtivD5Label">d5 · Cuidado Pessoal</div>
+                    <div class="jc-q-buttons" id="jcAtivD5Buttons" role="group" aria-labelledby="jcAtivD5Label">
                       <button class="jc-q-btn" data-value="0">N</button>
                       <button class="jc-q-btn" data-value="1">L</button>
                       <button class="jc-q-btn" data-value="2">M</button>
@@ -692,8 +693,8 @@
                     </div>
                   </div>
                   <div class="jc-complete-item">
-                    <div class="jc-field-title">d6 · Vida Doméstica</div>
-                    <div class="jc-q-buttons" id="jcAtivD6Buttons">
+                    <div class="jc-field-title" id="jcAtivD6Label">d6 · Vida Doméstica</div>
+                    <div class="jc-q-buttons" id="jcAtivD6Buttons" role="group" aria-labelledby="jcAtivD6Label">
                       <button class="jc-q-btn" data-value="0">N</button>
                       <button class="jc-q-btn" data-value="1">L</button>
                       <button class="jc-q-btn" data-value="2">M</button>
@@ -702,8 +703,8 @@
                     </div>
                   </div>
                   <div class="jc-complete-item">
-                    <div class="jc-field-title">d7 · Relações Interpessoais</div>
-                    <div class="jc-q-buttons" id="jcAtivD7Buttons">
+                    <div class="jc-field-title" id="jcAtivD7Label">d7 · Relações Interpessoais</div>
+                    <div class="jc-q-buttons" id="jcAtivD7Buttons" role="group" aria-labelledby="jcAtivD7Label">
                       <button class="jc-q-btn" data-value="0">N</button>
                       <button class="jc-q-btn" data-value="1">L</button>
                       <button class="jc-q-btn" data-value="2">M</button>
@@ -712,8 +713,8 @@
                     </div>
                   </div>
                   <div class="jc-complete-item">
-                    <div class="jc-field-title">d8 · Áreas Principais da Vida</div>
-                    <div class="jc-q-buttons" id="jcAtivD8Buttons">
+                    <div class="jc-field-title" id="jcAtivD8Label">d8 · Áreas Principais da Vida</div>
+                    <div class="jc-q-buttons" id="jcAtivD8Buttons" role="group" aria-labelledby="jcAtivD8Label">
                       <button class="jc-q-btn" data-value="0">N</button>
                       <button class="jc-q-btn" data-value="1">L</button>
                       <button class="jc-q-btn" data-value="2">M</button>
@@ -722,8 +723,8 @@
                     </div>
                   </div>
                   <div class="jc-complete-item">
-                    <div class="jc-field-title">d9 · Vida Comunitária</div>
-                    <div class="jc-q-buttons" id="jcAtivD9Buttons">
+                    <div class="jc-field-title" id="jcAtivD9Label">d9 · Vida Comunitária</div>
+                    <div class="jc-q-buttons" id="jcAtivD9Buttons" role="group" aria-labelledby="jcAtivD9Label">
                       <button class="jc-q-btn" data-value="0">N</button>
                       <button class="jc-q-btn" data-value="1">L</button>
                       <button class="jc-q-btn" data-value="2">M</button>

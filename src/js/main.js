@@ -234,8 +234,12 @@ function update() {
 // ============ EVENT HANDLERS ============
 function handleDomainButtonClick({ button, group, domain, value }) {
   if (!button || button.classList.contains('locked')) return;
-  group.querySelectorAll('.note-btn').forEach(noteButton => noteButton.classList.remove('active'));
+  group.querySelectorAll('.note-btn').forEach(noteButton => {
+    noteButton.classList.remove('active');
+    noteButton.setAttribute('aria-pressed', 'false');
+  });
   button.classList.add('active');
+  button.setAttribute('aria-pressed', 'true');
   state[domain] = value;
   userFilledDomains.add(domain);
   update();
@@ -322,7 +326,9 @@ function applyChildRules() {
       if (!(d.id in childDomainBackup)) childDomainBackup[d.id] = state[d.id];
       state[d.id] = 4;
       btns.forEach(b => {
-        b.classList.toggle('active', +b.dataset.value === 4);
+        const isActive = +b.dataset.value === 4;
+        b.classList.toggle('active', isActive);
+        b.setAttribute('aria-pressed', isActive);
         b.classList.add('locked');
       });
     } else {
@@ -332,7 +338,9 @@ function applyChildRules() {
       }
       btns.forEach(b => {
         b.classList.remove('locked');
-        b.classList.toggle('active', +b.dataset.value === state[d.id]);
+        const isActive = +b.dataset.value === state[d.id];
+        b.classList.toggle('active', isActive);
+        b.setAttribute('aria-pressed', isActive);
       });
     }
   });
@@ -341,8 +349,12 @@ function applyChildRules() {
 
 function handleAmbTabClick({ tab, value }) {
   currentAmbTab = value;
-  document.querySelectorAll('.amb-tab').forEach(ambTab => ambTab.classList.remove('active'));
+  document.querySelectorAll('.amb-tab').forEach(ambTab => {
+    ambTab.classList.remove('active');
+    ambTab.setAttribute('aria-pressed', 'false');
+  });
   tab.classList.add('active');
+  tab.setAttribute('aria-pressed', 'true');
   buildTabelaGrid();
   const ativ = calcAtividades();
   const corpo = calcCorpo();
@@ -415,7 +427,7 @@ function handleLimpar() {
   document.getElementById('inputIdade').value = idadeValor;
   document.getElementById('inputIdadeUnidade').value = idadeUnidade;
   syncChildModeByControls();
-  document.querySelectorAll('.note-btn').forEach(b => { b.classList.remove('active', 'locked'); if (+b.dataset.value === 0) b.classList.add('active') });
+  document.querySelectorAll('.note-btn').forEach(b => { b.classList.remove('active', 'locked'); const isZero = +b.dataset.value === 0; if (isZero) b.classList.add('active'); b.setAttribute('aria-pressed', isZero); });
   applyChildRules();
   update();
 }
@@ -473,13 +485,19 @@ function uniquePendingTargetIds(items = []) {
 }
 
 function clearJudicialInvalidHighlights() {
-  document.querySelectorAll('.jc-invalid').forEach(el => el.classList.remove('jc-invalid'));
+  document.querySelectorAll('.jc-invalid').forEach(el => {
+    el.classList.remove('jc-invalid');
+    el.removeAttribute('aria-invalid');
+  });
 }
 
 function markJudicialInvalidTargets(targetIds = []) {
   targetIds.forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.classList.add('jc-invalid');
+    if (el) {
+      el.classList.add('jc-invalid');
+      el.setAttribute('aria-invalid', 'true');
+    }
   });
 }
 
@@ -748,13 +766,17 @@ function renderJudicialProgress() {
 
 function syncQButtonGroup(groupId, value) {
   document.querySelectorAll(`#${groupId} .jc-q-btn`).forEach(btn => {
-    btn.classList.toggle('active', value != null && +btn.dataset.value === value);
+    const isActive = value != null && +btn.dataset.value === value;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-pressed', isActive);
   });
 }
 
 function syncSegmentedGroup(groupId, value) {
   document.querySelectorAll(`#${groupId} .jc-seg-btn`).forEach(btn => {
-    btn.classList.toggle('active', value != null && btn.dataset.value === value);
+    const isActive = value != null && btn.dataset.value === value;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-pressed', isActive);
   });
 }
 

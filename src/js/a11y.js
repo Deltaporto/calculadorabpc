@@ -5,5 +5,9 @@ export function initStaticRatingA11yLabels(labels) {
       btn.setAttribute('aria-label', labels[value]);
       btn.setAttribute('title', labels[value]);
     }
+    btn.setAttribute('aria-pressed', btn.classList.contains('active'));
+  });
+  document.querySelectorAll('.jc-seg-btn').forEach(btn => {
+    btn.setAttribute('aria-pressed', btn.classList.contains('active'));
   });
 }
