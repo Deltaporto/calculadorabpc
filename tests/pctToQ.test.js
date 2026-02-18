@@ -3,15 +3,15 @@ const assert = require('node:assert');
 const fs = require('node:fs');
 const path = require('node:path');
 
-// Extract pctToQ from index.html
-const htmlPath = path.join(__dirname, '../index.html');
-const htmlContent = fs.readFileSync(htmlPath, 'utf8');
+// Extract pctToQ from src/js/calculations.js
+const calculationsPath = path.join(__dirname, '../src/js/calculations.js');
+const calculationsContent = fs.readFileSync(calculationsPath, 'utf8');
 
 // Match the function specifically
-const pctToQMatch = htmlContent.match(/function\s+pctToQ\s*\(\s*pct\s*\)\s*\{([\s\S]*?)\}/);
+const pctToQMatch = calculationsContent.match(/export\s+function\s+pctToQ\s*\(\s*pct\s*\)\s*\{([\s\S]*?)\n\}/);
 
 if (!pctToQMatch) {
-    console.error('Could not find pctToQ function in index.html');
+    console.error('Could not find pctToQ function in src/js/calculations.js');
     process.exit(1);
 }
 

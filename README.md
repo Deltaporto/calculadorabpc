@@ -123,20 +123,26 @@ Aplicação do padrão em domínios previstos, com as seguintes salvaguardas de 
 
 ## 7) Como executar localmente
 
-Opção recomendada (servidor local simples):
+Opção recomendada (servidor local via Node):
 
 ```bash
-cd apresentacao_BPC
-python3 -m http.server 8000
+npm install
+npm run start
 ```
 
 Acesse:
 
 ```text
-http://localhost:8000/index.html
+http://127.0.0.1:8000/index.html
 ```
 
-Observação: a aplicação é estática e não depende de backend.
+Alternativa (Python):
+
+```bash
+python3 -m http.server 8000
+```
+
+Observação importante: não abra `index.html` diretamente via `file://`, pois os módulos ES do navegador são bloqueados por CORS nesse modo.
 
 ## 8) Fluxo recomendado de uso (magistrado)
 
