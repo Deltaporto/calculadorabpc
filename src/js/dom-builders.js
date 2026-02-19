@@ -30,7 +30,9 @@ export function buildTabelaGrid(container, labels, ambTab, tabelaConclusivaFn) {
     html += `<div class="tc row-header">${labels[c]}</div>`;
     for (let a = 0; a < 5; a++) {
       const yes = tabelaConclusivaFn(ambTab, a, c);
-      html += `<div class="tc ${yes ? 'yes' : 'no'}" data-c="${c}" data-a="${a}">${yes ? 'Sim' : 'Não'}</div>`;
+      const isSensitivityPoint = c === 2 && a === 2;
+      const sensitivityClass = isSensitivityPoint ? ` tc-sensitivity tc-sensitivity-${yes ? 'yes' : 'no'}` : '';
+      html += `<div class="tc ${yes ? 'yes' : 'no'}${sensitivityClass}" data-c="${c}" data-a="${a}">${yes ? 'Sim' : 'Não'}</div>`;
     }
   }
 
