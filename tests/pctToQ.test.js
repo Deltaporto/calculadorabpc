@@ -18,24 +18,24 @@ if (!pctToQMatch) {
 const pctToQ = new Function('pct', pctToQMatch[1]);
 
 test('pctToQ - Boundary values', () => {
-    // Range 0: 0-4
+    // Range 0: 0-4.999...
     assert.strictEqual(pctToQ(0), 0, '0 should be 0');
-    assert.strictEqual(pctToQ(4), 0, '4 should be 0');
+    assert.strictEqual(pctToQ(4.9), 0, '4.9 should be 0');
 
-    // Range 1: 5-24
-    assert.strictEqual(pctToQ(4.1), 1, '4.1 should be 1');
-    assert.strictEqual(pctToQ(24), 1, '24 should be 1');
+    // Range 1: 5-24.999...
+    assert.strictEqual(pctToQ(5), 1, '5 should be 1');
+    assert.strictEqual(pctToQ(24.9), 1, '24.9 should be 1');
 
-    // Range 2: 25-49
-    assert.strictEqual(pctToQ(24.1), 2, '24.1 should be 2');
-    assert.strictEqual(pctToQ(49), 2, '49 should be 2');
+    // Range 2: 25-49.999...
+    assert.strictEqual(pctToQ(25), 2, '25 should be 2');
+    assert.strictEqual(pctToQ(49.9), 2, '49.9 should be 2');
 
-    // Range 3: 50-95
-    assert.strictEqual(pctToQ(49.1), 3, '49.1 should be 3');
-    assert.strictEqual(pctToQ(95), 3, '95 should be 3');
+    // Range 3: 50-95.999...
+    assert.strictEqual(pctToQ(50), 3, '50 should be 3');
+    assert.strictEqual(pctToQ(95.9), 3, '95.9 should be 3');
 
     // Range 4: 96-100+
-    assert.strictEqual(pctToQ(95.1), 4, '95.1 should be 4');
+    assert.strictEqual(pctToQ(96), 4, '96 should be 4');
     assert.strictEqual(pctToQ(100), 4, '100 should be 4');
 });
 

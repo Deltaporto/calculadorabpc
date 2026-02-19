@@ -1,10 +1,10 @@
 export function pctToQ(pct) {
   let normalized = pct;
   if (normalized < 0) normalized = 0;
-  if (normalized <= 4) return 0;
-  if (normalized <= 24) return 1;
-  if (normalized <= 49) return 2;
-  if (normalized <= 95) return 3;
+  if (normalized < 5) return 0;
+  if (normalized < 25) return 1;
+  if (normalized < 50) return 2;
+  if (normalized < 96) return 3;
   return 4;
 }
 

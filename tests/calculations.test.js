@@ -95,5 +95,5 @@ test('computeAtivFromDomains - completo e incompleto', () => {
   assert.strictEqual(computeAtivFromDomains({ d1: 2, d2: 3 }, ids, pctToQ), null, 'Sem todos domínios deve retornar null');
 
   const computed = computeAtivFromDomains({ d1: 2, d2: 3, d3: 4 }, ids, pctToQ);
-  assert.deepStrictEqual(computed, { sum: 9, pct: 24.9, q: 2 });
+  assert.deepStrictEqual(computed, { sum: 9, pct: 24.9, q: 1 });
 });
