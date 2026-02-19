@@ -1367,15 +1367,23 @@ function renderStandardText(amb = calcAmbiente(), ativ = calcAtividades(), corpo
 
   if (yes) {
     paragrafo1 = `À luz do art. 20, §§ 2º e 10, da Lei nº 8.742/1993, e dos critérios da Portaria Conjunta MDS/INSS nº 2/2015 (Anexo IV), examina-se o enquadramento da parte autora como pessoa com deficiência para fins de BPC. ${contextoEtario} No caso, os qualificadores finais apurados foram: Fatores Ambientais em grau ${qWord(amb.q)}, Atividades e Participação em grau ${qWord(ativ.q)} e Funções do Corpo em grau ${qWord(corpo.q)}, com reconhecimento de impedimento de longo prazo. A combinação desses qualificadores, confrontada com a Tabela Conclusiva da Portaria, conduz a resultado positivo para reconhecimento do requisito biopsicossocial legal.`;
-    paragrafo2 = 'Diante desse quadro técnico-normativo, reputo preenchido o requisito legal, motivo pelo qual a parte autora se enquadra no conceito de pessoa com deficiência para fins do benefício assistencial.';
+    paragrafo2 = 'Diante disso, a parte autora se enquadra como pessoa com deficiência para fins de BPC/LOAS.';
   } else {
     if (impedimento) {
-      paragrafo1 = `A controvérsia deve ser resolvida conforme o art. 20, §§ 2º e 10, da Lei nº 8.742/1993, em conjunto com a Portaria Conjunta MDS/INSS nº 2/2015 (Anexo IV). ${contextoEtario} Na avaliação produzida, os qualificadores finais resultaram em Fatores Ambientais ${qWord(amb.q)}, Atividades e Participação ${qWord(ativ.q)} e Funções do Corpo ${qWord(corpo.q)}. Consta, ainda, indicação técnica de possibilidade de resolução das alterações em prazo inferior a 2 (dois) anos, o que afasta o requisito de impedimento de longo prazo.`;
+      paragrafo1 = `A controvérsia deve ser resolvida conforme o art. 20, §§ 2º e 10, da Lei nº 8.742/1993, em conjunto com a Portaria Conjunta MDS/INSS nº 2/2015 (Anexo IV). ${contextoEtario} Na avaliação produzida, os qualificadores finais resultaram em Fatores Ambientais em grau ${qWord(amb.q)}, Atividades e Participação em grau ${qWord(ativ.q)} e Funções do Corpo em grau ${qWord(corpo.q)}. Consta, ainda, indicação técnica de possibilidade de resolução das alterações em prazo inferior a 2 (dois) anos, o que afasta o requisito de impedimento de longo prazo.`;
     } else {
-      const reasonFinal = /[.!?]$/.test(reason) ? reason : `${reason}.`;
-      paragrafo1 = `A controvérsia deve ser resolvida conforme o art. 20, §§ 2º e 10, da Lei nº 8.742/1993, em conjunto com a Portaria Conjunta MDS/INSS nº 2/2015 (Anexo IV). ${contextoEtario} Na avaliação produzida, os qualificadores finais resultaram em Fatores Ambientais ${qWord(amb.q)}, Atividades e Participação ${qWord(ativ.q)} e Funções do Corpo ${qWord(corpo.q)}, com reconhecimento de impedimento de longo prazo. Ainda que presente limitação funcional, a combinação normativa não supera o patamar mínimo exigido pela Tabela Conclusiva. ${reasonFinal}`;
+      // Build a fluid justification sentence instead of inserting the raw technical reason
+      let justificativa;
+      if (corpo.q <= 1) {
+        justificativa = `Especificamente, Funções do Corpo apresentaram grau ${qWord(corpo.q)}, aquém do mínimo moderado exigido pela Tabela.`;
+      } else if (ativ.q <= 1) {
+        justificativa = `Especificamente, Atividades e Participação apresentaram grau ${qWord(ativ.q)}, aquém do mínimo moderado exigido pela Tabela.`;
+      } else {
+        justificativa = `Em particular, a combinação moderado–moderado em Funções do Corpo e Atividades e Participação exigiria Fatores Ambientais em grau grave ou superior, porém estes ficaram em grau ${qWord(amb.q)}.`;
+      }
+      paragrafo1 = `A controvérsia deve ser resolvida conforme o art. 20, §§ 2º e 10, da Lei nº 8.742/1993, em conjunto com a Portaria Conjunta MDS/INSS nº 2/2015 (Anexo IV). ${contextoEtario} Na avaliação produzida, os qualificadores finais resultaram em Fatores Ambientais em grau ${qWord(amb.q)}, Atividades e Participação em grau ${qWord(ativ.q)} e Funções do Corpo em grau ${qWord(corpo.q)}, com reconhecimento de impedimento de longo prazo. Ainda que presente limitação funcional, a combinação não supera o patamar mínimo exigido pela Tabela Conclusiva. ${justificativa}`;
     }
-    paragrafo2 = 'Assim, à luz dos parâmetros legais e regulamentares aplicáveis, não se configura, neste ponto, o enquadramento da parte autora como pessoa com deficiência para fins de BPC/LOAS.';
+    paragrafo2 = 'Diante disso, não se configura o enquadramento da parte autora como pessoa com deficiência para fins de BPC/LOAS.';
   }
 
   document.getElementById('textoPadrao').value = [paragrafo1, paragrafo2].filter(Boolean).join('\n\n');

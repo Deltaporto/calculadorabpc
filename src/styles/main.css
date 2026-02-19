@@ -931,12 +931,74 @@ input:checked+.toggle-switch::after {
   border-color: var(--gold)
 }
 
+.tabela-axis-guide {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px
+}
+
+.axis-horizontal {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 12px;
+  background: color-mix(in srgb, var(--bg) 60%, var(--surface));
+  color: var(--text2)
+}
+
+.axis-tag {
+  font-size: .62rem;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  font-weight: 700
+}
+
+.axis-name {
+  font-size: .74rem;
+  font-weight: 700
+}
+
+.axis-arrow {
+  font-size: .9rem;
+  font-weight: 700;
+  color: color-mix(in srgb, var(--blue) 70%, var(--text3));
+  line-height: 1
+}
+
+.tabela-grid-wrap {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  max-width: 680px;
+  margin: 0 auto
+}
+
+.axis-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: 236px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px;
+  text-align: center;
+  background: color-mix(in srgb, var(--bg) 65%, var(--surface));
+  color: var(--text2)
+}
+
 .tabela-grid {
   display: grid;
   grid-template-columns: auto repeat(5, 1fr);
   gap: 3px;
-  max-width: 500px;
-  margin: 0 auto
+  max-width: 560px;
+  width: 100%;
+  margin: 0
 }
 
 .tc {
@@ -2898,8 +2960,13 @@ header .badge {
   font-size: .92rem;
 }
 
-.tabela-axis-label {
-  margin-bottom: 8px;
+.tabela-axis-guide {
+  margin-bottom: 10px;
+}
+
+.axis-horizontal,
+.axis-vertical {
+  border: 1px solid var(--border);
 }
 
 .tabela-grid {
@@ -3304,6 +3371,23 @@ footer {
 
   .toolbar {
     justify-content: center;
+  }
+
+  .tabela-grid-wrap {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .axis-vertical {
+    min-height: 0;
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    padding: 7px 10px;
+  }
+
+  .axis-vertical .axis-arrow {
+    order: 3;
   }
 
   .tabela-grid {
