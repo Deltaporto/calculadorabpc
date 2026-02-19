@@ -5,3 +5,7 @@
 ## 2026-02-17 - Keyboard Focus on Hidden Inputs
 **Learning:** Custom toggle switches implemented with hidden checkboxes (`opacity: 0`) were completely invisible to keyboard users when focused, as the visual replacement (`.toggle-switch`) lacked focus styles.
 **Action:** When styling custom form controls, ensure the visual replacement element receives a visible focus indicator (e.g., using `:focus-visible + .visual-element`) to support keyboard navigation.
+
+## 2026-02-17 - Destructive Action Confirmation
+**Learning:** Users can accidentally lose significant progress in complex forms if "Clear" actions are instant.
+**Action:** Always wrap data-clearing functions in a confirmation step (`window.confirm` or modal) to prevent accidental data loss.

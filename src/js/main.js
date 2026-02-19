@@ -414,6 +414,7 @@ function handleApplyPadrao() {
 
 // Clear
 function handleLimpar() {
+  if (!window.confirm('Tem certeza que deseja limpar todos os dados da calculadora?')) return;
   Object.keys(state).forEach(k => state[k] = 0);
   Object.keys(childDomainBackup).forEach(k => delete childDomainBackup[k]);
   userFilledDomains.clear();
@@ -972,6 +973,7 @@ function resetJudicialControl() {
 }
 
 function clearJudicialMedicalAndTriage() {
+  if (!window.confirm('Tem certeza que deseja limpar as etapas médica e de triagem? A base administrativa será mantida.')) return;
   judicialControl.med = createEmptyJudicialMed();
   judicialControl.triage = { ready: false, status: 'pending', testeA: null, testeB: null, reason: '', route: null };
   clearJudicialTextArea();
@@ -1319,6 +1321,7 @@ function handleUseCurrentAsBase() {
 }
 
 function handleClearComp() {
+  if (!window.confirm('Tem certeza que deseja limpar a comparação e reiniciar o controle judicial?')) return;
   savedINSS = null;
   document.getElementById('compSection').classList.add('hidden');
   document.getElementById('btnClearComp').classList.add('hidden');
