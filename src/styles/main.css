@@ -249,6 +249,10 @@ header p {
   align-items: center
 }
 
+.toolbar-help-btn {
+  flex-shrink: 0;
+}
+
 .toolbar-helper {
   margin: -10px 2px 16px;
   color: var(--text3);
@@ -1694,6 +1698,22 @@ input:checked+.toggle-switch::after {
   line-height: 1.2
 }
 
+.jc-field-title-with-help {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.jc-field-title-with-help>span {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.jc-domain-help-btn {
+  flex-shrink: 0;
+  margin-top: -1px;
+}
+
 .jc-q-buttons {
   display: flex;
   gap: 6px;
@@ -1719,7 +1739,6 @@ input:checked+.toggle-switch::after {
 .jc-reduction-alert.jc-invalid,
 .jc-autofill-btn.jc-invalid,
 .btn.jc-invalid {
-  border-color: transparent !important;
   position: relative;
   isolation: isolate
 }

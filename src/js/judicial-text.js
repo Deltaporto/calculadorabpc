@@ -23,7 +23,7 @@ export function buildJudicialControlText({
   const qCorpo = q => Q_FULL.corpo[q]?.toLowerCase();
   const qAtiv = q => Q_FULL.ativ[q]?.toLowerCase();
 
-  const baseIntro = `No controle judicial da prova técnica, nos termos da Portaria Conjunta MDS/INSS nº 2/2015, a avaliação administrativa registra Fatores Ambientais com ${qAmb(b.amb)}, Atividades e Participação com ${qAtiv(b.ativ)} e Funções do Corpo com ${qCorpo(b.corpo)}.`;
+  const baseIntro = `Nos termos da Portaria Conjunta MDS/INSS nº 2/2015, a avaliação administrativa registra Fatores Ambientais com ${qAmb(b.amb)}, Atividades e Participação com ${qAtiv(b.ativ)} e Funções do Corpo com ${qCorpo(b.corpo)}.`;
 
   const est = b.corpoReconhecimentoInss.estruturasReconhecidas;
   const prog = b.corpoReconhecimentoInss.prognosticoReconhecido;

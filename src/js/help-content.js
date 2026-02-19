@@ -58,6 +58,18 @@ export const SIM_HELP_CONTENT = {
     source: 'Portaria Conjunta MDS/INSS nº 2/2015 — Conceitos e Critérios (linhas 2838-2853 e 2886-2893).',
     legalExcerpt: '“O qualificador final de Funções do Corpo corresponde ao maior qualificador atribuído aos domínios b1 a b8.”'
   },
+  'section.padrao_medio': {
+    title: 'Padrão Médio Social',
+    summary: 'Aplicação parametrizada do padrão médio à avaliação social, conforme Anexo II da Portaria Conjunta MDS/INSS nº 34/2025.',
+    bullets: [
+      'Só pode ser aplicado após avaliação médica com constatação de impedimento de longo prazo.',
+      'Aplica os qualificadores do Anexo II: e1=2, e2=2, e3=2, e4=1, e5=2, d6=3, d7=2, d8=3 e d9=3.',
+      'O resultado do padrão médio só pode ser usado para concessão ou manutenção do BPC; nos demais casos, a avaliação social do INSS é obrigatória.',
+      'Na calculadora, o botão preenche automaticamente apenas esses domínios e respeita regras de corte etário.'
+    ],
+    source: 'Portaria Conjunta MDS/INSS nº 34/2025 — art. 13, § 4º, III; § 6º; § 7º; e Anexo II. Implementação no app: getPadraoApplyContext/applyPadraoEntries/handleApplyPadrao em src/js/main.js.',
+    legalExcerpt: '“O resultado do padrão médio somente poderá ser utilizado para a concessão ou manutenção do BPC.”'
+  },
   'domain.e1': {
     title: 'E1 - Produtos e Tecnologia',
     summary: 'Refere-se a qualquer produto, instrumento, equipamento ou tecnologia, inclusive os adequados para melhorar a funcionalidade.',
@@ -122,7 +134,6 @@ export const SIM_HELP_CONTENT = {
     title: 'B2 - Funções Sensoriais',
     summary: 'Refere-se às funções sensoriais da visão, da audição, às funções sensoriais adicionais e à dor.',
     bullets: [
-      'No Anexo I, o domínio b2 é formado pelos blocos XI (visão), XII (audição) e XIII (funções sensoriais adicionais e dor).',
       'Inclui percepção visual (luz, tamanho e cor), percepção auditiva (localização, intensidade e qualidade sonora) e funções vestibulares.',
       'Também abrange gustação, olfação, propriocepção, tato, sensibilidade térmica e sensação de dor.'
     ],
@@ -133,7 +144,6 @@ export const SIM_HELP_CONTENT = {
     title: 'B3 - Voz e Fala',
     summary: 'Refere-se às funções da voz e da fala.',
     bullets: [
-      'Corresponde ao bloco XIV do instrumento.',
       'Inclui funções da voz (qualidade, disfonia, afonia e outras alterações).',
       'Inclui funções de articulação e de fluência/ritmo da fala.'
     ],
@@ -144,7 +154,6 @@ export const SIM_HELP_CONTENT = {
     title: 'B4 - Cardio/Hemato/Imuno/Respiratório',
     summary: 'Refere-se às funções dos sistemas cardiovascular, hematológico, imunológico e respiratório.',
     bullets: [
-      'No Anexo I, o domínio b4 é formado pelos blocos XV, XVI, XVII e XVIII.',
       'Abrange funções do coração, dos vasos sanguíneos e da pressão sanguínea.',
       'Abrange produção/transporte sanguíneo, imunidade e funções respiratórias.'
     ],
@@ -155,7 +164,6 @@ export const SIM_HELP_CONTENT = {
     title: 'B5 - Digestivo/Metabólico-Endócrino',
     summary: 'Refere-se às funções do sistema digestivo e dos sistemas metabólico e endócrino.',
     bullets: [
-      'No Anexo I, o domínio b5 é formado pelos blocos XIX e XX.',
       'Inclui ingestão, digestão e eliminação de substâncias líquidas e sólidas.',
       'Inclui funções metabólicas gerais e funções das glândulas endócrinas.'
     ],
@@ -166,7 +174,6 @@ export const SIM_HELP_CONTENT = {
     title: 'B6 - Geniturinário e Reprodutivo',
     summary: 'Refere-se às funções geniturinárias e reprodutivas.',
     bullets: [
-      'Corresponde ao bloco XXI do instrumento.',
       'Inclui funções urinárias e reprodutivas, inclusive funções sexuais e de procriação.',
       'A qualificação deve considerar funcionalidade compatível com a faixa etária.'
     ],
@@ -177,7 +184,6 @@ export const SIM_HELP_CONTENT = {
     title: 'B7 - Neuromusculoesquelético e Movimento',
     summary: 'Refere-se às funções neuromusculoesqueléticas e relacionadas ao movimento.',
     bullets: [
-      'Corresponde ao bloco XXII do instrumento.',
       'Inclui mobilidade, funções das articulações/ossos, reflexos e funções musculares.',
       'Inclui funções dos movimentos voluntários/involuntários e padrão da marcha.'
     ],
@@ -188,7 +194,6 @@ export const SIM_HELP_CONTENT = {
     title: 'B8 - Pele e Estruturas Relacionadas',
     summary: 'Refere-se às funções da pele e de seus anexos (pelos, cabelos e unhas).',
     bullets: [
-      'Corresponde ao bloco XXIII do instrumento.',
       'Inclui funções protetoras e reparadoras da pele e dos fâneros.',
       'Considera alterações dermatológicas com impacto funcional.'
     ],

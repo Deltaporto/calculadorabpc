@@ -150,10 +150,13 @@
       <div class="simulador-body">
         <div class="toolbar">
           <button class="btn btn-gold" id="btnPadrao"
-            title="Preenche domínios recomendados. Se houver conflito com preenchimento manual, você escolhe na hora."><svg
+            title="Preenche o padrão médio social. Se houver conflito com preenchimento manual, você escolhe na hora."><svg
               class="ui-icon sm" aria-hidden="true">
               <use href="#i-chart"></use>
-            </svg>Aplicar padrão</button>
+            </svg>Aplicar padrão médio</button>
+          <button type="button" class="sim-help-btn section-help-btn toolbar-help-btn" id="btnPadraoHelp"
+            data-help-key="section.padrao_medio" aria-label="Entender o que é o padrão médio social"
+            aria-controls="simHelpPopover" aria-expanded="false">i</button>
           <button class="btn btn-outline" id="btnLimpar"
             title="Limpa todos os domínios e redefine as opções da simulação."><svg class="ui-icon sm" aria-hidden="true">
               <use href="#i-trash"></use>
@@ -166,8 +169,8 @@
             Impedimento &lt; 2 anos
           </label>
         </div>
-        <p class="toolbar-helper"><code>Aplicar padrão</code> preenche domínios recomendados. Se já houver
-          preenchimento manual, você escolhe no momento entre preservar ou sobrescrever.</p>
+        <p class="toolbar-helper"><code>Aplicar padrão médio</code> aplica os domínios recomendados do perfil social
+          médio. Se já houver preenchimento manual, você escolhe no momento entre preservar ou sobrescrever.</p>
 
         <main class="calculator">
           <!-- Panel Ambiente -->
@@ -514,7 +517,7 @@
                     administrativo mais grave entre os informados.</p>
                   <div class="jc-complete-grid">
                     <div class="jc-complete-item">
-                      <div class="jc-field-title" id="jcCorpoB1Label">b1 · Funções Mentais</div>
+                      <div class="jc-field-title jc-field-title-with-help"><span id="jcCorpoB1Label">b1 · Funções Mentais</span><button type="button" class="sim-help-btn domain-help-btn jc-domain-help-btn" data-help-key="domain.b1" aria-label="Entender b1 (Funções Mentais)" aria-controls="simHelpPopover" aria-expanded="false">i</button></div>
                       <div class="jc-q-buttons" id="jcCorpoB1Buttons" role="group" aria-labelledby="jcCorpoB1Label">
                         <button class="jc-q-btn" data-value="0">N</button>
                         <button class="jc-q-btn" data-value="1">L</button>
@@ -524,7 +527,7 @@
                       </div>
                     </div>
                     <div class="jc-complete-item">
-                      <div class="jc-field-title" id="jcCorpoB2Label">b2 · Funções Sensoriais</div>
+                      <div class="jc-field-title jc-field-title-with-help"><span id="jcCorpoB2Label">b2 · Funções Sensoriais</span><button type="button" class="sim-help-btn domain-help-btn jc-domain-help-btn" data-help-key="domain.b2" aria-label="Entender b2 (Funções Sensoriais)" aria-controls="simHelpPopover" aria-expanded="false">i</button></div>
                       <div class="jc-q-buttons" id="jcCorpoB2Buttons" role="group" aria-labelledby="jcCorpoB2Label">
                         <button class="jc-q-btn" data-value="0">N</button>
                         <button class="jc-q-btn" data-value="1">L</button>
@@ -534,7 +537,7 @@
                       </div>
                     </div>
                     <div class="jc-complete-item">
-                      <div class="jc-field-title" id="jcCorpoB3Label">b3 · Voz e Fala</div>
+                      <div class="jc-field-title jc-field-title-with-help"><span id="jcCorpoB3Label">b3 · Voz e Fala</span><button type="button" class="sim-help-btn domain-help-btn jc-domain-help-btn" data-help-key="domain.b3" aria-label="Entender b3 (Voz e Fala)" aria-controls="simHelpPopover" aria-expanded="false">i</button></div>
                       <div class="jc-q-buttons" id="jcCorpoB3Buttons" role="group" aria-labelledby="jcCorpoB3Label">
                         <button class="jc-q-btn" data-value="0">N</button>
                         <button class="jc-q-btn" data-value="1">L</button>
@@ -544,7 +547,7 @@
                       </div>
                     </div>
                     <div class="jc-complete-item">
-                      <div class="jc-field-title" id="jcCorpoB4Label">b4 · Cardio/Hemato/Imuno/Respiratório</div>
+                      <div class="jc-field-title jc-field-title-with-help"><span id="jcCorpoB4Label">b4 · Cardio/Hemato/Imuno/Respiratório</span><button type="button" class="sim-help-btn domain-help-btn jc-domain-help-btn" data-help-key="domain.b4" aria-label="Entender b4 (Cardio/Hemato/Imuno/Respiratório)" aria-controls="simHelpPopover" aria-expanded="false">i</button></div>
                       <div class="jc-q-buttons" id="jcCorpoB4Buttons" role="group" aria-labelledby="jcCorpoB4Label">
                         <button class="jc-q-btn" data-value="0">N</button>
                         <button class="jc-q-btn" data-value="1">L</button>
@@ -554,7 +557,7 @@
                       </div>
                     </div>
                     <div class="jc-complete-item">
-                      <div class="jc-field-title" id="jcCorpoB5Label">b5 · Digestivo/Metabólico-Endócrino</div>
+                      <div class="jc-field-title jc-field-title-with-help"><span id="jcCorpoB5Label">b5 · Digestivo/Metabólico-Endócrino</span><button type="button" class="sim-help-btn domain-help-btn jc-domain-help-btn" data-help-key="domain.b5" aria-label="Entender b5 (Digestivo/Metabólico-Endócrino)" aria-controls="simHelpPopover" aria-expanded="false">i</button></div>
                       <div class="jc-q-buttons" id="jcCorpoB5Buttons" role="group" aria-labelledby="jcCorpoB5Label">
                         <button class="jc-q-btn" data-value="0">N</button>
                         <button class="jc-q-btn" data-value="1">L</button>
@@ -564,7 +567,7 @@
                       </div>
                     </div>
                     <div class="jc-complete-item">
-                      <div class="jc-field-title" id="jcCorpoB6Label">b6 · Geniturinário e Reprodutivo</div>
+                      <div class="jc-field-title jc-field-title-with-help"><span id="jcCorpoB6Label">b6 · Geniturinário e Reprodutivo</span><button type="button" class="sim-help-btn domain-help-btn jc-domain-help-btn" data-help-key="domain.b6" aria-label="Entender b6 (Geniturinário e Reprodutivo)" aria-controls="simHelpPopover" aria-expanded="false">i</button></div>
                       <div class="jc-q-buttons" id="jcCorpoB6Buttons" role="group" aria-labelledby="jcCorpoB6Label">
                         <button class="jc-q-btn" data-value="0">N</button>
                         <button class="jc-q-btn" data-value="1">L</button>
@@ -574,7 +577,7 @@
                       </div>
                     </div>
                     <div class="jc-complete-item">
-                      <div class="jc-field-title" id="jcCorpoB7Label">b7 · Neuromusculoesquelético e Movimento</div>
+                      <div class="jc-field-title jc-field-title-with-help"><span id="jcCorpoB7Label">b7 · Neuromusculoesquelético e Movimento</span><button type="button" class="sim-help-btn domain-help-btn jc-domain-help-btn" data-help-key="domain.b7" aria-label="Entender b7 (Neuromusculoesquelético e Movimento)" aria-controls="simHelpPopover" aria-expanded="false">i</button></div>
                       <div class="jc-q-buttons" id="jcCorpoB7Buttons" role="group" aria-labelledby="jcCorpoB7Label">
                         <button class="jc-q-btn" data-value="0">N</button>
                         <button class="jc-q-btn" data-value="1">L</button>
@@ -584,7 +587,7 @@
                       </div>
                     </div>
                     <div class="jc-complete-item">
-                      <div class="jc-field-title" id="jcCorpoB8Label">b8 · Pele e Estruturas Relacionadas</div>
+                      <div class="jc-field-title jc-field-title-with-help"><span id="jcCorpoB8Label">b8 · Pele e Estruturas Relacionadas</span><button type="button" class="sim-help-btn domain-help-btn jc-domain-help-btn" data-help-key="domain.b8" aria-label="Entender b8 (Pele e Estruturas Relacionadas)" aria-controls="simHelpPopover" aria-expanded="false">i</button></div>
                       <div class="jc-q-buttons" id="jcCorpoB8Buttons" role="group" aria-labelledby="jcCorpoB8Label">
                         <button class="jc-q-btn" data-value="0">N</button>
                         <button class="jc-q-btn" data-value="1">L</button>
@@ -654,7 +657,7 @@
                   de Atividades e Participação.</p>
                 <div class="jc-complete-grid">
                   <div class="jc-complete-item">
-                    <div class="jc-field-title" id="jcAtivD1Label">d1 · Aprendizagem</div>
+                    <div class="jc-field-title jc-field-title-with-help"><span id="jcAtivD1Label">d1 · Aprendizagem</span><button type="button" class="sim-help-btn domain-help-btn jc-domain-help-btn" data-help-key="domain.d1" aria-label="Entender d1 (Aprendizagem)" aria-controls="simHelpPopover" aria-expanded="false">i</button></div>
                     <div class="jc-q-buttons" id="jcAtivD1Buttons" role="group" aria-labelledby="jcAtivD1Label">
                       <button class="jc-q-btn" data-value="0">N</button>
                       <button class="jc-q-btn" data-value="1">L</button>
@@ -664,7 +667,7 @@
                     </div>
                   </div>
                   <div class="jc-complete-item">
-                    <div class="jc-field-title" id="jcAtivD2Label">d2 · Tarefas Gerais</div>
+                    <div class="jc-field-title jc-field-title-with-help"><span id="jcAtivD2Label">d2 · Tarefas Gerais</span><button type="button" class="sim-help-btn domain-help-btn jc-domain-help-btn" data-help-key="domain.d2" aria-label="Entender d2 (Tarefas Gerais)" aria-controls="simHelpPopover" aria-expanded="false">i</button></div>
                     <div class="jc-q-buttons" id="jcAtivD2Buttons" role="group" aria-labelledby="jcAtivD2Label">
                       <button class="jc-q-btn" data-value="0">N</button>
                       <button class="jc-q-btn" data-value="1">L</button>
@@ -674,7 +677,7 @@
                     </div>
                   </div>
                   <div class="jc-complete-item">
-                    <div class="jc-field-title" id="jcAtivD3Label">d3 · Comunicação</div>
+                    <div class="jc-field-title jc-field-title-with-help"><span id="jcAtivD3Label">d3 · Comunicação</span><button type="button" class="sim-help-btn domain-help-btn jc-domain-help-btn" data-help-key="domain.d3" aria-label="Entender d3 (Comunicação)" aria-controls="simHelpPopover" aria-expanded="false">i</button></div>
                     <div class="jc-q-buttons" id="jcAtivD3Buttons" role="group" aria-labelledby="jcAtivD3Label">
                       <button class="jc-q-btn" data-value="0">N</button>
                       <button class="jc-q-btn" data-value="1">L</button>
@@ -684,7 +687,7 @@
                     </div>
                   </div>
                   <div class="jc-complete-item">
-                    <div class="jc-field-title" id="jcAtivD4Label">d4 · Mobilidade</div>
+                    <div class="jc-field-title jc-field-title-with-help"><span id="jcAtivD4Label">d4 · Mobilidade</span><button type="button" class="sim-help-btn domain-help-btn jc-domain-help-btn" data-help-key="domain.d4" aria-label="Entender d4 (Mobilidade)" aria-controls="simHelpPopover" aria-expanded="false">i</button></div>
                     <div class="jc-q-buttons" id="jcAtivD4Buttons" role="group" aria-labelledby="jcAtivD4Label">
                       <button class="jc-q-btn" data-value="0">N</button>
                       <button class="jc-q-btn" data-value="1">L</button>
@@ -694,7 +697,7 @@
                     </div>
                   </div>
                   <div class="jc-complete-item">
-                    <div class="jc-field-title" id="jcAtivD5Label">d5 · Cuidado Pessoal</div>
+                    <div class="jc-field-title jc-field-title-with-help"><span id="jcAtivD5Label">d5 · Cuidado Pessoal</span><button type="button" class="sim-help-btn domain-help-btn jc-domain-help-btn" data-help-key="domain.d5" aria-label="Entender d5 (Cuidado Pessoal)" aria-controls="simHelpPopover" aria-expanded="false">i</button></div>
                     <div class="jc-q-buttons" id="jcAtivD5Buttons" role="group" aria-labelledby="jcAtivD5Label">
                       <button class="jc-q-btn" data-value="0">N</button>
                       <button class="jc-q-btn" data-value="1">L</button>
@@ -704,7 +707,7 @@
                     </div>
                   </div>
                   <div class="jc-complete-item">
-                    <div class="jc-field-title" id="jcAtivD6Label">d6 · Vida Doméstica</div>
+                    <div class="jc-field-title jc-field-title-with-help"><span id="jcAtivD6Label">d6 · Vida Doméstica</span><button type="button" class="sim-help-btn domain-help-btn jc-domain-help-btn" data-help-key="domain.d6" aria-label="Entender d6 (Vida Doméstica)" aria-controls="simHelpPopover" aria-expanded="false">i</button></div>
                     <div class="jc-q-buttons" id="jcAtivD6Buttons" role="group" aria-labelledby="jcAtivD6Label">
                       <button class="jc-q-btn" data-value="0">N</button>
                       <button class="jc-q-btn" data-value="1">L</button>
@@ -714,7 +717,7 @@
                     </div>
                   </div>
                   <div class="jc-complete-item">
-                    <div class="jc-field-title" id="jcAtivD7Label">d7 · Relações Interpessoais</div>
+                    <div class="jc-field-title jc-field-title-with-help"><span id="jcAtivD7Label">d7 · Relações Interpessoais</span><button type="button" class="sim-help-btn domain-help-btn jc-domain-help-btn" data-help-key="domain.d7" aria-label="Entender d7 (Relações Interpessoais)" aria-controls="simHelpPopover" aria-expanded="false">i</button></div>
                     <div class="jc-q-buttons" id="jcAtivD7Buttons" role="group" aria-labelledby="jcAtivD7Label">
                       <button class="jc-q-btn" data-value="0">N</button>
                       <button class="jc-q-btn" data-value="1">L</button>
@@ -724,7 +727,7 @@
                     </div>
                   </div>
                   <div class="jc-complete-item">
-                    <div class="jc-field-title" id="jcAtivD8Label">d8 · Áreas Principais da Vida</div>
+                    <div class="jc-field-title jc-field-title-with-help"><span id="jcAtivD8Label">d8 · Áreas Principais da Vida</span><button type="button" class="sim-help-btn domain-help-btn jc-domain-help-btn" data-help-key="domain.d8" aria-label="Entender d8 (Áreas Principais da Vida)" aria-controls="simHelpPopover" aria-expanded="false">i</button></div>
                     <div class="jc-q-buttons" id="jcAtivD8Buttons" role="group" aria-labelledby="jcAtivD8Label">
                       <button class="jc-q-btn" data-value="0">N</button>
                       <button class="jc-q-btn" data-value="1">L</button>
@@ -734,7 +737,7 @@
                     </div>
                   </div>
                   <div class="jc-complete-item">
-                    <div class="jc-field-title" id="jcAtivD9Label">d9 · Vida Comunitária</div>
+                    <div class="jc-field-title jc-field-title-with-help"><span id="jcAtivD9Label">d9 · Vida Comunitária</span><button type="button" class="sim-help-btn domain-help-btn jc-domain-help-btn" data-help-key="domain.d9" aria-label="Entender d9 (Vida Comunitária)" aria-controls="simHelpPopover" aria-expanded="false">i</button></div>
                     <div class="jc-q-buttons" id="jcAtivD9Buttons" role="group" aria-labelledby="jcAtivD9Label">
                       <button class="jc-q-btn" data-value="0">N</button>
                       <button class="jc-q-btn" data-value="1">L</button>
@@ -841,7 +844,7 @@
     <dialog class="portaria-modal padrao-modal" id="padraoModal" aria-labelledby="padraoModalTitle">
       <article class="portaria-modal-card padrao-modal-card">
         <header class="portaria-modal-header">
-          <h2 id="padraoModalTitle">Aplicar padrão</h2>
+          <h2 id="padraoModalTitle">Aplicar padrão médio</h2>
           <button class="btn btn-red portaria-close-btn" id="closePadraoModalBtn" type="button" data-padrao-close><svg
               class="ui-icon sm" aria-hidden="true">
               <use href="#i-close"></use>
