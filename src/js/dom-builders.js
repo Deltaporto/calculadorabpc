@@ -15,20 +15,38 @@ export function buildDomainRows(container, domains, labels, names) {
 }
 
 export function buildTabelaGrid(container, labels, ambTab, tabelaConclusivaFn) {
-  let html = '';
-  html += '<div class="tc corner"></div>';
+  if (!container.firstElementChild) {
+    let html = '';
+    html += '<div class="tc corner"></div>';
 
-  labels.forEach(l => {
-    html += `<div class="tc header">${l}</div>`;
-  });
+    labels.forEach(l => {
+      html += `<div class="tc header">${l}</div>`;
+    });
 
-  for (let c = 0; c < 5; c++) {
-    html += `<div class="tc row-header">${labels[c]}</div>`;
-    for (let a = 0; a < 5; a++) {
-      const yes = tabelaConclusivaFn(ambTab, a, c);
-      html += `<div class="tc ${yes ? 'yes' : 'no'}" data-c="${c}" data-a="${a}">${yes ? 'Sim' : 'Não'}</div>`;
+    for (let c = 0; c < 5; c++) {
+      html += `<div class="tc row-header">${labels[c]}</div>`;
+      for (let a = 0; a < 5; a++) {
+        const yes = tabelaConclusivaFn(ambTab, a, c);
+        html += `<div class="tc ${yes ? 'yes' : 'no'}" data-c="${c}" data-a="${a}">${yes ? 'Sim' : 'Não'}</div>`;
+      }
     }
+
+    container.innerHTML = html;
+    return;
   }
 
-  container.innerHTML = html;
+  const cells = container.querySelectorAll('.tc[data-c]');
+  cells.forEach(cell => {
+    const c = +cell.dataset.c;
+    const a = +cell.dataset.a;
+    const yes = tabelaConclusivaFn(ambTab, a, c);
+
+    // Optimization: reuse DOM nodes, only update if changed
+    const isYes = cell.classList.contains('yes');
+    if (isYes !== yes) {
+      cell.classList.toggle('yes', yes);
+      cell.classList.toggle('no', !yes);
+      cell.textContent = yes ? 'Sim' : 'Não';
+    }
+  });
 }
