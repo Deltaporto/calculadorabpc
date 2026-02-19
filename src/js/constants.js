@@ -14,10 +14,10 @@ export const DOM_AMB = [
 ];
 
 export const DOM_CORPO = [
-  { id: 'b1', name: 'Funções Mentais' }, { id: 'b2', name: 'Visão' }, { id: 'b3', name: 'Audição' },
-  { id: 'b4', name: 'Dor e Sensações' }, { id: 'b5', name: 'Voz e Fala' },
-  { id: 'b6', name: 'Cardiovascular / Respiratório' }, { id: 'b7', name: 'Digestivo / Metabólico' },
-  { id: 'b8', name: 'Neuromusculoesquelético' }
+  { id: 'b1', name: 'Funções Mentais' }, { id: 'b2', name: 'Funções Sensoriais' }, { id: 'b3', name: 'Voz e Fala' },
+  { id: 'b4', name: 'Cardiovascular / Hematológico / Imunológico / Respiratório' }, { id: 'b5', name: 'Digestivo / Metabólico-Endócrino' },
+  { id: 'b6', name: 'Geniturinário e Reprodutivo' }, { id: 'b7', name: 'Neuromusculoesquelético e Movimento' },
+  { id: 'b8', name: 'Pele e Estruturas Relacionadas' }
 ];
 
 export const DOM_ATIV_M = [
