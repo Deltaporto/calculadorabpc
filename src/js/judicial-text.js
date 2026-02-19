@@ -87,7 +87,16 @@ export function buildJudicialControlText({
       );
     }
   } else {
-    // necessaria
+    // necessaria — determine why the result is negative and what social evaluation can change
+    const ativFinal = (m.hasAtivMed && ativMedResolved != null) ? ativMedResolved : b.ativ;
+    let bloqueio;
+    if (ativFinal <= 1) {
+      bloqueio = `Atividades e Participação em grau ${qAtiv(ativFinal)} não atende ao mínimo exigido (art. 8º, II, da referida Portaria)`;
+    } else {
+      bloqueio = `a combinação moderada em Funções do Corpo e Atividades e Participação exigiria Fatores Ambientais em grau grave ou superior`;
+    }
+    const reversao = 'A avaliação social pode reclassificar Fatores Ambientais e os domínios sociais de Atividades e Participação (d6 a d9), o que pode alterar o desfecho.';
+
     if (m.hasAtivMed && ativMedResolved != null) {
       paragraphs.push(
         `A perícia médica judicial reconheceu o impedimento de longo prazo, ` +
@@ -95,21 +104,22 @@ export function buildJudicialControlText({
         `${reconhecimentoPhrase}` +
         `Verificada a Tabela Conclusiva, o resultado permaneceu negativo tanto com os ` +
         `qualificadores administrativos (item ${testeAItem}) quanto com a reclassificação ` +
-        `médica de Atividades e Participação (item ${testeBItem}). A prova técnica, por si só, ` +
-        `não foi suficiente para o enquadramento no requisito biopsicossocial; a renovação ` +
-        `da avaliação social em juízo é necessária para completar a instrução probatória.`
+        `médica de Atividades e Participação (item ${testeBItem}): ${bloqueio}. ` +
+        `A prova técnica, por si só, não foi suficiente para o enquadramento no requisito biopsicossocial.`
       );
     } else {
       paragraphs.push(
         `A perícia médica judicial reconheceu o impedimento de longo prazo e ` +
         `${corpoPart}, sem trazer elementos para reclassificação de Atividades e Participação. ` +
         `${reconhecimentoPhrase}` +
-        `Verificada a Tabela Conclusiva (item ${testeAItem}), o resultado permaneceu negativo, ` +
-        `e a prova técnica, por si só, não foi suficiente para o enquadramento no requisito ` +
-        `biopsicossocial; a renovação da avaliação social em juízo é necessária para completar ` +
-        `a instrução probatória.`
+        `Verificada a Tabela Conclusiva (item ${testeAItem}), o resultado permaneceu negativo: ` +
+        `${bloqueio}. ` +
+        `A prova técnica, por si só, não foi suficiente para o enquadramento no requisito biopsicossocial.`
       );
     }
+    paragraphs.push(
+      `A renovação da avaliação social em juízo é, portanto, necessária. ${reversao}`
+    );
   }
 
   return paragraphs.join('\n\n');

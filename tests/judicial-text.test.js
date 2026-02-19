@@ -284,8 +284,12 @@ test('buildJudicialControlText - necessaria com ativMedResolved', () => {
     'Deve mencionar testeB negativo'
   );
   assert.ok(
-    result.includes('renovação da avaliação social em juízo é necessária'),
+    result.includes('renovação da avaliação social em juízo'),
     'Deve mencionar necessidade de avaliação social'
+  );
+  assert.ok(
+    result.includes('reclassificar Fatores Ambientais'),
+    'Deve explicar o que a avaliação social pode reclassificar'
   );
 });
 
@@ -307,7 +311,11 @@ test('buildJudicialControlText - necessaria sem ativMedResolved', () => {
     'Deve mencionar resultado negativo'
   );
   assert.ok(
-    result.includes('renovação da avaliação social em juízo é necessária'),
+    result.includes('renovação da avaliação social em juízo'),
     'Deve mencionar necessidade de avaliação social'
+  );
+  assert.ok(
+    result.includes('domínios sociais de Atividades e Participação'),
+    'Deve explicar utilidade da avaliação social'
   );
 });

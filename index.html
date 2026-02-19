@@ -149,19 +149,15 @@
       <summary class="simulador-summary">Calculadora (consulta rápida)</summary>
       <div class="simulador-body">
         <div class="toolbar">
-          <button class="btn btn-gold" id="btnPadrao"><svg class="ui-icon sm" aria-hidden="true">
+          <button class="btn btn-gold" id="btnPadrao"
+            title="Preenche domínios recomendados. Se houver conflito com preenchimento manual, você escolhe na hora."><svg
+              class="ui-icon sm" aria-hidden="true">
               <use href="#i-chart"></use>
-            </svg>Aplicar Padrão Médio Social</button>
-          <button class="btn btn-outline" id="btnLimpar"><svg class="ui-icon sm" aria-hidden="true">
+            </svg>Aplicar padrão</button>
+          <button class="btn btn-outline" id="btnLimpar"
+            title="Limpa todos os domínios e redefine as opções da simulação."><svg class="ui-icon sm" aria-hidden="true">
               <use href="#i-trash"></use>
-            </svg>Limpar</button>
-          <label class="toggle-label">
-            <input type="checkbox" id="togglePadraoOverwrite"><span class="toggle-switch"></span><svg class="ui-icon sm"
-              aria-hidden="true">
-              <use href="#i-swap"></use>
-            </svg>
-            Sobrescrever domínios preenchidos
-          </label>
+            </svg>Limpar tudo</button>
           <label class="toggle-label">
             <input type="checkbox" id="toggleImpedimento"><span class="toggle-switch"></span><svg class="ui-icon sm"
               aria-hidden="true">
@@ -170,6 +166,8 @@
             Impedimento &lt; 2 anos
           </label>
         </div>
+        <p class="toolbar-helper"><code>Aplicar padrão</code> preenche domínios recomendados. Se já houver
+          preenchimento manual, você escolhe no momento entre preservar ou sobrescrever.</p>
 
         <main class="calculator">
           <!-- Panel Ambiente -->
@@ -179,7 +177,9 @@
                   <use href="#i-home"></use>
                 </svg></div>
               <div>
-                <h2>Fatores Ambientais</h2>
+                <h2>Fatores Ambientais <button type="button" class="sim-help-btn section-help-btn" data-help-key="section.ambiente"
+                    aria-label="Entender o conceito de Fatores Ambientais" aria-controls="simHelpPopover"
+                    aria-expanded="false">i</button></h2>
                 <div class="sub">Avaliação Social · 5 domínios (e1–e5)</div>
               </div>
             </div>
@@ -201,7 +201,9 @@
                   <use href="#i-network"></use>
                 </svg></div>
               <div>
-                <h2>Atividades e Participação</h2>
+                <h2>Atividades e Participação <button type="button" class="sim-help-btn section-help-btn" data-help-key="section.atividades"
+                    aria-label="Entender o conceito de Atividades e Participação" aria-controls="simHelpPopover"
+                    aria-expanded="false">i</button></h2>
                 <div class="sub">Misto · 9 domínios (d1–d9)</div>
               </div>
             </div>
@@ -228,7 +230,9 @@
                   <use href="#i-stethoscope"></use>
                 </svg></div>
               <div>
-                <h2>Funções do Corpo</h2>
+                <h2>Funções do Corpo <button type="button" class="sim-help-btn section-help-btn" data-help-key="section.corpo"
+                    aria-label="Entender o conceito de Funções do Corpo" aria-controls="simHelpPopover"
+                    aria-expanded="false">i</button></h2>
                 <div class="sub">Avaliação Médica · 8 domínios (b1–b8)</div>
               </div>
             </div>
@@ -280,9 +284,9 @@
                   class="axis-kicker">Eixo vertical</span><span class="axis-title">Funções do Corpo</span></div>
               <div class="tabela-grid" id="tGrid"></div>
             </div>
-            <p class="tabela-impact-note"><strong>Leitura rápida:</strong> o impacto de reclassificar Atividades e
-              Participação é mais sensível quando Funções do Corpo está em moderada; no cenário M-M, o deferimento
-              depende de Fatores Ambientais em grave ou completa.</p>
+            <p class="tabela-impact-note"><strong>Leitura da matriz simulada:</strong> o impacto de reclassificar
+              Atividades e Participação é mais sensível quando Funções do Corpo está em moderada; no cenário M-M, o
+              deferimento depende de Fatores Ambientais em grave ou completa.</p>
             <div class="tabela-labels"><span><span class="dot g"></span> Deferido (Sim)</span><span><span
                   class="dot r"></span> Indeferido (Não)</span></div>
           </div>
@@ -424,28 +428,24 @@
               <div class="jc-help-grid">
                 <article class="jc-help-item">
                   <div class="jc-help-title">Estruturas do corpo mais limitantes que Funções do Corpo</div>
-                  <p>Use esta resposta para registrar se o INSS já reconheceu, na fase administrativa, alterações
-                    anatômicas (órgãos, membros ou estruturas) com impacto maior do que o captado no qualificador de
-                    Funções do Corpo.</p>
-                  <p><strong>Marque “Sim”</strong> quando o próprio material administrativo do INSS já apontar esse
-                    descompasso.</p>
-                  <p><strong>Exemplos de “Sim”:</strong> amputação extensa, deformidade estrutural grave ou lesão
-                    anatômica permanente que imponha restrição superior à indicada no qualificador final de Funções do
-                    Corpo.</p>
-                  <p><strong>Exemplos de “Não”:</strong> quando o INSS não reconheceu esse ponto, ou quando as
-                    alterações estruturais já estão proporcionais ao qualificador de Funções do Corpo atribuído.</p>
+                  <p>Este campo replica o critério da Portaria sobre existência de alterações em Estruturas do Corpo
+                    que configurem maiores limitações ou restrições do que as observadas em Funções do Corpo.</p>
+                  <p><strong>Marque “Sim”</strong> apenas quando esse reconhecimento constar no ato administrativo do
+                    INSS.</p>
+                  <p><strong>Marque “Não”</strong> quando não houver reconhecimento administrativo expresso desse
+                    requisito.</p>
+                  <p><strong>Base legal:</strong> Portaria Conjunta MDS/INSS nº 2/2015, Conceitos e Critérios (linhas
+                    2848-2853 e 2890-2894).</p>
                 </article>
                 <article class="jc-help-item">
                   <div class="jc-help-title">Prognóstico desfavorável</div>
-                  <p>A Portaria pergunta apenas se as alterações configuram prognóstico desfavorável, sem exigir
-                    literalmente “piora” em todos os casos.</p>
-                  <p><strong>Manutenção isolada não basta automaticamente.</strong> Marque “Sim” quando o INSS tiver
-                    reconhecido, de forma técnica, curso funcional desfavorável: tendência de piora <strong>ou</strong>
-                    persistência relevante sem expectativa concreta de recuperação funcional significativa.</p>
-                  <p><strong>Exemplos de “Sim”:</strong> doença progressiva com perda funcional contínua; quadro crônico
-                    grave/irreversível com limitação importante e sem perspectiva real de reabilitação relevante.</p>
-                  <p><strong>Exemplos de “Não”:</strong> quadro estável com possibilidade real de melhora funcional; ou
-                    situação em que o INSS não tenha feito esse reconhecimento no ato administrativo.</p>
+                  <p>Este campo replica o critério da Portaria sobre a condição de prognóstico desfavorável.</p>
+                  <p><strong>Marque “Sim”</strong> apenas quando houver reconhecimento técnico expresso no material
+                    administrativo do INSS.</p>
+                  <p><strong>Marque “Não”</strong> quando esse reconhecimento não constar na avaliação
+                    administrativa.</p>
+                  <p><strong>Base legal:</strong> Portaria Conjunta MDS/INSS nº 2/2015, Conceitos e Critérios (linhas
+                    2850-2853 e 2890-2893).</p>
                 </article>
               </div>
             </details>
@@ -835,6 +835,49 @@
         </div>
       </article>
     </dialog>
+
+    <dialog class="portaria-modal padrao-modal" id="padraoModal" aria-labelledby="padraoModalTitle">
+      <article class="portaria-modal-card padrao-modal-card">
+        <header class="portaria-modal-header">
+          <h2 id="padraoModalTitle">Aplicar padrão</h2>
+          <button class="btn btn-red portaria-close-btn" id="closePadraoModalBtn" type="button" data-padrao-close><svg
+              class="ui-icon sm" aria-hidden="true">
+              <use href="#i-close"></use>
+            </svg>Cancelar</button>
+        </header>
+        <p class="portaria-modal-helper" id="padraoModalMessage"></p>
+        <div class="padrao-modal-summary" id="padraoModalSummary"></div>
+        <div class="padrao-modal-actions">
+          <button class="btn btn-outline" type="button" id="padraoPreserveBtn"><svg class="ui-icon sm"
+              aria-hidden="true">
+              <use href="#i-check-circle"></use>
+            </svg>Preservar preenchidos</button>
+          <button class="btn btn-gold" type="button" id="padraoOverwriteBtn"><svg class="ui-icon sm"
+              aria-hidden="true">
+              <use href="#i-swap"></use>
+            </svg>Sobrescrever preenchidos</button>
+        </div>
+      </article>
+    </dialog>
+
+    <div class="sim-help-popover hidden" id="simHelpPopover" role="dialog" aria-modal="false" aria-hidden="true"
+      aria-labelledby="simHelpTitle" tabindex="-1">
+      <div class="sim-help-popover-header">
+        <h4 id="simHelpTitle"></h4>
+        <button type="button" class="sim-help-close" id="simHelpCloseBtn" aria-label="Fechar ajuda"><svg
+            class="ui-icon sm" aria-hidden="true">
+            <use href="#i-close"></use>
+          </svg></button>
+      </div>
+      <p class="sim-help-summary" id="simHelpSummary"></p>
+      <ul class="sim-help-list" id="simHelpList"></ul>
+      <p class="sim-help-source" id="simHelpSource"></p>
+      <p class="sim-help-excerpt hidden" id="simHelpExcerpt"></p>
+      <div class="sim-help-actions">
+        <button type="button" class="sim-help-link" id="simHelpExcerptBtn">Ver base legal (trecho)</button>
+        <button type="button" class="sim-help-link" id="simHelpPortariaBtn">Ver Portaria completa</button>
+      </div>
+    </div>
   </div>
 
   <script>

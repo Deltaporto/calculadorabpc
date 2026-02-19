@@ -12,7 +12,6 @@ import {
   Q_NAMES
 } from './constants.js';
 import {
-  createDomainNameById,
   createDomainState,
   createEmptyAdminCorpoRecognition as createEmptyAdminCorpoRecognitionState,
   createEmptyAtivReclassDomains as createEmptyAtivReclassDomainsState,
@@ -33,6 +32,7 @@ import {
   buildDomainRows as buildDomainRowsView,
   buildTabelaGrid as buildTabelaGridView
 } from './dom-builders.js';
+import { DOMAIN_HELP_KEYS, SIM_HELP_CONTENT } from './help-content.js';
 import { initStaticRatingA11yLabels } from './a11y.js';
 import { highlightActiveCell, runMainUpdate } from './ui-render.js';
 import { bindJudicialControlEvents } from './events.js';
@@ -56,7 +56,6 @@ import { bindAppEvents } from './app-events.js';
 const ALL_DOMAINS = [...DOM_AMB, ...DOM_CORPO, ...DOM_ATIV_M, ...DOM_ATIV_S];
 const ATIV_DOMAINS = [...DOM_ATIV_M, ...DOM_ATIV_S];
 const state = createDomainState(ALL_DOMAINS);
-const domainNameById = createDomainNameById(ALL_DOMAINS);
 let progDesfav = false, estrMaior = false, impedimento = false, crianca = false, idadeMeses = CHILD_AGE_LIMIT_MONTHS, idadeValor = 15, idadeUnidade = 'anos';
 let savedINSS = null;
 let uiMode = 'controle';
@@ -93,6 +92,11 @@ const PORTARIA_TEXT_PATH = 'docs/normas/portaria-conjunta-2-2015.txt';
 const PORTARIA_PDF_PATH = 'docs/normas/portaria-conjunta-2-2015.pdf';
 let portariaTextCache = null;
 let lastPortariaTrigger = null;
+let pendingPadraoDialogContext = null;
+let lastPadraoDialogTrigger = null;
+let activeSimHelpKey = null;
+let activeSimHelpTrigger = null;
+const SIM_HELP_MOBILE_QUERY = '(max-width: 940px)';
 
 // ============ CALCULATION ============
 function calcAmbiente() {
@@ -198,7 +202,7 @@ function getCorpoFlowTraceLineElement(corpoFlow) {
 
 // ============ DOM BUILDERS ============
 function buildDomainRows(container, domains) {
-  buildDomainRowsView(container, domains, Q_LABELS, Q_NAMES);
+  buildDomainRowsView(container, domains, Q_LABELS, Q_NAMES, DOMAIN_HELP_KEYS);
 }
 let lastAmbTabForGrid = null;
 function buildTabelaGrid() {
@@ -361,11 +365,113 @@ function handleAmbTabClick({ tab, value }) {
   highlightActiveCell(ativ.q, corpo.q);
 }
 
+function closeSimHelpPopover() {
+  const popover = document.getElementById('simHelpPopover');
+  const excerptEl = document.getElementById('simHelpExcerpt');
+  const excerptBtn = document.getElementById('simHelpExcerptBtn');
+  if (activeSimHelpTrigger) activeSimHelpTrigger.setAttribute('aria-expanded', 'false');
+  activeSimHelpKey = null;
+  activeSimHelpTrigger = null;
+  if (excerptEl) excerptEl.classList.add('hidden');
+  if (excerptBtn) excerptBtn.textContent = 'Ver base legal (trecho)';
+  if (!popover) return;
+  popover.classList.add('hidden');
+  popover.classList.remove('mobile');
+  popover.setAttribute('aria-hidden', 'true');
+  popover.style.top = '';
+  popover.style.left = '';
+  popover.style.right = '';
+  popover.style.bottom = '';
+}
+
+function positionSimHelpPopover() {
+  if (!activeSimHelpKey || !activeSimHelpTrigger) return;
+  const popover = document.getElementById('simHelpPopover');
+  if (!popover || popover.classList.contains('hidden')) return;
+
+  const isMobile = window.matchMedia(SIM_HELP_MOBILE_QUERY).matches;
+  popover.classList.toggle('mobile', isMobile);
+  if (isMobile) {
+    popover.style.top = '';
+    popover.style.left = '';
+    popover.style.right = '';
+    popover.style.bottom = '';
+    return;
+  }
+
+  const triggerRect = activeSimHelpTrigger.getBoundingClientRect();
+  const popRect = popover.getBoundingClientRect();
+  const scrollX = window.scrollX;
+  const scrollY = window.scrollY;
+  const margin = 12;
+
+  let left = triggerRect.left + scrollX + (triggerRect.width / 2) - (popRect.width / 2);
+  const minLeft = scrollX + margin;
+  const maxLeft = scrollX + window.innerWidth - popRect.width - margin;
+  if (left < minLeft) left = minLeft;
+  if (left > maxLeft) left = maxLeft;
+
+  let top = triggerRect.bottom + scrollY + 10;
+  const maxTop = scrollY + window.innerHeight - popRect.height - margin;
+  if (top > maxTop) top = triggerRect.top + scrollY - popRect.height - 10;
+  if (top < scrollY + margin) top = scrollY + margin;
+
+  popover.style.left = `${Math.round(left)}px`;
+  popover.style.top = `${Math.round(top)}px`;
+  popover.style.right = 'auto';
+  popover.style.bottom = 'auto';
+}
+
+function openSimHelpPopover(helpKey, trigger) {
+  const entry = SIM_HELP_CONTENT[helpKey];
+  const popover = document.getElementById('simHelpPopover');
+  const titleEl = document.getElementById('simHelpTitle');
+  const summaryEl = document.getElementById('simHelpSummary');
+  const listEl = document.getElementById('simHelpList');
+  const sourceEl = document.getElementById('simHelpSource');
+  const excerptEl = document.getElementById('simHelpExcerpt');
+  const excerptBtn = document.getElementById('simHelpExcerptBtn');
+  const portariaBtn = document.getElementById('simHelpPortariaBtn');
+  if (!entry || !popover || !titleEl || !summaryEl || !listEl || !sourceEl || !excerptEl || !excerptBtn || !portariaBtn) return;
+
+  if (activeSimHelpTrigger && activeSimHelpTrigger !== trigger) {
+    activeSimHelpTrigger.setAttribute('aria-expanded', 'false');
+  }
+
+  titleEl.textContent = entry.title;
+  summaryEl.textContent = entry.summary;
+  listEl.innerHTML = entry.bullets.map(item => `<li>${item}</li>`).join('');
+  sourceEl.textContent = `Base legal: ${entry.source}`;
+  excerptEl.textContent = entry.legalExcerpt || '';
+  excerptEl.classList.add('hidden');
+  excerptBtn.textContent = 'Ver base legal (trecho)';
+  excerptBtn.disabled = !entry.legalExcerpt;
+  excerptBtn.setAttribute('aria-disabled', String(!entry.legalExcerpt));
+  portariaBtn.dataset.helpKey = helpKey;
+
+  activeSimHelpKey = helpKey;
+  activeSimHelpTrigger = trigger;
+  trigger.setAttribute('aria-expanded', 'true');
+
+  popover.classList.remove('hidden');
+  popover.setAttribute('aria-hidden', 'false');
+  positionSimHelpPopover();
+}
+
+function toggleSimHelpPopover(trigger) {
+  const helpKey = trigger?.dataset?.helpKey;
+  if (!helpKey) return;
+  if (activeSimHelpKey === helpKey && activeSimHelpTrigger === trigger) {
+    closeSimHelpPopover();
+    return;
+  }
+  openSimHelpPopover(helpKey, trigger);
+}
+
 // Padrão Médio Social
-function handleApplyPadrao() {
+function getPadraoApplyContext() {
   const padrao = { e1: 2, e2: 2, e3: 2, e4: 1, e5: 2, d6: 3, d7: 2, d8: 3, d9: 3 };
   const padraoEntries = Object.entries(padrao);
-  const overwriteFilled = document.getElementById('togglePadraoOverwrite').checked;
   let skippedByAgeCut = 0;
   const eligibleEntries = padraoEntries.filter(([id]) => {
     if (crianca) {
@@ -375,41 +481,91 @@ function handleApplyPadrao() {
     return true;
   });
   const manuallyFilledEligible = eligibleEntries.filter(([id]) => userFilledDomains.has(id));
-  const entriesToApply = overwriteFilled
-    ? eligibleEntries
-    : eligibleEntries.filter(([id]) => !userFilledDomains.has(id));
+  const entriesPreserve = eligibleEntries.filter(([id]) => !userFilledDomains.has(id));
+  const entriesOverwrite = eligibleEntries;
+  return { eligibleEntries, manuallyFilledEligible, entriesPreserve, entriesOverwrite, skippedByAgeCut };
+}
 
-  if (!eligibleEntries.length) {
+function applyPadraoEntries(entriesToApply) {
+  entriesToApply.forEach(([id, v]) => {
+    state[id] = v;
+    const btns = document.querySelectorAll(`[data-domain="${id}"] .note-btn`);
+    btns.forEach(b => { b.classList.remove('active'); if (+b.dataset.value === v) b.classList.add('active'); });
+  });
+  update();
+}
+
+function applyPadraoWithConfirmFallback(context) {
+  const hasOnlyManual = context.entriesPreserve.length === 0;
+  if (hasOnlyManual) {
+    const overwrite = window.confirm('Todos os domínios elegíveis já foram preenchidos manualmente. Deseja sobrescrever esses preenchimentos com o padrão?');
+    if (overwrite) applyPadraoEntries(context.entriesOverwrite);
+    return;
+  }
+  const overwrite = window.confirm(
+    `Foram encontrados ${context.manuallyFilledEligible.length} domínios elegíveis já preenchidos manualmente.\n\n` +
+    'Clique em OK para sobrescrever esses domínios com o padrão.\n' +
+    'Clique em Cancelar para preservar os domínios manuais e aplicar o padrão apenas nos domínios vazios.'
+  );
+  applyPadraoEntries(overwrite ? context.entriesOverwrite : context.entriesPreserve);
+}
+
+function openPadraoDecisionDialog(context) {
+  const modal = document.getElementById('padraoModal');
+  const messageEl = document.getElementById('padraoModalMessage');
+  const summaryEl = document.getElementById('padraoModalSummary');
+  const preserveBtn = document.getElementById('padraoPreserveBtn');
+  const overwriteBtn = document.getElementById('padraoOverwriteBtn');
+  if (!modal || !messageEl || !summaryEl || !preserveBtn || !overwriteBtn) {
+    applyPadraoWithConfirmFallback(context);
+    return;
+  }
+
+  const hasOnlyManual = context.entriesPreserve.length === 0;
+  pendingPadraoDialogContext = context;
+  lastPadraoDialogTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+
+  messageEl.textContent = hasOnlyManual
+    ? 'Todos os domínios elegíveis deste padrão já foram preenchidos manualmente. Escolha se deseja sobrescrever esses preenchimentos.'
+    : `Foram encontrados ${context.manuallyFilledEligible.length} domínios elegíveis já preenchidos manualmente.`;
+
+  summaryEl.innerHTML = [
+    `<div><strong>Atualizações preservando preenchidos:</strong> ${context.entriesPreserve.length}</div>`,
+    `<div><strong>Atualizações sobrescrevendo preenchidos:</strong> ${context.entriesOverwrite.length}</div>`,
+    `<div><strong>Domínios manuais elegíveis:</strong> ${context.manuallyFilledEligible.length}</div>`,
+    `<div><strong>Não aplicáveis por corte etário:</strong> ${context.skippedByAgeCut}</div>`
+  ].join('');
+
+  preserveBtn.disabled = hasOnlyManual;
+  preserveBtn.setAttribute('aria-disabled', String(hasOnlyManual));
+  preserveBtn.title = hasOnlyManual ? 'Não há domínios vazios elegíveis para atualização sem sobrescrita.' : '';
+
+  if (typeof modal.showModal === 'function') {
+    if (!modal.open) modal.showModal();
+  } else {
+    modal.setAttribute('open', '');
+  }
+  if (hasOnlyManual) {
+    overwriteBtn.focus();
+  } else {
+    preserveBtn.focus();
+  }
+}
+
+function handleApplyPadrao() {
+  const context = getPadraoApplyContext();
+
+  if (!context.eligibleEntries.length) {
     alert('Padrão Médio Social não aplicado: nenhum domínio está elegível em razão dos pontos de corte etários.');
     return;
   }
 
-  if (!entriesToApply.length) {
-    alert('Padrão Médio Social não aplicado: todos os domínios elegíveis já foram preenchidos manualmente e a sobrescrita está desativada.');
+  if (!context.manuallyFilledEligible.length) {
+    applyPadraoEntries(context.entriesOverwrite);
     return;
   }
 
-  if (!overwriteFilled && manuallyFilledEligible.length > 0) {
-    const appliedList = entriesToApply.map(([id]) => `${id.toUpperCase()} (${domainNameById[id]})`).join(', ');
-    const confirmMessage = [
-      'Foram encontrados domínios do Padrão Médio Social já preenchidos manualmente.',
-      '',
-      'Como a opção "Sobrescrever domínios preenchidos" está desativada, esses domínios serão preservados.',
-      `Serão atualizados ${entriesToApply.length} domínio(s):`,
-      appliedList,
-      '',
-      `Domínios manuais preservados: ${manuallyFilledEligible.length}.`,
-      `Domínios não aplicáveis por ponto de corte etário: ${skippedByAgeCut}.`
-    ].join('\n');
-    if (!window.confirm(confirmMessage)) return;
-  }
-
-  entriesToApply.forEach(([id, v]) => {
-    state[id] = v;
-    const btns = document.querySelectorAll(`[data-domain="${id}"] .note-btn`);
-    btns.forEach(b => { b.classList.remove('active'); if (+b.dataset.value === v) b.classList.add('active') });
-  });
-  update();
+  openPadraoDecisionDialog(context);
 }
 
 // Clear
@@ -421,7 +577,6 @@ function handleLimpar() {
   crianca = false; idadeValor = 15; idadeUnidade = 'anos'; idadeMeses = CHILD_AGE_LIMIT_MONTHS;
   document.getElementById('toggleProg').checked = false;
   document.getElementById('toggleEstr').checked = false;
-  document.getElementById('togglePadraoOverwrite').checked = false;
   document.getElementById('toggleImpedimento').checked = false;
   document.getElementById('toggleMenor16').checked = false;
   document.getElementById('inputIdade').value = idadeValor;
@@ -1477,6 +1632,98 @@ function initPortariaModal() {
   });
 }
 
+function initPadraoModal() {
+  const modal = document.getElementById('padraoModal');
+  const preserveBtn = document.getElementById('padraoPreserveBtn');
+  const overwriteBtn = document.getElementById('padraoOverwriteBtn');
+  if (!modal || !preserveBtn || !overwriteBtn) return;
+
+  const closeModal = () => {
+    pendingPadraoDialogContext = null;
+    if (typeof modal.close === 'function') {
+      if (modal.open) modal.close();
+      return;
+    }
+    modal.removeAttribute('open');
+  };
+
+  const applyChoice = (mode) => {
+    if (!pendingPadraoDialogContext) {
+      closeModal();
+      return;
+    }
+    const entries = mode === 'overwrite'
+      ? pendingPadraoDialogContext.entriesOverwrite
+      : pendingPadraoDialogContext.entriesPreserve;
+    if (entries.length) applyPadraoEntries(entries);
+    closeModal();
+  };
+
+  preserveBtn.addEventListener('click', () => applyChoice('preserve'));
+  overwriteBtn.addEventListener('click', () => applyChoice('overwrite'));
+  modal.querySelectorAll('[data-padrao-close]').forEach(btn => {
+    btn.addEventListener('click', closeModal);
+  });
+  modal.addEventListener('click', event => {
+    if (event.target === modal) closeModal();
+  });
+  modal.addEventListener('close', () => {
+    pendingPadraoDialogContext = null;
+    if (lastPadraoDialogTrigger && typeof lastPadraoDialogTrigger.focus === 'function') {
+      try {
+        lastPadraoDialogTrigger.focus({ preventScroll: true });
+      } catch {
+        lastPadraoDialogTrigger.focus();
+      }
+    }
+  });
+}
+
+function initSimHelpPopover() {
+  const popover = document.getElementById('simHelpPopover');
+  const closeBtn = document.getElementById('simHelpCloseBtn');
+  const excerptBtn = document.getElementById('simHelpExcerptBtn');
+  const excerptEl = document.getElementById('simHelpExcerpt');
+  const portariaBtn = document.getElementById('simHelpPortariaBtn');
+  if (!popover || !closeBtn || !excerptBtn || !excerptEl || !portariaBtn) return;
+
+  const handleDocumentClick = (event) => {
+    const trigger = event.target.closest('.sim-help-btn');
+    if (trigger) {
+      event.preventDefault();
+      toggleSimHelpPopover(trigger);
+      return;
+    }
+    if (!activeSimHelpKey) return;
+    if (!event.target.closest('#simHelpPopover')) closeSimHelpPopover();
+  };
+
+  document.addEventListener('click', handleDocumentClick);
+  closeBtn.addEventListener('click', closeSimHelpPopover);
+  excerptBtn.addEventListener('click', () => {
+    const hidden = excerptEl.classList.toggle('hidden');
+    excerptBtn.textContent = hidden ? 'Ver base legal (trecho)' : 'Ocultar base legal';
+  });
+  portariaBtn.addEventListener('click', () => {
+    const openPortariaBtn = document.getElementById('openPortariaTextBtn');
+    if (openPortariaBtn) openPortariaBtn.click();
+    closeSimHelpPopover();
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && activeSimHelpKey) closeSimHelpPopover();
+  });
+
+  window.addEventListener('resize', () => {
+    if (activeSimHelpKey) positionSimHelpPopover();
+  });
+  window.addEventListener('scroll', () => {
+    if (activeSimHelpKey && !window.matchMedia(SIM_HELP_MOBILE_QUERY).matches) {
+      positionSimHelpPopover();
+    }
+  });
+}
+
 bindAppEvents({
   onDomainButtonClick: handleDomainButtonClick,
   onToggleProg: handleToggleProg,
@@ -1534,5 +1781,7 @@ renderJudicialControl();
 setUIMode('controle', { preserveAccordionState: false });
 buildTabelaGrid();
 initPortariaModal();
+initPadraoModal();
+initSimHelpPopover();
 
 update();

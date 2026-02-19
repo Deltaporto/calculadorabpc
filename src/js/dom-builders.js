@@ -1,4 +1,4 @@
-export function buildDomainRows(container, domains, labels, names) {
+export function buildDomainRows(container, domains, labels, names, domainHelpKeys = {}) {
   const scale = document.createElement('div');
   scale.className = 'note-scale-row';
   scale.innerHTML = `<div class="note-scale-spacer"></div>
@@ -6,9 +6,13 @@ export function buildDomainRows(container, domains, labels, names) {
   container.appendChild(scale);
 
   domains.forEach(d => {
+    const helpKey = domainHelpKeys[d.id];
+    const helpButton = helpKey
+      ? `<button type="button" class="sim-help-btn domain-help-btn" data-help-key="${helpKey}" aria-label="Entender ${d.id.toUpperCase()} (${d.name})" aria-controls="simHelpPopover" aria-expanded="false">i</button>`
+      : '';
     const row = document.createElement('div');
     row.className = 'domain-row';
-    row.innerHTML = `<div class="domain-label"><span class="domain-code">${d.id}</span> <span class="domain-name">${d.name}</span></div>
+    row.innerHTML = `<div class="domain-label"><span class="domain-code">${d.id}</span><span class="domain-name-wrap"><span class="domain-name">${d.name}</span>${helpButton}</span></div>
   <div class="note-buttons" data-domain="${d.id}">${[0, 1, 2, 3, 4].map(v => `<button class="note-btn${v === 0 ? ' active' : ''}" data-value="${v}" aria-label="Nota ${v}: ${names[v]}" title="Nota ${v}: ${names[v]}" aria-pressed="${v === 0}">${v}</button>`).join('')}</div>`;
     container.appendChild(row);
   });
