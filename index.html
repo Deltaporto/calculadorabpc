@@ -142,7 +142,7 @@
           </select>
           <strong id="faixaEtaria" class="idade-status"></strong>
         </span>
-        <span class="idade-status hidden" id="childAutoSummary"></span>
+        <span class="idade-status hidden" id="childAutoSummary" role="status" aria-live="polite"></span>
       </div>
     </header>
 
@@ -327,7 +327,7 @@
         conceito de pessoa com deficiência para fins de BPC/LOAS.</p>
       <textarea id="textoPadrao" readonly></textarea>
       <div class="standard-text-actions">
-        <span class="copy-feedback" id="copyFeedback"></span>
+        <span class="copy-feedback" id="copyFeedback" role="status" aria-live="polite"></span>
         <button class="btn btn-outline" id="btnCopiarTexto"><svg class="ui-icon sm" aria-hidden="true">
             <use href="#i-clipboard"></use>
           </svg>Copiar texto</button>
@@ -793,7 +793,7 @@
             <span class="jc-step-guidance-text" id="jcTextoGuidanceText">A minuta será liberada após a triagem.</span>
           </div>
           <div class="standard-text-actions">
-            <span class="copy-feedback" id="copyFeedbackControle"></span>
+            <span class="copy-feedback" id="copyFeedbackControle" role="status" aria-live="polite"></span>
             <button class="btn btn-outline" id="btnGerarControleTexto"><svg class="ui-icon sm" aria-hidden="true">
                 <use href="#i-document"></use>
               </svg>Gerar texto</button>
