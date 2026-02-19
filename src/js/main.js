@@ -1357,7 +1357,7 @@ function renderStandardText(amb = calcAmbiente(), ativ = calcAtividades(), corpo
     : '';
   const idadeTexto = crianca
     ? `Foi assinalada idade inferior a 16 anos, com idade informada de ${idadeValor} ${idadeUnidade} (${idadeMeses} meses).`
-    : 'Não foi assinalada idade inferior a 16 anos, de modo que se considerou a faixa etária de 16 anos ou mais.';
+    : '';
   const qWord = q => ['nenhum', 'leve', 'moderado', 'grave', 'completo'][q];
   const contextoEtario = `${idadeTexto}${forcedText ? ` ${forcedText}` : ''}`;
 
@@ -1366,22 +1366,22 @@ function renderStandardText(amb = calcAmbiente(), ativ = calcAtividades(), corpo
   let paragrafo2 = '';
 
   if (yes) {
-    paragrafo1 = `À luz do art. 20, §§ 2º e 10, da Lei nº 8.742/1993, e dos critérios da Portaria Conjunta MDS/INSS nº 2/2015 (Anexo IV), examina-se o enquadramento da parte autora como pessoa com deficiência para fins de BPC. ${contextoEtario} No caso, os qualificadores finais apurados foram: Fatores Ambientais em grau ${qWord(amb.q)}, Atividades e Participação em grau ${qWord(ativ.q)} e Funções do Corpo em grau ${qWord(corpo.q)}, com reconhecimento de impedimento de longo prazo. A combinação desses qualificadores, confrontada com a Tabela Conclusiva da Portaria, conduz a resultado positivo para reconhecimento do requisito biopsicossocial legal.`;
+    paragrafo1 = `À luz do art. 20, §§ 2º e 10, da Lei nº 8.742/1993, e dos critérios da Portaria Conjunta MDS/INSS nº 2/2015 (Anexo IV), examina-se o enquadramento da parte autora como pessoa com deficiência para fins de BPC.${contextoEtario ? ` ${contextoEtario}` : ''} No caso, os qualificadores finais apurados foram: Fatores Ambientais em grau ${qWord(amb.q)}, Atividades e Participação em grau ${qWord(ativ.q)} e Funções do Corpo em grau ${qWord(corpo.q)}, com reconhecimento de impedimento de longo prazo. A combinação desses qualificadores, confrontada com a Tabela Conclusiva da Portaria, conduz a resultado positivo para reconhecimento do requisito biopsicossocial legal.`;
     paragrafo2 = 'Diante disso, a parte autora se enquadra como pessoa com deficiência para fins de BPC/LOAS.';
   } else {
     if (impedimento) {
-      paragrafo1 = `A controvérsia deve ser resolvida conforme o art. 20, §§ 2º e 10, da Lei nº 8.742/1993, em conjunto com a Portaria Conjunta MDS/INSS nº 2/2015 (Anexo IV). ${contextoEtario} Na avaliação produzida, os qualificadores finais resultaram em Fatores Ambientais em grau ${qWord(amb.q)}, Atividades e Participação em grau ${qWord(ativ.q)} e Funções do Corpo em grau ${qWord(corpo.q)}. Consta, ainda, indicação técnica de possibilidade de resolução das alterações em prazo inferior a 2 (dois) anos, o que afasta o requisito de impedimento de longo prazo.`;
+      paragrafo1 = `A controvérsia deve ser resolvida conforme o art. 20, §§ 2º e 10, da Lei nº 8.742/1993, em conjunto com a Portaria Conjunta MDS/INSS nº 2/2015.${contextoEtario ? ` ${contextoEtario}` : ''} Na avaliação produzida, os qualificadores finais resultaram em Fatores Ambientais em grau ${qWord(amb.q)}, Atividades e Participação em grau ${qWord(ativ.q)} e Funções do Corpo em grau ${qWord(corpo.q)}. Consta, porém, indicação técnica de possibilidade de resolução das alterações em prazo inferior a 2 (dois) anos, o que afasta o requisito de impedimento de longo prazo (art. 8º, III, da referida Portaria).`;
     } else {
-      // Build a fluid justification sentence instead of inserting the raw technical reason
+      // Build a fluid justification citing art. 8º with the applicable inciso
       let justificativa;
       if (corpo.q <= 1) {
-        justificativa = `Especificamente, Funções do Corpo apresentaram grau ${qWord(corpo.q)}, aquém do mínimo moderado exigido pela Tabela.`;
+        justificativa = `O qualificador final de Funções do Corpo resultou em grau ${qWord(corpo.q)}, hipótese de indeferimento prevista no art. 8º, I, da referida Portaria.`;
       } else if (ativ.q <= 1) {
-        justificativa = `Especificamente, Atividades e Participação apresentaram grau ${qWord(ativ.q)}, aquém do mínimo moderado exigido pela Tabela.`;
+        justificativa = `O qualificador final de Atividades e Participação resultou em grau ${qWord(ativ.q)}, hipótese de indeferimento prevista no art. 8º, II, da referida Portaria.`;
       } else {
-        justificativa = `Em particular, a combinação moderado–moderado em Funções do Corpo e Atividades e Participação exigiria Fatores Ambientais em grau grave ou superior, porém estes ficaram em grau ${qWord(amb.q)}.`;
+        justificativa = `A combinação moderado–moderado em Funções do Corpo e Atividades e Participação exigiria Fatores Ambientais em grau grave ou superior, porém estes ficaram em grau ${qWord(amb.q)}, de modo que a Tabela Conclusiva (Anexo IV) conduz a resultado negativo.`;
       }
-      paragrafo1 = `A controvérsia deve ser resolvida conforme o art. 20, §§ 2º e 10, da Lei nº 8.742/1993, em conjunto com a Portaria Conjunta MDS/INSS nº 2/2015 (Anexo IV). ${contextoEtario} Na avaliação produzida, os qualificadores finais resultaram em Fatores Ambientais em grau ${qWord(amb.q)}, Atividades e Participação em grau ${qWord(ativ.q)} e Funções do Corpo em grau ${qWord(corpo.q)}, com reconhecimento de impedimento de longo prazo. Ainda que presente limitação funcional, a combinação não supera o patamar mínimo exigido pela Tabela Conclusiva. ${justificativa}`;
+      paragrafo1 = `A controvérsia deve ser resolvida conforme o art. 20, §§ 2º e 10, da Lei nº 8.742/1993, em conjunto com a Portaria Conjunta MDS/INSS nº 2/2015.${contextoEtario ? ` ${contextoEtario}` : ''} Na avaliação produzida, os qualificadores finais resultaram em Fatores Ambientais em grau ${qWord(amb.q)}, Atividades e Participação em grau ${qWord(ativ.q)} e Funções do Corpo em grau ${qWord(corpo.q)}, com reconhecimento de impedimento de longo prazo. ${justificativa}`;
     }
     paragrafo2 = 'Diante disso, não se configura o enquadramento da parte autora como pessoa com deficiência para fins de BPC/LOAS.';
   }

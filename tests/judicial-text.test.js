@@ -234,8 +234,8 @@ test('buildJudicialControlText - dispensa corpo_nl_irrelevante', () => {
     'Deve mencionar nível do corpo (leve)'
   );
   assert.ok(
-    result.includes('não comporta resultado positivo'),
-    'Deve mencionar impossibilidade de resultado positivo'
+    result.includes('art. 8º, I'),
+    'Deve citar art. 8º, I, da referida Portaria'
   );
   assert.ok(
     result.includes('dispensável'),

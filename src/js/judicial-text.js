@@ -23,7 +23,7 @@ export function buildJudicialControlText({
   const qCorpo = q => Q_FULL.corpo[q]?.toLowerCase();
   const qAtiv = q => Q_FULL.ativ[q]?.toLowerCase();
 
-  const baseIntro = `No controle judicial da prova técnica, a avaliação administrativa registra Fatores Ambientais com ${qAmb(b.amb)}, Atividades e Participação com ${qAtiv(b.ativ)} e Funções do Corpo com ${qCorpo(b.corpo)}.`;
+  const baseIntro = `No controle judicial da prova técnica, nos termos da Portaria Conjunta MDS/INSS nº 2/2015, a avaliação administrativa registra Fatores Ambientais com ${qAmb(b.amb)}, Atividades e Participação com ${qAtiv(b.ativ)} e Funções do Corpo com ${qCorpo(b.corpo)}.`;
 
   const est = b.corpoReconhecimentoInss.estruturasReconhecidas;
   const prog = b.corpoReconhecimentoInss.prognosticoReconhecido;
@@ -58,21 +58,19 @@ export function buildJudicialControlText({
         (`A perícia médica judicial reconheceu o impedimento de longo prazo e ${corpoPart}${ativPart}. ${reconhecimentoPhrase}`).trimEnd()
       );
       paragraphs.push(
-        `Verificada a Tabela Conclusiva (item ${testeAItem} do Anexo IV da Portaria Conjunta ` +
-        `MDS/INSS nº 2/2015) com os dados da perícia médica e os demais qualificadores ` +
-        `administrativos preservados, o resultado foi positivo. A prova médica judicial é, ` +
-        `portanto, suficiente para o enquadramento no requisito biopsicossocial, dispensando ` +
-        `a renovação da avaliação social em juízo.`
+        `Verificada a Tabela Conclusiva (item ${testeAItem} do Anexo IV da referida Portaria) ` +
+        `com os dados da perícia médica e os demais qualificadores administrativos preservados, ` +
+        `o resultado foi positivo. A prova técnica é, portanto, suficiente para o enquadramento ` +
+        `no requisito biopsicossocial, dispensando a renovação da avaliação social em juízo.`
       );
     } else if (triage.route === 'corpo_nl_irrelevante') {
       paragraphs.push(
-        (`A perícia médica judicial reconheceu o impedimento de longo prazo; Funções do Corpo, contudo, permaneceu com ${qCorpo(corpoFlow.q)}. ${reconhecimentoPhrase}`).trimEnd()
+        (`A perícia médica judicial reconheceu o impedimento de longo prazo; Funções do Corpo, contudo, permaneceram com ${qCorpo(corpoFlow.q)}. ${reconhecimentoPhrase}`).trimEnd()
       );
       paragraphs.push(
-        `Com esse nível funcional, a Tabela Conclusiva (item ${testeAItem} do Anexo IV ` +
-        `da Portaria Conjunta MDS/INSS nº 2/2015) não comporta resultado positivo ` +
-        `independentemente do qualificador de Atividades e Participação, tornando dispensável ` +
-        `a renovação da avaliação social em juízo.`
+        `Com esse nível funcional, incide a hipótese de indeferimento do art. 8º, I, ` +
+        `da referida Portaria, independentemente do qualificador de Atividades e Participação, ` +
+        `tornando dispensável a renovação da avaliação social em juízo.`
       );
     } else {
       // default dispensa: Teste B positivo
@@ -83,7 +81,7 @@ export function buildJudicialControlText({
         `Na Tabela Conclusiva, a verificação com os qualificadores administrativos de ` +
         `Atividades e Participação (item ${testeAItem}) apresentou resultado negativo; ` +
         `a verificação que incorpora a reclassificação médica de Atividades (item ${testeBItem}), ` +
-        `porém, obteve resultado positivo. A prova médica judicial é, portanto, suficiente ` +
+        `porém, obteve resultado positivo. A prova técnica é, portanto, suficiente ` +
         `para o enquadramento no requisito biopsicossocial, dispensando a renovação da ` +
         `avaliação social em juízo.`
       );
@@ -97,7 +95,7 @@ export function buildJudicialControlText({
         `${reconhecimentoPhrase}` +
         `Verificada a Tabela Conclusiva, o resultado permaneceu negativo tanto com os ` +
         `qualificadores administrativos (item ${testeAItem}) quanto com a reclassificação ` +
-        `médica de Atividades e Participação (item ${testeBItem}). A prova médica, por si só, ` +
+        `médica de Atividades e Participação (item ${testeBItem}). A prova técnica, por si só, ` +
         `não foi suficiente para o enquadramento no requisito biopsicossocial; a renovação ` +
         `da avaliação social em juízo é necessária para completar a instrução probatória.`
       );
@@ -107,7 +105,7 @@ export function buildJudicialControlText({
         `${corpoPart}, sem trazer elementos para reclassificação de Atividades e Participação. ` +
         `${reconhecimentoPhrase}` +
         `Verificada a Tabela Conclusiva (item ${testeAItem}), o resultado permaneceu negativo, ` +
-        `e a prova médica, por si só, não foi suficiente para o enquadramento no requisito ` +
+        `e a prova técnica, por si só, não foi suficiente para o enquadramento no requisito ` +
         `biopsicossocial; a renovação da avaliação social em juízo é necessária para completar ` +
         `a instrução probatória.`
       );

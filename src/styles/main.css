@@ -931,24 +931,51 @@ input:checked+.toggle-switch::after {
   border-color: var(--gold)
 }
 
-.tabela-axis-guide {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 8px
+.tabela-matrix {
+  display: grid;
+  grid-template-columns: 122px minmax(0, 1fr);
+  grid-template-areas:
+    ". top"
+    "left grid";
+  column-gap: 12px;
+  row-gap: 10px;
+  align-items: stretch;
+  max-width: 680px;
+  margin: 0 auto
 }
 
-.axis-horizontal {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 6px 12px;
-  background: color-mix(in srgb, var(--bg) 60%, var(--surface));
+.tabela-axis-top,
+.tabela-axis-left {
+  border: 1px solid color-mix(in srgb, var(--blue) 12%, var(--border));
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--bg) 68%, var(--surface));
   color: var(--text2)
 }
 
-.axis-tag {
+.tabela-axis-top {
+  grid-area: top;
+  width: 100%;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 8px 14px;
+  text-align: center
+}
+
+.tabela-axis-left {
+  grid-area: left;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 10px 8px;
+  text-align: center
+}
+
+.axis-kicker {
   font-size: .62rem;
   color: var(--text3);
   text-transform: uppercase;
@@ -956,8 +983,8 @@ input:checked+.toggle-switch::after {
   font-weight: 700
 }
 
-.axis-name {
-  font-size: .74rem;
+.axis-title {
+  font-size: .76rem;
   font-weight: 700
 }
 
@@ -968,31 +995,8 @@ input:checked+.toggle-switch::after {
   line-height: 1
 }
 
-.tabela-grid-wrap {
-  display: grid;
-  grid-template-columns: 120px minmax(0, 1fr);
-  gap: 10px;
-  align-items: start;
-  max-width: 680px;
-  margin: 0 auto
-}
-
-.axis-vertical {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  min-height: 236px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 8px;
-  text-align: center;
-  background: color-mix(in srgb, var(--bg) 65%, var(--surface));
-  color: var(--text2)
-}
-
 .tabela-grid {
+  grid-area: grid;
   display: grid;
   grid-template-columns: auto repeat(5, 1fr);
   gap: 3px;
@@ -1108,11 +1112,17 @@ input:checked+.toggle-switch::after {
   border: 1px solid #991B1B
 }
 
-.tabela-axis-label {
-  text-align: center;
-  font-size: .7rem;
+.tabela-impact-note {
+  max-width: 680px;
+  margin: 10px auto 0;
+  font-size: .74rem;
+  line-height: 1.35;
   color: var(--text3);
-  font-weight: 600
+  text-align: center
+}
+
+.tabela-impact-note strong {
+  color: var(--text2)
 }
 
 /* DECISION BANNER */
@@ -2960,18 +2970,25 @@ header .badge {
   font-size: .92rem;
 }
 
-.tabela-axis-guide {
-  margin-bottom: 10px;
+.tabela-matrix {
+  max-width: 700px;
+  row-gap: 11px;
 }
 
-.axis-horizontal,
-.axis-vertical {
+.tabela-axis-top,
+.tabela-axis-left {
   border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg-soft) 72%, var(--surface));
 }
 
 .tabela-grid {
   max-width: 560px;
   gap: 4px;
+}
+
+.tabela-impact-note {
+  max-width: 700px;
+  color: var(--text2);
 }
 
 .tc {
@@ -3373,21 +3390,31 @@ footer {
     justify-content: center;
   }
 
-  .tabela-grid-wrap {
+  .tabela-matrix {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "top"
+      "left"
+      "grid";
     gap: 8px;
   }
 
-  .axis-vertical {
-    min-height: 0;
+  .tabela-axis-top,
+  .tabela-axis-left {
     width: 100%;
+    min-height: 0;
     flex-direction: row;
     justify-content: center;
     padding: 7px 10px;
   }
 
-  .axis-vertical .axis-arrow {
+  .tabela-axis-left .axis-arrow {
     order: 3;
+  }
+
+  .tabela-impact-note {
+    text-align: left;
+    margin-top: 8px;
   }
 
   .tabela-grid {
