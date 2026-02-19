@@ -50,30 +50,40 @@ async function startStaticServer(rootDir) {
   };
 }
 
-test('Portaria prioritizes PDF links and keeps in-app text as secondary', async ({ page }) => {
+test('Impedimento de longo prazo helper opens with anchored legal guidance', async ({ page }) => {
   const rootDir = process.cwd();
   const { server, url } = await startStaticServer(rootDir);
 
   try {
     await page.goto(`${url}/index.html`);
+    await page.click('button[data-mode="simulador"]');
+    await page.evaluate(() => {
+      const details = document.getElementById('simuladorDetails');
+      if (details && !details.hasAttribute('open')) details.setAttribute('open', '');
+    });
 
-    await expect(page.locator('#headerPortariaPdfLink')).toHaveAttribute('href', 'docs/normas/portaria-conjunta-2-2015.pdf');
-    await expect(page.locator('#headerPortariaPdfLink')).toHaveAttribute('title', /nova aba/i);
-    await expect(page.locator('#footerPortariaPdfLink')).toHaveAttribute('href', 'docs/normas/portaria-conjunta-2-2015.pdf');
-    await expect(page.locator('#footerPortariaPdfLink')).toHaveAttribute('title', /nova aba/i);
+    await page.click('#btnImpedimentoHelp');
+    await expect(page.locator('#simHelpPopover')).toBeVisible();
+    await expect(page.locator('#simHelpTitle')).toHaveText('Impedimento de Longo Prazo');
+    await expect(page.locator('#simHelpSummary')).toContainText('juízo prospectivo');
+    await expect(page.locator('#simHelpList')).toContainText('menos de 2 anos');
+    await expect(page.locator('#simHelpList')).toContainText('autônoma e fundamentada');
+    await page.click('#simHelpCloseBtn');
 
-    await page.click('#openPortariaTextBtn');
+    await page.click('button[data-mode="controle"]');
+
+    await page.click('.jc-field-title-with-help:has(#jcImpedimentoLabel) .jc-domain-help-btn');
+    await expect(page.locator('#simHelpPopover')).toBeVisible();
+    await expect(page.locator('#simHelpTitle')).toHaveText('Impedimento de Longo Prazo');
+    await expect(page.locator('#simHelpSummary')).toContainText('juízo prospectivo');
+    await expect(page.locator('#simHelpList')).toContainText('menos de 2 anos');
+    await expect(page.locator('#simHelpList')).toContainText('autônoma e fundamentada');
+
+    await page.click('#simHelpPortariaBtn');
     await expect(page.locator('#portariaModal')).toBeVisible();
     await expect(page.locator('#portariaModalTitle')).toContainText('2/2015');
-    await expect(page.locator('#portariaStatus')).toContainText('Texto da Portaria carregado.');
-    await expect(page.locator('#portariaContent')).toContainText('PORTARIA CONJUNTA MDS/INSS');
     await expect(page.locator('#portariaPdfLink')).toHaveAttribute('href', 'docs/normas/portaria-conjunta-2-2015.pdf');
-
-    await page.keyboard.press('Escape');
-    await expect(page.locator('#portariaModal')).toBeHidden();
-    await expect.poll(async () => (
-      page.evaluate(() => document.activeElement && document.activeElement.id)
-    )).toBe('openPortariaTextBtn');
+    await expect(page.locator('#portariaContent')).toContainText('PORTARIA CONJUNTA MDS/INSS');
   } finally {
     await new Promise(resolve => server.close(resolve));
   }

@@ -161,13 +161,18 @@
             title="Limpa todos os domínios e redefine as opções da simulação."><svg class="ui-icon sm" aria-hidden="true">
               <use href="#i-trash"></use>
             </svg>Limpar tudo</button>
-          <label class="toggle-label">
-            <input type="checkbox" id="toggleImpedimento"><span class="toggle-switch"></span><svg class="ui-icon sm"
-              aria-hidden="true">
-              <use href="#i-alert"></use>
-            </svg>
-            Impedimento &lt; 2 anos
-          </label>
+          <div class="toolbar-toggle-group">
+            <label class="toggle-label">
+              <input type="checkbox" id="toggleImpedimento"><span class="toggle-switch"></span><svg class="ui-icon sm"
+                aria-hidden="true">
+                <use href="#i-alert"></use>
+              </svg>
+              Impedimento &lt; 2 anos
+            </label>
+            <button type="button" class="sim-help-btn section-help-btn toolbar-help-btn" id="btnImpedimentoHelp"
+              data-help-key="concept.impedimento_lp" aria-label="Entender o conceito de impedimento de longo prazo"
+              aria-controls="simHelpPopover" aria-expanded="false">i</button>
+          </div>
         </div>
         <p class="toolbar-helper"><code>Aplicar padrão médio</code> aplica os domínios recomendados do perfil social
           médio. Se já houver preenchimento manual, você escolhe no momento entre preservar ou sobrescrever.</p>
@@ -487,7 +492,12 @@
           </div>
           <div class="jc-med-grid">
             <div class="jc-field">
-              <div class="jc-field-title" id="jcImpedimentoLabel">Impedimento de longo prazo</div>
+              <div class="jc-field-title jc-field-title-with-help">
+                <span id="jcImpedimentoLabel">Impedimento de longo prazo</span>
+                <button type="button" class="sim-help-btn domain-help-btn jc-domain-help-btn"
+                  data-help-key="concept.impedimento_lp" aria-label="Entender o conceito de impedimento de longo prazo"
+                  aria-controls="simHelpPopover" aria-expanded="false">i</button>
+              </div>
               <div class="jc-segmented" id="jcImpedimentoButtons" role="group" aria-labelledby="jcImpedimentoLabel">
                 <button class="jc-seg-btn" data-value="sim">Sim</button>
                 <button class="jc-seg-btn" data-value="nao">Não</button>

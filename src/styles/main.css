@@ -253,6 +253,12 @@ header p {
   flex-shrink: 0;
 }
 
+.toolbar-toggle-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .toolbar-helper {
   margin: -10px 2px 16px;
   color: var(--text3);
@@ -3766,9 +3772,14 @@ footer {
   }
 
   .toolbar .btn,
-  .toolbar .toggle-label {
+  .toolbar .toggle-label,
+  .toolbar .toolbar-toggle-group {
     width: 100%;
     justify-content: center;
+  }
+
+  .toolbar .toolbar-toggle-group .toggle-label {
+    width: auto;
   }
 
   .panel-header,

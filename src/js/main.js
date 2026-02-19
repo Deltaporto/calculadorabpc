@@ -88,9 +88,21 @@ const JC_STEP_GUIDANCE = {
   triagem: { box: 'jcTriagemGuidance', text: 'jcTriagemGuidanceText' },
   texto: { box: 'jcTextoGuidance', text: 'jcTextoGuidanceText' }
 };
-const PORTARIA_TEXT_PATH = 'docs/normas/portaria-conjunta-2-2015.txt';
-const PORTARIA_PDF_PATH = 'docs/normas/portaria-conjunta-2-2015.pdf';
-let portariaTextCache = null;
+const PORTARIA_SOURCES = {
+  p2_2015: {
+    title: 'Portaria Conjunta MDS/INSS nº 2/2015',
+    textPath: 'docs/normas/portaria-conjunta-2-2015.txt',
+    pdfPath: 'docs/normas/portaria-conjunta-2-2015.pdf'
+  },
+  p34_2025: {
+    title: 'Portaria Conjunta MDS/INSS nº 34/2025',
+    textPath: 'docs/normas/portaria-mds-inss-34-2025.txt',
+    pdfPath: 'docs/normas/portaria-mds-inss-34-2025.pdf'
+  }
+};
+const DEFAULT_PORTARIA_SOURCE_KEY = 'p2_2015';
+let portariaTextCache = new Map();
+let openPortariaModalBySource = null;
 let lastPortariaTrigger = null;
 let pendingPadraoDialogContext = null;
 let lastPadraoDialogTrigger = null;
@@ -448,6 +460,7 @@ function openSimHelpPopover(helpKey, trigger) {
   excerptBtn.disabled = !entry.legalExcerpt;
   excerptBtn.setAttribute('aria-disabled', String(!entry.legalExcerpt));
   portariaBtn.dataset.helpKey = helpKey;
+  portariaBtn.dataset.portariaSourceKey = entry.portariaSourceKey || DEFAULT_PORTARIA_SOURCE_KEY;
 
   activeSimHelpKey = helpKey;
   activeSimHelpTrigger = trigger;
@@ -1554,12 +1567,18 @@ function handleModeSwitcherClick(mode) {
   setUIMode(mode, { scrollToJudicial: mode === 'controle' });
 }
 
-async function loadPortariaText() {
-  if (portariaTextCache != null) return portariaTextCache;
-  const response = await fetch(PORTARIA_TEXT_PATH, { cache: 'no-store' });
+function getPortariaSource(sourceKey = DEFAULT_PORTARIA_SOURCE_KEY) {
+  return PORTARIA_SOURCES[sourceKey] || PORTARIA_SOURCES[DEFAULT_PORTARIA_SOURCE_KEY];
+}
+
+async function loadPortariaText(sourceKey = DEFAULT_PORTARIA_SOURCE_KEY) {
+  const source = getPortariaSource(sourceKey);
+  if (portariaTextCache.has(source.textPath)) return portariaTextCache.get(source.textPath);
+  const response = await fetch(source.textPath, { cache: 'no-store' });
   if (!response.ok) throw new Error(`Falha HTTP ${response.status}`);
-  portariaTextCache = await response.text();
-  return portariaTextCache;
+  const text = await response.text();
+  portariaTextCache.set(source.textPath, text);
+  return text;
 }
 
 function setPortariaStatus(statusEl, message, isError = false) {
@@ -1570,14 +1589,12 @@ function setPortariaStatus(statusEl, message, isError = false) {
 function initPortariaModal() {
   const openTextBtn = document.getElementById('openPortariaTextBtn');
   const modal = document.getElementById('portariaModal');
+  const titleEl = document.getElementById('portariaModalTitle');
   const closeBtn = document.getElementById('closePortariaModalBtn');
   const contentEl = document.getElementById('portariaContent');
   const statusEl = document.getElementById('portariaStatus');
   const pdfLink = document.getElementById('portariaPdfLink');
-  if (!modal || !contentEl || !statusEl || !pdfLink) return;
-
-  pdfLink.href = PORTARIA_PDF_PATH;
-  if (!openTextBtn) return;
+  if (!modal || !titleEl || !contentEl || !statusEl || !pdfLink) return;
 
   const closeModal = () => {
     if (typeof modal.close === 'function') {
@@ -1587,13 +1604,16 @@ function initPortariaModal() {
     modal.removeAttribute('open');
   };
 
-  const openModal = async () => {
+  const openModal = async (sourceKey = DEFAULT_PORTARIA_SOURCE_KEY) => {
+    const source = getPortariaSource(sourceKey);
     lastPortariaTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : openTextBtn;
     if (typeof modal.showModal === 'function') {
       if (!modal.open) modal.showModal();
     } else {
       modal.setAttribute('open', '');
     }
+    titleEl.textContent = source.title;
+    pdfLink.href = source.pdfPath;
     if (closeBtn) {
       try {
         closeBtn.focus({ preventScroll: true });
@@ -1604,7 +1624,7 @@ function initPortariaModal() {
     setPortariaStatus(statusEl, 'Carregando texto da Portaria...');
     contentEl.textContent = '';
     try {
-      const text = await loadPortariaText();
+      const text = await loadPortariaText(sourceKey);
       contentEl.textContent = text;
       contentEl.scrollTop = 0;
       setPortariaStatus(statusEl, 'Texto da Portaria carregado.');
@@ -1614,7 +1634,10 @@ function initPortariaModal() {
     }
   };
 
-  openTextBtn.addEventListener('click', openModal);
+  openPortariaModalBySource = openModal;
+  if (openTextBtn) {
+    openTextBtn.addEventListener('click', () => openModal(DEFAULT_PORTARIA_SOURCE_KEY));
+  }
   modal.querySelectorAll('[data-portaria-close]').forEach(btn => {
     btn.addEventListener('click', closeModal);
   });
@@ -1705,8 +1728,13 @@ function initSimHelpPopover() {
     excerptBtn.textContent = hidden ? 'Ver base legal (trecho)' : 'Ocultar base legal';
   });
   portariaBtn.addEventListener('click', () => {
-    const openPortariaBtn = document.getElementById('openPortariaTextBtn');
-    if (openPortariaBtn) openPortariaBtn.click();
+    const sourceKey = portariaBtn.dataset.portariaSourceKey || DEFAULT_PORTARIA_SOURCE_KEY;
+    if (typeof openPortariaModalBySource === 'function') {
+      openPortariaModalBySource(sourceKey);
+    } else {
+      const openPortariaBtn = document.getElementById('openPortariaTextBtn');
+      if (openPortariaBtn) openPortariaBtn.click();
+    }
     closeSimHelpPopover();
   });
 

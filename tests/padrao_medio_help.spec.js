@@ -66,6 +66,12 @@ test('Toolbar uses "padrão médio" wording and exposes helper trigger', async (
     await expect(page.locator('#simHelpSummary')).toContainText('Aplicação parametrizada do padrão médio');
     await expect(page.locator('#simHelpList')).toContainText('e1=2');
     await expect(page.locator('#simHelpList')).toContainText('d9=3');
+
+    await page.click('#simHelpPortariaBtn');
+    await expect(page.locator('#portariaModal')).toBeVisible();
+    await expect(page.locator('#portariaModalTitle')).toContainText('34/2025');
+    await expect(page.locator('#portariaPdfLink')).toHaveAttribute('href', 'docs/normas/portaria-mds-inss-34-2025.pdf');
+    await expect(page.locator('#portariaContent')).toContainText('PORTARIA CONJUNTA MDS/INSS Nº 34');
   } finally {
     await new Promise(resolve => server.close(resolve));
   }

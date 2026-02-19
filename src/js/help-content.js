@@ -61,6 +61,7 @@ export const SIM_HELP_CONTENT = {
   'section.padrao_medio': {
     title: 'Padrão Médio Social',
     summary: 'Aplicação parametrizada do padrão médio à avaliação social, conforme Anexo II da Portaria Conjunta MDS/INSS nº 34/2025.',
+    portariaSourceKey: 'p34_2025',
     bullets: [
       'Só pode ser aplicado após avaliação médica com constatação de impedimento de longo prazo.',
       'Aplica os qualificadores do Anexo II: e1=2, e2=2, e3=2, e4=1, e5=2, d6=3, d7=2, d8=3 e d9=3.',
@@ -69,6 +70,19 @@ export const SIM_HELP_CONTENT = {
     ],
     source: 'Portaria Conjunta MDS/INSS nº 34/2025 — art. 13, § 4º, III; § 6º; § 7º; e Anexo II. Implementação no app: getPadraoApplyContext/applyPadraoEntries/handleApplyPadrao em src/js/main.js.',
     legalExcerpt: '“O resultado do padrão médio somente poderá ser utilizado para a concessão ou manutenção do BPC.”'
+  },
+  'concept.impedimento_lp': {
+    title: 'Impedimento de Longo Prazo',
+    summary: 'É um juízo prospectivo sobre se as alterações em Funções e/ou Estruturas do Corpo podem ser resolvidas em menos de 2 (dois) anos.',
+    portariaSourceKey: 'p2_2015',
+    bullets: [
+      'A Portaria 2/2015 exige considerar, nesse juízo, as barreiras da avaliação social, os aspectos clínicos, o tempo pregresso e o acesso ao tratamento, na perspectiva de participação plena e efetiva.',
+      'Se as alterações puderem ser resolvidas em menos de 2 anos, nessas condições, o requerimento deve ser indeferido.',
+      'Na Portaria 34/2025, “não haver impedimento de longo prazo” e “deficiência não atender aos critérios” são hipóteses distintas de indeferimento.',
+      'Assim, mesmo com alteração estrutural antiga, o quesito não fica prejudicado: ele deve ser respondido de forma autônoma e fundamentada.'
+    ],
+    source: 'Portaria Conjunta MDS/INSS nº 2/2015 — art. 7º, III e art. 8º, III (linhas 123-127 e 140-141); Portaria Conjunta MDS/INSS nº 34/2025 — art. 15, § 1º, II e III (linhas 408-412).',
+    legalExcerpt: '“pronunciar-se sobre a possibilidade das alterações em Funções e/ou Estruturas do Corpo serem resolvidas em menos de 2 (dois) anos...”'
   },
   'domain.e1': {
     title: 'E1 - Produtos e Tecnologia',
