@@ -4,12 +4,24 @@ export function setQBadge(id, q, labels) {
   el.dataset.q = labels[q];
 }
 
-export function highlightActiveCell(ativQ, corpoQ) {
-  const active = document.querySelector('.tc.active-cell');
-  if (active) active.classList.remove('active-cell');
+let activeCell = null;
 
-  const target = document.querySelector(`.tc[data-c="${corpoQ}"][data-a="${ativQ}"]`);
-  if (target) target.classList.add('active-cell');
+export function highlightActiveCell(ativQ, corpoQ) {
+  const targetId = `tc-${corpoQ}-${ativQ}`;
+  const target = document.getElementById(targetId);
+
+  if (activeCell === target) return;
+
+  if (activeCell) {
+    activeCell.classList.remove('active-cell');
+  }
+
+  if (target) {
+    target.classList.add('active-cell');
+    activeCell = target;
+  } else {
+    activeCell = null;
+  }
 }
 
 export function runMainUpdate({
