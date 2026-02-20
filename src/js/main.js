@@ -1446,7 +1446,7 @@ function renderJudicialControlText() {
   renderJudicialControl();
 }
 
-async function copyToClipboard(area, feedback) {
+async function copyToClipboard(area, feedback, triggerButton = null) {
   if (!area.value.trim()) {
     feedback.textContent = 'Gere o texto antes de copiar.';
     return;
@@ -1457,6 +1457,24 @@ async function copyToClipboard(area, feedback) {
     }
     await navigator.clipboard.writeText(area.value);
     feedback.textContent = 'Texto copiado para a área de transferência.';
+
+    if (triggerButton) {
+      if (triggerButton.dataset.timerId) {
+        clearTimeout(Number(triggerButton.dataset.timerId));
+      } else if (!triggerButton.dataset.originalHtml) {
+        triggerButton.dataset.originalHtml = triggerButton.innerHTML;
+        triggerButton.innerHTML = `<svg class="ui-icon sm" aria-hidden="true"><use href="#i-check-circle"></use></svg>Copiado!`;
+      }
+
+      const timerId = setTimeout(() => {
+        if (triggerButton.dataset.originalHtml) {
+          triggerButton.innerHTML = triggerButton.dataset.originalHtml;
+          delete triggerButton.dataset.originalHtml;
+          delete triggerButton.dataset.timerId;
+        }
+      }, 2000);
+      triggerButton.dataset.timerId = String(timerId);
+    }
   } catch (err) {
     area.focus();
     area.select();
@@ -1464,15 +1482,16 @@ async function copyToClipboard(area, feedback) {
   }
 }
 
-async function copyJudicialControlText() {
+async function copyJudicialControlText(event) {
   const feedback = document.getElementById('copyFeedbackControle');
   const area = document.getElementById('textoControleJudicial');
-  await copyToClipboard(area, feedback);
+  const button = event?.target?.closest('button');
+  await copyToClipboard(area, feedback, button);
 }
 
-function generateAndCopyJudicialText() {
+function generateAndCopyJudicialText(event) {
   renderJudicialControlText();
-  copyJudicialControlText();
+  copyJudicialControlText(event);
 }
 
 function sendScenarioToJudicialDraft() {
@@ -1560,10 +1579,11 @@ function renderStandardText(amb = calcAmbiente(), ativ = calcAtividades(), corpo
   document.getElementById('textoPadrao').value = [paragrafo1, paragrafo2].filter(Boolean).join('\n\n');
 }
 
-async function copyStandardText() {
+async function copyStandardText(event) {
   const feedback = document.getElementById('copyFeedback');
   const area = document.getElementById('textoPadrao');
-  await copyToClipboard(area, feedback);
+  const button = event?.target?.closest('button');
+  await copyToClipboard(area, feedback, button);
 }
 
 function handleModeSwitcherClick(mode) {
