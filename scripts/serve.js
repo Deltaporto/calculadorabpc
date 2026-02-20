@@ -27,6 +27,11 @@ function resolvePath(urlPathname) {
   const decoded = decodeURIComponent(urlPathname.split('?')[0]);
   const normalized = path.normalize(decoded).replace(/^([.][.][/\\])+/, '');
   const relative = normalized === '/' ? '/index.html' : normalized;
+
+  // Block hidden files (starting with .)
+  const parts = relative.split(path.sep);
+  if (parts.some(part => part.startsWith('.') && part !== '.' && part !== '..')) return null;
+
   const filePath = path.join(root, relative);
   if (!filePath.startsWith(root)) return null;
   return filePath;
@@ -35,7 +40,10 @@ function resolvePath(urlPathname) {
 function send(res, status, body, type = 'text/plain; charset=utf-8') {
   res.writeHead(status, {
     'Content-Type': type,
-    'Cache-Control': 'no-store'
+    'Cache-Control': 'no-store',
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'DENY',
+    'Referrer-Policy': 'no-referrer'
   });
   res.end(body);
 }
@@ -70,7 +78,10 @@ const server = http.createServer((req, res) => {
       const type = MIME_TYPES[ext] || 'application/octet-stream';
       res.writeHead(200, {
         'Content-Type': type,
-        'Cache-Control': 'no-store'
+        'Cache-Control': 'no-store',
+        'X-Content-Type-Options': 'nosniff',
+        'X-Frame-Options': 'DENY',
+        'Referrer-Policy': 'no-referrer'
       });
       res.end(data);
     });
