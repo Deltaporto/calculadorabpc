@@ -19,6 +19,36 @@ export function buildDomainRows(container, domains, labels, names, domainHelpKey
 }
 
 export function buildTabelaGrid(container, labels, ambTab, tabelaConclusivaFn) {
+  // ⚡ Optimization: Reuse existing DOM nodes if grid is already built
+  const existingCells = container.querySelectorAll('.tc[data-c]');
+  if (existingCells.length > 0) {
+    existingCells.forEach(cell => {
+      const c = parseInt(cell.dataset.c, 10);
+      const a = parseInt(cell.dataset.a, 10);
+      const yes = tabelaConclusivaFn(ambTab, a, c);
+
+      // Update text content
+      const newText = yes ? 'Sim' : 'Não';
+      if (cell.textContent !== newText) {
+        cell.textContent = newText;
+      }
+
+      // Update classes efficiently
+      cell.classList.toggle('yes', yes);
+      cell.classList.toggle('no', !yes);
+
+      // Handle sensitivity point (c=2, a=2)
+      if (c === 2 && a === 2) {
+        // Ensure base class exists (should be there from initial render, but safe to add)
+        cell.classList.add('tc-sensitivity');
+        cell.classList.toggle('tc-sensitivity-yes', yes);
+        cell.classList.toggle('tc-sensitivity-no', !yes);
+      }
+    });
+    return;
+  }
+
+  // Initial build
   let html = '';
   html += '<div class="tc corner"></div>';
 
