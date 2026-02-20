@@ -3830,3 +3830,16 @@ footer {
     justify-content: center;
   }
 }
+
+/* A11Y FOCUS STYLES (Palette) */
+.note-btn:focus-visible,
+.amb-tab:focus-visible,
+.mode-btn:focus-visible,
+.btn:focus-visible,
+.simulador-summary:focus-visible,
+.idade-input input:focus-visible,
+.idade-input select:focus-visible {
+  outline: 2px solid transparent;
+  box-shadow: 0 0 0 2px var(--blue);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--blue) 72%, #fff 28%);
+}
