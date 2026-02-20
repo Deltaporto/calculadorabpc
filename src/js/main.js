@@ -1458,16 +1458,22 @@ async function copyToClipboard(area, feedback, triggerButton = null) {
     await navigator.clipboard.writeText(area.value);
     feedback.textContent = 'Texto copiado para a área de transferência.';
 
-    if (triggerButton && !triggerButton.dataset.originalHtml) {
-      const originalHtml = triggerButton.innerHTML;
-      triggerButton.dataset.originalHtml = originalHtml;
-      triggerButton.innerHTML = `<svg class="ui-icon sm" aria-hidden="true"><use href="#i-check-circle"></use></svg>Copiado!`;
-      setTimeout(() => {
+    if (triggerButton) {
+      if (triggerButton.dataset.timerId) {
+        clearTimeout(Number(triggerButton.dataset.timerId));
+      } else if (!triggerButton.dataset.originalHtml) {
+        triggerButton.dataset.originalHtml = triggerButton.innerHTML;
+        triggerButton.innerHTML = `<svg class="ui-icon sm" aria-hidden="true"><use href="#i-check-circle"></use></svg>Copiado!`;
+      }
+
+      const timerId = setTimeout(() => {
         if (triggerButton.dataset.originalHtml) {
           triggerButton.innerHTML = triggerButton.dataset.originalHtml;
           delete triggerButton.dataset.originalHtml;
+          delete triggerButton.dataset.timerId;
         }
       }, 2000);
+      triggerButton.dataset.timerId = String(timerId);
     }
   } catch (err) {
     area.focus();
