@@ -20,7 +20,7 @@
   --text3: #6B7280;
   --border: #E5E7EB;
   --navy: #0F1B2D;
-  --gold: #C5A55A;
+  --accent: #1B4DCC;
   --blue: #2563EB;
   --qN: #9CA3AF;
   --qL: #60A5FA;
@@ -150,8 +150,8 @@ header .badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: var(--gold);
-  color: var(--navy);
+  background: var(--accent);
+  color: #fff;
   font-size: .7rem;
   font-weight: 700;
   padding: 3px 10px;
@@ -239,7 +239,7 @@ header p {
 }
 
 .header-row input[type=checkbox] {
-  accent-color: var(--gold);
+  accent-color: var(--accent);
   width: 16px;
   height: 16px
 }
@@ -298,15 +298,15 @@ header p {
   height: .95em
 }
 
-.btn-gold {
-  background: linear-gradient(135deg, #C5A55A, #D4B96A);
-  color: #1a1a1a;
-  box-shadow: 0 2px 8px rgba(197, 165, 90, .3)
+.btn-primary {
+  background: linear-gradient(135deg, #2558C5, #1B4AAF);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(27, 77, 204, .3)
 }
 
-.btn-gold:hover {
+.btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(197, 165, 90, .4)
+  box-shadow: 0 4px 12px rgba(27, 77, 204, .4)
 }
 
 .btn-outline {
@@ -1011,9 +1011,9 @@ input:checked+.toggle-switch::after {
 }
 
 [data-theme="dark"] .amb-tab.active {
-  background: var(--gold);
+  background: var(--accent);
   color: #1a1a1a;
-  border-color: var(--gold)
+  border-color: var(--accent)
 }
 
 .tabela-matrix {
@@ -1151,7 +1151,7 @@ input:checked+.toggle-switch::after {
 }
 
 [data-theme="dark"] .tc.active-cell {
-  outline-color: var(--gold)
+  outline-color: var(--accent)
 }
 
 .tc-sensitivity {
@@ -1176,7 +1176,7 @@ input:checked+.toggle-switch::after {
 }
 
 [data-theme="dark"] .tc-sensitivity::after {
-  border-color: color-mix(in srgb, var(--gold) 52%, var(--text3));
+  border-color: color-mix(in srgb, var(--accent) 52%, var(--text3));
 }
 
 @keyframes pulse-cell {
@@ -2751,7 +2751,7 @@ footer p {
   --text3: #63738f;
   --border: #d4deec;
   --navy: #102342;
-  --gold: #c6a35d;
+  --accent: #1B4DCC;
   --blue: #2855b6;
   --radius: 14px;
   --shadow: 0 10px 24px rgba(15, 27, 45, .06), 0 1px 2px rgba(15, 27, 45, .08);
@@ -2768,7 +2768,7 @@ footer p {
   --text3: #8ea2c6;
   --border: #24344f;
   --navy: #1b2f54;
-  --gold: #d8b46b;
+  --accent: #5A8DFF;
   --blue: #5a8dff;
   --bg-soft: #101a2d;
   --shadow: 0 12px 28px rgba(2, 6, 14, .5);
@@ -2783,7 +2783,7 @@ body {
   line-height: 1.58;
   background:
     radial-gradient(circle at 12% -8%, rgba(40, 85, 182, .16), transparent 34%),
-    radial-gradient(circle at 88% -12%, rgba(198, 163, 93, .14), transparent 34%),
+    radial-gradient(circle at 88% -12%, rgba(27, 77, 204, .10), transparent 34%),
     linear-gradient(180deg, rgba(255, 255, 255, .24), rgba(255, 255, 255, 0)),
     var(--bg);
 }
@@ -2823,7 +2823,7 @@ header::before {
   height: 320px;
   top: -210px;
   right: -70px;
-  background: radial-gradient(circle, rgba(198, 163, 93, .28), transparent 68%);
+  background: radial-gradient(circle, rgba(27, 77, 204, .18), transparent 68%);
 }
 
 header::after {
@@ -2932,16 +2932,16 @@ header .badge {
   padding: 8px 13px;
 }
 
-.btn-gold {
-  background: linear-gradient(180deg, #d9bb78, #c29a4d);
-  color: #1a253d;
-  border: 1px solid #a8823b;
-  box-shadow: 0 8px 18px rgba(167, 127, 57, .34);
+.btn-primary {
+  background: linear-gradient(180deg, #2558C5, #1B4AAF);
+  color: #fff;
+  border: 1px solid #1644A0;
+  box-shadow: 0 8px 18px rgba(27, 77, 204, .30);
 }
 
-.btn-gold:hover {
-  background: linear-gradient(180deg, #e1c684, #c9a65b);
-  box-shadow: 0 11px 22px rgba(167, 127, 57, .42);
+.btn-primary:hover {
+  background: linear-gradient(180deg, #2E63D0, #1F50BA);
+  box-shadow: 0 11px 22px rgba(27, 77, 204, .40);
 }
 
 .btn-outline {
