@@ -129,6 +129,15 @@ function getDecisionReason(ambQ, ativQ, corpoQ, yes) {
 function iconMarkup(name, cls = 'ui-icon') {
   return `<svg class="${cls}" aria-hidden="true"><use href="#i-${name}"></use></svg>`;
 }
+function createIcon(name, cls = 'ui-icon') {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('class', cls);
+  svg.setAttribute('aria-hidden', 'true');
+  const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+  use.setAttribute('href', `#i-${name}`);
+  svg.appendChild(use);
+  return svg;
+}
 function setDecisionIcon(name) {
   document.getElementById('decIcon').innerHTML = iconMarkup(name, 'ui-icon lg');
 }
@@ -142,10 +151,33 @@ function getItemNumber(amb, ativ, corpo) {
   return n;
 }
 
+function renderSafeHTML(content) {
+  const fragment = document.createDocumentFragment();
+  const parts = content.split(/(<\/?strong>)/g);
+  let inside = false;
+
+  parts.forEach(part => {
+    if (part === '<strong>') {
+      inside = true;
+    } else if (part === '</strong>') {
+      inside = false;
+    } else if (part) {
+      if (inside) {
+        const b = document.createElement('strong');
+        b.textContent = part;
+        fragment.appendChild(b);
+      } else {
+        fragment.appendChild(document.createTextNode(part));
+      }
+    }
+  });
+  return fragment;
+}
+
 function createTraceLine(html) {
   const div = document.createElement('div');
   div.className = 'jc-trace-line';
-  div.innerHTML = html;
+  div.appendChild(renderSafeHTML(html));
   return div;
 }
 
@@ -627,10 +659,16 @@ function setStepState(id, state, text) {
   el.textContent = text;
 }
 
-function setStatusBadge(kind, text) {
+function setStatusBadge(kind, iconName, textHtml) {
   const badge = document.getElementById('jcStatusBadge');
   badge.className = `jc-status-badge ${kind}`;
-  badge.innerHTML = text;
+  badge.replaceChildren();
+
+  if (iconName) {
+    badge.appendChild(createIcon(iconName, 'ui-icon sm'));
+    badge.appendChild(document.createTextNode(' '));
+  }
+  badge.appendChild(renderSafeHTML(textHtml));
 }
 
 function setWhyBlocked(message = '') {
@@ -1297,8 +1335,8 @@ function renderJudicialControl() {
       tone: 'blocked',
       text: 'A minuta da decisão será liberada após a triagem.'
     });
-    setStatusBadge('pending', `${iconMarkup('alert', 'ui-icon sm')} Preencha as etapas 1 e 2 para liberar a conclusão probatória.`);
-    document.getElementById('jcTrace').innerHTML = `<div class="jc-trace-line">Etapa 1: fixe a base administrativa do INSS para iniciar o controle judicial.</div>`;
+    setStatusBadge('pending', 'alert', 'Preencha as etapas 1 e 2 para liberar a conclusão probatória.');
+    document.getElementById('jcTrace').replaceChildren(createTraceLine('Etapa 1: fixe a base administrativa do INSS para iniciar o controle judicial.'));
     setWhyBlocked(blockReason);
     renderJudicialProgress();
     markJudicialInvalidTargets(uniquePendingTargetIds(adminPendingItems));
@@ -1334,8 +1372,8 @@ function renderJudicialControl() {
       tone: 'blocked',
       text: 'A minuta será liberada após a conclusão da triagem probatória.'
     });
-    setStatusBadge('pending', `${iconMarkup('alert', 'ui-icon sm')} ${triage.reason}`);
-    document.getElementById('jcTrace').innerHTML = `<div class="jc-trace-line">${triage.reason}</div>`;
+    setStatusBadge('pending', 'alert', triage.reason);
+    document.getElementById('jcTrace').replaceChildren(createTraceLine(triage.reason));
     setWhyBlocked(triage.reason);
     renderJudicialProgress();
     const activeStep = getActiveJudicialStep();
@@ -1399,9 +1437,9 @@ function renderJudicialControl() {
   }
 
   if (triage.status === 'dispensa') {
-    setStatusBadge('dispensa', `${iconMarkup('check-circle', 'ui-icon sm')} <strong>Avaliação social judicial dispensável</strong>`);
+    setStatusBadge('dispensa', 'check-circle', '<strong>Avaliação social judicial dispensável</strong>');
   } else {
-    setStatusBadge('necessaria', `${iconMarkup('alert', 'ui-icon sm')} <strong>Avaliação social judicial necessária</strong>`);
+    setStatusBadge('necessaria', 'alert', '<strong>Avaliação social judicial necessária</strong>');
   }
   setStepGuidance('triagem', {
     tone: 'done',
