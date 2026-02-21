@@ -62,7 +62,7 @@ export function buildTabelaGrid(container, labels, ambTab, tabelaConclusivaFn) {
       const yes = tabelaConclusivaFn(ambTab, a, c);
       const isSensitivityPoint = c === 2 && a === 2;
       const sensitivityClass = isSensitivityPoint ? ` tc-sensitivity tc-sensitivity-${yes ? 'yes' : 'no'}` : '';
-      html += `<div class="tc ${yes ? 'yes' : 'no'}${sensitivityClass}" data-c="${c}" data-a="${a}">${yes ? 'Sim' : 'Não'}</div>`;
+      html += `<div id="tc-${c}-${a}" class="tc ${yes ? 'yes' : 'no'}${sensitivityClass}" data-c="${c}" data-a="${a}">${yes ? 'Sim' : 'Não'}</div>`;
     }
   }
 
