@@ -20,7 +20,7 @@
   --text3: #6B7280;
   --border: #E5E7EB;
   --navy: #0F1B2D;
-  --accent: #1B4DCC;
+  --accent: #2855B6;
   --blue: #2563EB;
   --qN: #9CA3AF;
   --qL: #60A5FA;
@@ -299,14 +299,14 @@ header p {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #2558C5, #1B4AAF);
+  background: linear-gradient(135deg, #3468C4, #2855B6);
   color: #fff;
-  box-shadow: 0 2px 8px rgba(27, 77, 204, .3)
+  box-shadow: 0 2px 8px rgba(40, 85, 182, .28)
 }
 
 .btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(27, 77, 204, .4)
+  box-shadow: 0 4px 12px rgba(40, 85, 182, .38)
 }
 
 .btn-outline {
@@ -2751,7 +2751,7 @@ footer p {
   --text3: #63738f;
   --border: #d4deec;
   --navy: #102342;
-  --accent: #1B4DCC;
+  --accent: #2855B6;
   --blue: #2855b6;
   --radius: 14px;
   --shadow: 0 10px 24px rgba(15, 27, 45, .06), 0 1px 2px rgba(15, 27, 45, .08);
@@ -2783,7 +2783,7 @@ body {
   line-height: 1.58;
   background:
     radial-gradient(circle at 12% -8%, rgba(40, 85, 182, .16), transparent 34%),
-    radial-gradient(circle at 88% -12%, rgba(27, 77, 204, .10), transparent 34%),
+    radial-gradient(circle at 88% -12%, rgba(40, 85, 182, .10), transparent 34%),
     linear-gradient(180deg, rgba(255, 255, 255, .24), rgba(255, 255, 255, 0)),
     var(--bg);
 }
@@ -2823,7 +2823,7 @@ header::before {
   height: 320px;
   top: -210px;
   right: -70px;
-  background: radial-gradient(circle, rgba(27, 77, 204, .18), transparent 68%);
+  background: radial-gradient(circle, rgba(40, 85, 182, .16), transparent 68%);
 }
 
 header::after {
@@ -2933,15 +2933,15 @@ header .badge {
 }
 
 .btn-primary {
-  background: linear-gradient(180deg, #2558C5, #1B4AAF);
+  background: linear-gradient(180deg, #3468C4, #2855B6);
   color: #fff;
-  border: 1px solid #1644A0;
-  box-shadow: 0 8px 18px rgba(27, 77, 204, .30);
+  border: 1px solid #224DA5;
+  box-shadow: 0 8px 18px rgba(40, 85, 182, .28);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(180deg, #2E63D0, #1F50BA);
-  box-shadow: 0 11px 22px rgba(27, 77, 204, .40);
+  background: linear-gradient(180deg, #3E72CE, #2F60BF);
+  box-shadow: 0 11px 22px rgba(40, 85, 182, .38);
 }
 
 .btn-outline {
