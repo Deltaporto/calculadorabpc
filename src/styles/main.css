@@ -120,6 +120,10 @@ h3 {
   overflow: visible
 }
 
+.mode-simulador .skip-link[href="#judicialControlSection"] {
+  display: none
+}
+
 .app {
   max-width: 1400px;
   margin: 0 auto;
@@ -3838,7 +3842,11 @@ footer {
 .btn:focus-visible,
 .simulador-summary:focus-visible,
 .idade-input input:focus-visible,
-.idade-input select:focus-visible {
+.idade-input select:focus-visible,
+.jc-textarea:focus-visible,
+.jc-mini-textarea:focus-visible,
+.jc-select:focus-visible,
+.standard-text textarea:focus-visible {
   outline: 2px solid transparent;
   box-shadow: 0 0 0 2px var(--blue);
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--blue) 72%, #fff 28%);
