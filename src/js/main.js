@@ -51,6 +51,7 @@ import {
 } from './judicial-trace.js';
 import { buildJudicialControlText } from './judicial-text.js';
 import { bindAppEvents } from './app-events.js';
+import { showToast } from './toast.js';
 
 // ============ STATE ============
 const ALL_DOMAINS = [...DOM_AMB, ...DOM_CORPO, ...DOM_ATIV_M, ...DOM_ATIV_S];
@@ -601,7 +602,7 @@ function handleApplyPadrao() {
   const context = getPadraoApplyContext();
 
   if (!context.eligibleEntries.length) {
-    alert('Padrão Médio Social não aplicado: nenhum domínio está elegível em razão dos pontos de corte etários.');
+    showToast('Padrão Médio Social não aplicado: nenhum domínio está elegível em razão dos pontos de corte etários.', 'warning');
     return;
   }
 
@@ -1135,7 +1136,7 @@ function applyCurrentQualifiersAsAdminDraft() {
 function fixAdminBaseFromDraft() {
   if (!getAdminDraftComplete()) {
     notifyJudicialInteraction('btnFixarBaseAdmin');
-    alert('Preencha os três qualificadores finais da base administrativa e os reconhecimentos do INSS em Funções do Corpo.');
+    showToast('Preencha os três qualificadores finais da base administrativa e os reconhecimentos do INSS em Funções do Corpo.', 'error');
     renderJudicialControl();
     return;
   }
@@ -1495,6 +1496,7 @@ async function copyToClipboard(area, feedback, triggerButton = null) {
     }
     await navigator.clipboard.writeText(area.value);
     feedback.textContent = 'Texto copiado para a área de transferência.';
+    showToast('Texto copiado para a área de transferência.', 'success');
 
     if (triggerButton) {
       if (triggerButton.dataset.timerId) {
@@ -1517,6 +1519,7 @@ async function copyToClipboard(area, feedback, triggerButton = null) {
     area.focus();
     area.select();
     feedback.textContent = 'Não foi possível copiar automaticamente. Use Ctrl+C.';
+    showToast('Não foi possível copiar automaticamente. Use Ctrl+C.', 'error');
   }
 }
 
