@@ -35,7 +35,7 @@ import {
 import { DOMAIN_HELP_KEYS, SIM_HELP_CONTENT } from './help-content.js';
 import { initStaticRatingA11yLabels } from './a11y.js';
 import { highlightActiveCell, runMainUpdate } from './ui-render.js';
-import { bindJudicialControlEvents } from './events.js';
+import { bindJudicialControlEvents, throttle } from './events.js';
 import {
   computeJudicialTriage as computeJudicialTriageFlow,
   getAtivReclassContext as getAtivReclassContextFlow,
@@ -1810,14 +1810,16 @@ function initSimHelpPopover() {
     if (event.key === 'Escape' && activeSimHelpKey) closeSimHelpPopover();
   });
 
-  window.addEventListener('resize', () => {
+  // ⚡ Optimization: Throttle popover positioning to reduce layout thrashing
+  window.addEventListener('resize', throttle(() => {
     if (activeSimHelpKey) positionSimHelpPopover();
-  });
-  window.addEventListener('scroll', () => {
+  }, 16));
+
+  window.addEventListener('scroll', throttle(() => {
     if (activeSimHelpKey && !window.matchMedia(SIM_HELP_MOBILE_QUERY).matches) {
       positionSimHelpPopover();
     }
-  });
+  }, 16));
 }
 
 bindAppEvents({

@@ -8,6 +8,19 @@ function debounce(func, wait) {
   };
 }
 
+// ⚡ Optimization: Throttle helper for frequent events like scroll/resize
+export function throttle(func, limit) {
+  let inThrottle;
+  return function(...args) {
+    const context = this;
+    if (!inThrottle) {
+      func.apply(context, args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
+    }
+  };
+}
+
 export function bindQGroup(groupId, onPick, onRender, onInteraction = null) {
   document.getElementById(groupId).addEventListener('click', e => {
     const btn = e.target.closest('.jc-q-btn');
