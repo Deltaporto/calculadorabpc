@@ -1,0 +1,5 @@
+
+> calculadora-bpc@1.0.0 start
+> node scripts/serve.js
+
+Servidor local: http://127.0.0.1:8000/index.html

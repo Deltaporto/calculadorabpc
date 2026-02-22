@@ -9,22 +9,32 @@ export function showToast(message, type = 'info', duration = 4000) {
 
   const toast = document.createElement('div');
   toast.className = `toast toast-${type}`;
-  toast.innerHTML = `
-    <div class="toast-icon"></div>
-    <div class="toast-message">${message}</div>
-    <button class="toast-close" aria-label="Fechar notificação">×</button>
-  `;
 
-  const icon = toast.querySelector('.toast-icon');
+  const iconDiv = document.createElement('div');
+  iconDiv.className = 'toast-icon';
+
   if (type === 'success') {
-    icon.innerHTML = '<svg class="ui-icon" aria-hidden="true"><use href="#i-check-circle"></use></svg>';
+    iconDiv.innerHTML = '<svg class="ui-icon" aria-hidden="true"><use href="#i-check-circle"></use></svg>';
   } else if (type === 'error') {
-    icon.innerHTML = '<svg class="ui-icon" aria-hidden="true"><use href="#i-alert"></use></svg>';
+    iconDiv.innerHTML = '<svg class="ui-icon" aria-hidden="true"><use href="#i-alert"></use></svg>';
   } else if (type === 'warning') {
-    icon.innerHTML = '<svg class="ui-icon" aria-hidden="true"><use href="#i-alert"></use></svg>';
+    iconDiv.innerHTML = '<svg class="ui-icon" aria-hidden="true"><use href="#i-alert"></use></svg>';
   } else {
-    icon.innerHTML = '<svg class="ui-icon" aria-hidden="true"><use href="#i-document"></use></svg>';
+    iconDiv.innerHTML = '<svg class="ui-icon" aria-hidden="true"><use href="#i-document"></use></svg>';
   }
+
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'toast-message';
+  messageDiv.textContent = message;
+
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'toast-close';
+  closeBtn.setAttribute('aria-label', 'Fechar notificação');
+  closeBtn.textContent = '×';
+
+  toast.appendChild(iconDiv);
+  toast.appendChild(messageDiv);
+  toast.appendChild(closeBtn);
 
   container.appendChild(toast);
 
@@ -44,7 +54,6 @@ export function showToast(message, type = 'info', duration = 4000) {
     });
   };
 
-  const closeBtn = toast.querySelector('.toast-close');
   closeBtn.addEventListener('click', removeToast);
 
   if (duration > 0) {
