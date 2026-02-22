@@ -4,11 +4,16 @@ export function showToast(message, type = 'info', duration = 4000) {
     container = document.createElement('div');
     container.id = 'toast-container';
     container.className = 'toast-container';
+    container.setAttribute('role', 'region');
+    container.setAttribute('aria-label', 'Notificações');
+    container.setAttribute('aria-live', 'polite');
     document.body.appendChild(container);
   }
 
   const toast = document.createElement('div');
   toast.className = `toast toast-${type}`;
+  const role = type === 'error' ? 'alert' : 'status';
+  toast.setAttribute('role', role);
   toast.innerHTML = `
     <div class="toast-icon"></div>
     <div class="toast-message">${message}</div>

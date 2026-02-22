@@ -1161,6 +1161,7 @@ function fixAdminBaseFromDraft() {
   updateComparison(calcAmbiente(), calcAtividades(), calcCorpo());
   clearJudicialTextArea();
   notifyJudicialInteraction('btnFixarBaseAdmin');
+  showToast('Base administrativa fixada com sucesso.', 'success');
   renderJudicialControl();
 }
 
@@ -1543,13 +1544,13 @@ function sendScenarioToJudicialDraft() {
   }, 0);
   notifyJudicialInteraction('btnLevarParaControle');
   applyCurrentQualifiersAsAdminDraft();
-  document.getElementById('copyFeedbackControle').textContent = 'Rascunho preenchido. Revise os reconhecimentos do INSS e clique em "Fixar base administrativa".';
+  showToast('Cenário copiado para o rascunho do Controle Judicial.', 'success');
 }
 
 function handleUseCurrentAsBase() {
   notifyJudicialInteraction('btnUseCurrentAsBase');
   applyCurrentQualifiersAsAdminDraft();
-  document.getElementById('copyFeedbackControle').textContent = 'Rascunho preenchido com os qualificadores atuais da Calculadora. Revise e clique em "Fixar base administrativa".';
+  showToast('Rascunho preenchido com os dados da Calculadora.', 'success');
 }
 
 function handleClearComp() {
