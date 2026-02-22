@@ -3200,6 +3200,11 @@ header .badge {
   background: linear-gradient(180deg, #16273f, #121f33);
 }
 
+.judicial-control:focus {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
 .standard-text h3,
 .comparison h3,
 .judicial-control h3 {

@@ -1537,6 +1537,10 @@ function generateAndCopyJudicialText(event) {
 
 function sendScenarioToJudicialDraft() {
   setUIMode('controle', { scrollToJudicial: false });
+  setTimeout(() => {
+    const section = document.getElementById('judicialControlSection');
+    if (section) section.focus();
+  }, 0);
   notifyJudicialInteraction('btnLevarParaControle');
   applyCurrentQualifiersAsAdminDraft();
   document.getElementById('copyFeedbackControle').textContent = 'Rascunho preenchido. Revise os reconhecimentos do INSS e clique em "Fixar base administrativa".';
