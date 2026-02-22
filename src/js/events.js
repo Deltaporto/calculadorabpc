@@ -1,3 +1,13 @@
+// ⚡ Optimization: Debounce helper for high-frequency events
+function debounce(func, wait) {
+  let timeout;
+  return function(...args) {
+    const context = this;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(context, args), wait);
+  };
+}
+
 export function bindQGroup(groupId, onPick, onRender, onInteraction = null) {
   document.getElementById(groupId).addEventListener('click', e => {
     const btn = e.target.closest('.jc-q-btn');
@@ -154,12 +164,15 @@ export function bindJudicialControlEvents({
     clearJudicialTextArea();
   }, renderJudicialControl, notifyInteraction);
 
+  // ⚡ Optimization: Debounce render to avoid UI blocking during typing
+  const debouncedRender = debounce(renderJudicialControl, 300);
+
   document.getElementById('jcAtivMedJustification').addEventListener('input', e => {
     if (!judicialControl.adminBase || judicialControl.med.hasAtivMed !== true) return;
     judicialControl.med.ativMedJustification = e.target.value;
     clearJudicialTextArea();
     notifyInteraction('jcAtivMedJustification');
-    renderJudicialControl();
+    debouncedRender();
   });
 
   document.getElementById('btnGerarControleTexto').addEventListener('click', () => {
