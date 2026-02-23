@@ -33,6 +33,7 @@ let lastDecisionTone = null;
 let lastDecisionIcon = null;
 let lastDecisionSignature = null;
 let decisionPopTimer = null;
+let cachedRefs = null;
 
 function setQBadgeElement(el, q, labels) {
   if (!el) return;
@@ -42,6 +43,7 @@ function setQBadgeElement(el, q, labels) {
 }
 
 function ensureRefs() {
+  if (cachedRefs && cachedRefs.fAmb && cachedRefs.fAmb.isConnected) return cachedRefs;
   const refs = {
     fAmb: getById('fAmb'),
     barAmb: getById('barAmb'),
@@ -68,6 +70,7 @@ function ensureRefs() {
   };
   const ambTabs = [...document.querySelectorAll('.amb-tab')];
   refs.ambTabMap = new Map(ambTabs.map(tab => [+tab.dataset.a, tab]));
+  cachedRefs = refs;
   return refs;
 }
 
