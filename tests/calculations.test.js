@@ -54,9 +54,10 @@ function buildFunction(name, deps = {}) {
 }
 
 const pctToQ = buildFunction('pctToQ');
+const calculateScore = buildFunction('calculateScore');
 const tabelaConclusiva = buildFunction('tabelaConclusiva');
-const calcAmbienteFromState = buildFunction('calcAmbienteFromState', { pctToQ });
-const calcAtividadesFromState = buildFunction('calcAtividadesFromState', { pctToQ });
+const calcAmbienteFromState = buildFunction('calcAmbienteFromState', { pctToQ, calculateScore });
+const calcAtividadesFromState = buildFunction('calcAtividadesFromState', { pctToQ, calculateScore });
 const calcCorpoFromState = buildFunction('calcCorpoFromState');
 const computeAtivFromDomains = buildFunction('computeAtivFromDomains', { pctToQ });
 
