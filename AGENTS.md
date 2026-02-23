@@ -9,7 +9,7 @@
 - `src/styles/main.css`: global and component styles.
 - `tests/`: automated tests (`*.test.js` for Node unit tests, `*.spec.js` for Playwright E2E).
 - `scripts/serve.js`: local static server.
-- `docs/`: refactor decisions and functional documentation.
+- `docs/`: refactor decisions and functional documentation (including normative traceability in `docs/matriz-aderencia-portarias.md`).
 
 ## Build, Test, and Development Commands
 - `npm install`: install dependencies.
@@ -32,6 +32,7 @@
 - Unit tests: Node built-in test runner, file pattern `tests/*.test.js`.
 - E2E tests: Playwright, file pattern `tests/*.spec.js`.
 - For UI/copy changes in Judicial Control, add or update Playwright coverage.
+- For legal/rule changes (Portaria criteria), update `docs/matriz-aderencia-portarias.md` with norma→código traceability.
 - Before opening a PR, run:
   - `npm test`
   - `npx playwright test`
