@@ -1009,11 +1009,6 @@ function resetCorpoChangeDetails() {
   judicialControl.med.corpoJud = null;
 }
 
-function resetCorpoReclassFields() {
-  judicialControl.med.corpoKeepAdmin = null;
-  resetCorpoChangeDetails();
-}
-
 function getAdminDraftComplete() {
   const d = judicialControl.adminDraft;
   return d.amb != null
