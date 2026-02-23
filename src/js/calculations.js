@@ -8,16 +8,18 @@ export function pctToQ(pct) {
   return 4;
 }
 
-export function calcAmbienteFromState(state, domains, pctToQFn = pctToQ) {
+export function calculateScore(state, domains, multiplier, pctToQFn = pctToQ) {
   const sum = domains.reduce((acc, d) => acc + state[d.id], 0);
-  const pct = Math.max(0, (sum * 5) - 0.1);
+  const pct = Math.max(0, (sum * multiplier) - 0.1);
   return { sum, pct: +pct.toFixed(1), q: pctToQFn(pct) };
 }
 
+export function calcAmbienteFromState(state, domains, pctToQFn = pctToQ) {
+  return calculateScore(state, domains, 5, pctToQFn);
+}
+
 export function calcAtividadesFromState(state, domains, pctToQFn = pctToQ) {
-  const sum = domains.reduce((acc, d) => acc + state[d.id], 0);
-  const pct = Math.max(0, (sum * 2.77777777777778) - 0.1);
-  return { sum, pct: +pct.toFixed(1), q: pctToQFn(pct) };
+  return calculateScore(state, domains, 2.77777777777778, pctToQFn);
 }
 
 export function calcCorpoFromState(state, domains, options = {}) {
@@ -60,7 +62,6 @@ export function computeAtivFromDomains(domains, ativDomainIds, pctToQFn = pctToQ
   if (!domains) return null;
   const missing = ativDomainIds.some(id => domains[id] == null);
   if (missing) return null;
-  const sum = ativDomainIds.reduce((acc, id) => acc + domains[id], 0);
-  const pctRaw = Math.max(0, (sum * 2.77777777777778) - 0.1);
-  return { sum, pct: +pctRaw.toFixed(1), q: pctToQFn(pctRaw) };
+  const domainObjs = ativDomainIds.map(id => ({ id }));
+  return calculateScore(domains, domainObjs, 2.77777777777778, pctToQFn);
 }
