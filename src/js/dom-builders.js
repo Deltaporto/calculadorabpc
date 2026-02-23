@@ -20,6 +20,7 @@ export function buildDomainRows(container, domains, labels, names, domainHelpKey
 
 export function buildTabelaGrid(container, labels, ambTab, tabelaConclusivaFn) {
   // ⚡ Optimization: Reuse existing DOM nodes if grid is already built
+  // This avoids layout thrashing and preserves CSS transitions on state changes
   const existingCells = container.querySelectorAll('.tc[data-c]');
   if (existingCells.length > 0) {
     existingCells.forEach(cell => {
