@@ -33,6 +33,8 @@ export const DOM_ATIV_S = [
 
 export const CHILD_AGE_LIMIT_MONTHS = 192;
 
+export const MULTIPLIER_ATIVIDADES = 100 / 36;
+
 export const JC_ATIV_RECLASS_DOMAINS = [...DOM_ATIV_M, ...DOM_ATIV_S].map(d => d.id);
 export const JC_CORPO_RECLASS_DOMAINS = DOM_CORPO.map(d => d.id);
 
