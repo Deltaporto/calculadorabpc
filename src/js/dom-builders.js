@@ -22,9 +22,9 @@ export function buildTabelaGrid(container, labels, ambTab, tabelaConclusivaFn) {
   // ⚡ Optimization: Reuse existing DOM nodes if grid is already built
   const existingCells = container.querySelectorAll('.tc[data-c]');
   if (existingCells.length > 0) {
-    existingCells.forEach(cell => {
-      const c = parseInt(cell.dataset.c, 10);
-      const a = parseInt(cell.dataset.a, 10);
+    existingCells.forEach((cell, i) => {
+      const c = Math.floor(i / 5);
+      const a = i % 5;
       const yes = tabelaConclusivaFn(ambTab, a, c);
 
       // Update text content
