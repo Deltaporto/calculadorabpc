@@ -21,24 +21,24 @@ export function throttle(func, limit) {
   };
 }
 
-export function bindQGroup(groupId, onPick, onRender, onInteraction = null) {
-  document.getElementById(groupId).addEventListener('click', e => {
-    const btn = e.target.closest('.jc-q-btn');
+function bindEvent(groupId, selector, onPick, onRender, onInteraction = null, transform = val => val) {
+  const element = document.getElementById(groupId);
+  if (!element) return;
+  element.addEventListener('click', e => {
+    const btn = e.target.closest(selector);
     if (!btn) return;
-    onPick(+btn.dataset.value);
+    onPick(transform(btn.dataset.value));
     if (onInteraction) onInteraction(groupId);
     onRender();
   });
 }
 
+export function bindQGroup(groupId, onPick, onRender, onInteraction = null) {
+  bindEvent(groupId, '.jc-q-btn', onPick, onRender, onInteraction, val => +val);
+}
+
 export function bindSegmented(groupId, onPick, onRender, onInteraction = null) {
-  document.getElementById(groupId).addEventListener('click', e => {
-    const btn = e.target.closest('.jc-seg-btn');
-    if (!btn) return;
-    onPick(btn.dataset.value);
-    if (onInteraction) onInteraction(groupId);
-    onRender();
-  });
+  bindEvent(groupId, '.jc-seg-btn', onPick, onRender, onInteraction);
 }
 
 export function bindJudicialControlEvents({
