@@ -3946,3 +3946,16 @@ footer {
     width: calc(100% - 32px);
   }
 }
+
+/* Panel Colors (for CSP compliance) */
+.panel-blue {
+  --panel-color: #2563EB
+}
+
+.panel-purple {
+  --panel-color: #7C3AED
+}
+
+.panel-red {
+  --panel-color: #DC2626
+}
