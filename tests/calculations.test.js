@@ -97,3 +97,39 @@ test('computeAtivFromDomains - completo e incompleto', () => {
   const computed = computeAtivFromDomains({ d1: 2, d2: 3, d3: 4 }, ids, pctToQ);
   assert.deepStrictEqual(computed, { sum: 9, pct: 24.9, q: 1 });
 });
+
+test('computeAtivFromDomains - casos de borda e precisão', () => {
+  const ids = ['d1', 'd2'];
+
+  // Caso 1: domains nulo
+  assert.strictEqual(computeAtivFromDomains(null, ids, pctToQ), null, 'domains null deve retornar null');
+
+  // Caso 2: domains faltando chaves
+  assert.strictEqual(computeAtivFromDomains({ d1: 1 }, ids, pctToQ), null, 'domains incompleto deve retornar null');
+
+  // Caso 3: Soma zero
+  // (0 * 2.777...) - 0.1 = -0.1 -> Math.max(0, ...) -> 0
+  const zero = computeAtivFromDomains({ d1: 0, d2: 0 }, ids, pctToQ);
+  assert.deepStrictEqual(zero, { sum: 0, pct: 0, q: 0 }, 'Soma zero deve dar pct 0');
+
+  // Caso 4: Soma máxima (assumindo max 4 por domínio)
+  // 4 + 4 = 8
+  // (8 * 2.77777777777778) - 0.1 = 22.222... - 0.1 = 22.122... -> 22.1
+  const max = computeAtivFromDomains({ d1: 4, d2: 4 }, ids, pctToQ);
+  assert.strictEqual(max.sum, 8);
+  assert.strictEqual(max.pct, 22.1);
+  assert.strictEqual(max.q, 1); // pct < 25 -> q=1
+
+  // Caso 5: Verificação de valor específico para checar a fórmula
+  // Vamos usar um valor que resulte em algo conhecido
+  // Se sum = 18 (ex: 9 domínios com 2)
+  // 18 * 2.77777777777778 = 50.000...004
+  // - 0.1 = 49.900...
+  // toFixed(1) -> 49.9
+  // q para 49.9 (< 50) -> 2
+  // Vamos forçar sum=18 com d1=9, d2=9 apenas para teste matemático, embora na prática max seja 4
+  const sum18 = computeAtivFromDomains({ d1: 9, d2: 9 }, ids, pctToQ);
+  assert.strictEqual(sum18.sum, 18);
+  assert.strictEqual(sum18.pct, 49.9);
+  assert.strictEqual(sum18.q, 2);
+});
