@@ -17,15 +17,8 @@ export function createEmptyAdminCorpoRecognition() {
   return { estruturasReconhecidas: null, prognosticoReconhecido: null };
 }
 
-export function createEmptyCorpoReclassDomains(corpoDomainIds) {
-  return corpoDomainIds.reduce((acc, id) => {
-    acc[id] = null;
-    return acc;
-  }, {});
-}
-
-export function createEmptyAtivReclassDomains(ativDomainIds) {
-  return ativDomainIds.reduce((acc, id) => {
+export function createEmptyDomains(domainIds) {
+  return domainIds.reduce((acc, id) => {
     acc[id] = null;
     return acc;
   }, {});
@@ -37,14 +30,14 @@ export function createEmptyJudicialMed(corpoDomainIds, ativDomainIds) {
     corpoJud: null,
     corpoKeepAdmin: null,
     corpoChangeReason: null,
-    corpoAdminDomains: createEmptyCorpoReclassDomains(corpoDomainIds),
+    corpoAdminDomains: createEmptyDomains(corpoDomainIds),
     corpoJudManual: null,
     corpoAlertReductionConfirmed: false,
     hasAtivMed: null,
     ativMode: null,
     ativMedSimple: null,
     ativMedJustification: '',
-    ativMedDomains: createEmptyAtivReclassDomains(ativDomainIds),
+    ativMedDomains: createEmptyDomains(ativDomainIds),
     ativMedComputed: null
   };
 }

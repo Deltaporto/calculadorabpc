@@ -14,8 +14,7 @@ import {
 import {
   createDomainState,
   createEmptyAdminCorpoRecognition as createEmptyAdminCorpoRecognitionState,
-  createEmptyAtivReclassDomains as createEmptyAtivReclassDomainsState,
-  createEmptyCorpoReclassDomains as createEmptyCorpoReclassDomainsState,
+  createEmptyDomains as createEmptyDomainsState,
   createEmptyJudicialMed as createEmptyJudicialMedState,
   createJudicialControl
 } from './state.js';
@@ -66,11 +65,11 @@ function createEmptyAdminCorpoRecognition() {
 }
 
 function createEmptyCorpoReclassDomains() {
-  return createEmptyCorpoReclassDomainsState(JC_CORPO_RECLASS_DOMAINS);
+  return createEmptyDomainsState(JC_CORPO_RECLASS_DOMAINS);
 }
 
 function createEmptyAtivReclassDomains() {
-  return createEmptyAtivReclassDomainsState(JC_ATIV_RECLASS_DOMAINS);
+  return createEmptyDomainsState(JC_ATIV_RECLASS_DOMAINS);
 }
 
 function createEmptyJudicialMed() {
