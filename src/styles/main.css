@@ -3991,6 +3991,10 @@ footer {
   }
 }
 
+.panel-blue { --panel-color: #2563EB; }
+.panel-purple { --panel-color: #7C3AED; }
+.panel-red { --panel-color: #DC2626; }
+
 @media print {
   body { background: #fff; color: #000; }
   .app { max-width: none; padding: 0; margin: 0; }
