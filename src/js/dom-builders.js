@@ -49,22 +49,39 @@ export function buildTabelaGrid(container, labels, ambTab, tabelaConclusivaFn) {
   }
 
   // Initial build
-  let html = '';
-  html += '<div class="tc corner"></div>';
+  const fragment = document.createDocumentFragment();
+
+  const corner = document.createElement('div');
+  corner.className = 'tc corner';
+  fragment.appendChild(corner);
 
   labels.forEach(l => {
-    html += `<div class="tc header">${l}</div>`;
+    const div = document.createElement('div');
+    div.className = 'tc header';
+    div.textContent = l;
+    fragment.appendChild(div);
   });
 
   for (let c = 0; c < 5; c++) {
-    html += `<div class="tc row-header">${labels[c]}</div>`;
+    const rowHeader = document.createElement('div');
+    rowHeader.className = 'tc row-header';
+    rowHeader.textContent = labels[c];
+    fragment.appendChild(rowHeader);
+
     for (let a = 0; a < 5; a++) {
       const yes = tabelaConclusivaFn(ambTab, a, c);
       const isSensitivityPoint = c === 2 && a === 2;
       const sensitivityClass = isSensitivityPoint ? ` tc-sensitivity tc-sensitivity-${yes ? 'yes' : 'no'}` : '';
-      html += `<div id="tc-${c}-${a}" class="tc ${yes ? 'yes' : 'no'}${sensitivityClass}" data-c="${c}" data-a="${a}">${yes ? 'Sim' : 'Não'}</div>`;
+
+      const cell = document.createElement('div');
+      cell.id = `tc-${c}-${a}`;
+      cell.className = `tc ${yes ? 'yes' : 'no'}${sensitivityClass}`;
+      cell.dataset.c = c;
+      cell.dataset.a = a;
+      cell.textContent = yes ? 'Sim' : 'Não';
+      fragment.appendChild(cell);
     }
   }
 
-  container.innerHTML = html;
+  container.replaceChildren(fragment);
 }
