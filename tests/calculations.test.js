@@ -55,11 +55,12 @@ function buildFunction(name, deps = {}) {
 
 const pctToQ = buildFunction('pctToQ');
 const calculateScore = buildFunction('calculateScore');
+const MULTIPLIER_ATIVIDADES = 100 / 36;
 const tabelaConclusiva = buildFunction('tabelaConclusiva');
 const calcAmbienteFromState = buildFunction('calcAmbienteFromState', { pctToQ, calculateScore });
-const calcAtividadesFromState = buildFunction('calcAtividadesFromState', { pctToQ, calculateScore });
+const calcAtividadesFromState = buildFunction('calcAtividadesFromState', { pctToQ, calculateScore, MULTIPLIER_ATIVIDADES });
 const calcCorpoFromState = buildFunction('calcCorpoFromState');
-const computeAtivFromDomains = buildFunction('computeAtivFromDomains', { pctToQ });
+const computeAtivFromDomains = buildFunction('computeAtivFromDomains', { pctToQ, MULTIPLIER_ATIVIDADES });
 
 test('tabelaConclusiva - regras principais', () => {
   assert.strictEqual(tabelaConclusiva(4, 2, 1), false, 'Corpo N/L sempre indefere');

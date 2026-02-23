@@ -1,3 +1,5 @@
+import { MULTIPLIER_ATIVIDADES } from './constants.js';
+
 export function pctToQ(pct) {
   let normalized = pct;
   if (normalized < 0) normalized = 0;
@@ -19,7 +21,7 @@ export function calcAmbienteFromState(state, domains, pctToQFn = pctToQ) {
 }
 
 export function calcAtividadesFromState(state, domains, pctToQFn = pctToQ) {
-  return calculateScore(state, domains, 2.77777777777778, pctToQFn);
+  return calculateScore(state, domains, MULTIPLIER_ATIVIDADES, pctToQFn);
 }
 
 export function calcCorpoFromState(state, domains, options = {}) {
@@ -63,6 +65,6 @@ export function computeAtivFromDomains(domains, ativDomainIds, pctToQFn = pctToQ
   const missing = ativDomainIds.some(id => domains[id] == null);
   if (missing) return null;
   const sum = ativDomainIds.reduce((acc, id) => acc + domains[id], 0);
-  const pctRaw = Math.max(0, (sum * 2.77777777777778) - 0.1);
+  const pctRaw = Math.max(0, (sum * MULTIPLIER_ATIVIDADES) - 0.1);
   return { sum, pct: +pctRaw.toFixed(1), q: pctToQFn(pctRaw) };
 }
