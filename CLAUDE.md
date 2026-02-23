@@ -31,7 +31,7 @@ Vanilla JS SPA (no framework). `index.html` is the shell; all logic is in `src/j
 | `main.js` | Bootstrap, global state, orchestration, `update()` loop |
 | `state.js` | State factory functions |
 | `constants.js` | Domain definitions (E1–E5, B1–B8, D1–D9), qualifier labels, age cutoffs |
-| `calculations.js` | Core math: `pctToQ`, `calcAmbiente`, `calcAtividades`, `calcCorpo`, `tabelaConclusiva` |
+| `calculations.js` | Core math: `pctToQ`, `calcAmbienteFromState`, `calcAtividadesFromState`, `calcCorpoFromState`, `computeAtivFromDomains`, `tabelaConclusiva` |
 | `judicial-flow.js` | Judicial decision logic: corpo reclassification, ativ context, triage computation |
 | `judicial-text.js` | Generates standardized decision text (minuta) from triage outcome |
 | `judicial-trace.js` | Renders step-by-step audit trail for judicial reasoning |
@@ -43,7 +43,8 @@ Vanilla JS SPA (no framework). `index.html` is the shell; all logic is in `src/j
 
 ### Global state (in `main.js`)
 
-- `state` — domain qualifiers (e1–e5, b1–b8, d1–d9, each 0–4) + flags: `progDesfav`, `estrMaior`, `impedimento`, `crianca`, `idadeMeses`
+- `state` — domain qualifiers only (e1–e5, b1–b8, d1–d9; each 0–4)
+- flags outside `state`: `progDesfav`, `estrMaior`, `impedimento`, `crianca`, `idadeMeses`, `idadeValor`, `idadeUnidade`
 - `savedINSS` — cached administrative evaluation for comparison
 - `judicialControl` — nested object with `adminDraft`, `adminBase`, `med`, `triage`, `ui`
 
@@ -76,9 +77,20 @@ Data flow: user input → event handler → mutate state → `update()` / `rende
 
 - Unit tests target `calculations.js` functions via a custom function extractor
 - E2E tests cover judicial copy deduplication, guidance flow, Portaria modal, trace verification
+- Normative regression suites are in:
+  - `tests/tabelaConclusiva.portaria.test.js` (Anexo IV oracle, 125 rows)
+  - `tests/formulas.portaria.test.js` (formulas + N-L-M-G-C boundaries)
+  - `tests/child-rules.portaria.test.js` (age cuts + auto-qualification)
+  - `tests/padrao-medio.portaria.test.js` (Portaria 34/2025 Anexo II mapping)
 - For any UI or copy change in Judicial Control, add or update Playwright coverage
 - Before a PR: run both `npm test` and `npx playwright test`
 
 ## Key Domain Knowledge
 
-Governed by **Portaria Conjunta MDS/INSS nº 2/2015** (full text at `docs/normas/portaria-conjunta-2-2015.txt`). Domains follow the ICF (International Classification of Functioning) model. Age-based auto-locking applies to activity domains for children under 16 (cutoffs per domain in `constants.js`).
+Governed by:
+- **Portaria Conjunta MDS/INSS nº 2/2015** (`docs/normas/portaria-conjunta-2-2015.txt`)
+- **Portaria Conjunta MDS/INSS nº 34/2025** (`docs/normas/portaria-mds-inss-34-2025.txt`, padrão médio)
+
+Normative traceability matrix (norma→código→teste): `docs/matriz-aderencia-portarias.md`.
+
+Domains follow the ICF (International Classification of Functioning) model. Age-based auto-locking applies to activity domains for children under 16 (cutoffs per domain in `constants.js`).
