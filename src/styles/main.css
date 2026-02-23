@@ -3664,6 +3664,17 @@ footer {
   }
 }
 
+/* PALETTE: Animations */
+@keyframes popover-in { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+@keyframes dialog-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+
+@media (prefers-reduced-motion: no-preference) {
+  .sim-help-popover:not(.hidden) { animation: popover-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  dialog[open] { animation: dialog-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  dialog[open]::backdrop, .portaria-modal::backdrop { animation: backdrop-in 0.3s ease-out both; }
+}
+
 @media (max-width:1200px) {
   .calculator {
     grid-template-columns: repeat(2, minmax(0, 1fr));

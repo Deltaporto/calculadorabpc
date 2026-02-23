@@ -13,3 +13,7 @@
 ## 2026-02-19 - Context-Aware Skip Links
 **Learning:** Static skip links (e.g., "Skip to Judicial Control") can point to hidden or irrelevant sections depending on the application state/mode (Simulator vs. Control), leading to a confusing navigation experience.
 **Action:** When using application modes that toggle section visibility, ensure skip links are also toggled (e.g., via CSS) or updated dynamically to point to relevant, visible content.
+
+## 2025-02-19 - Entry Animations for Popovers
+**Learning:** Adding entry animations (fade+scale for popovers, fade+slide for dialogs) significantly improves the perceived responsiveness and polish of the interface without adding JavaScript overhead.
+**Action:** Use CSS keyframe animations for entry states of interactive overlays, ensuring they respect `prefers-reduced-motion`.
