@@ -98,8 +98,7 @@ test('Security Verification: Trace Log XSS and Structure', async ({ page }) => {
     await expect(trace).toBeVisible();
 
     // Check if the payload appears as text
-    const content = await trace.textContent();
-    expect(content).toContain(maliciousInput);
+    await expect(trace).toContainText(maliciousInput);
 
     // Ensure no image tag was created (XSS check)
     const imgTag = trace.locator('img');
