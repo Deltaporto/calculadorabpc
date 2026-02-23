@@ -61,6 +61,7 @@ const calcAmbienteFromState = buildFunction('calcAmbienteFromState', { pctToQ, c
 const calcAtividadesFromState = buildFunction('calcAtividadesFromState', { pctToQ, calculateScore, MULTIPLIER_ATIVIDADES });
 const calcCorpoFromState = buildFunction('calcCorpoFromState');
 const computeAtivFromDomains = buildFunction('computeAtivFromDomains', { pctToQ, MULTIPLIER_ATIVIDADES });
+const getDecisionReason = buildFunction('getDecisionReason');
 
 test('tabelaConclusiva - regras principais', () => {
   assert.strictEqual(tabelaConclusiva(4, 2, 1), false, 'Corpo N/L sempre indefere');
@@ -134,4 +135,49 @@ test('computeAtivFromDomains - casos de borda e precisão', () => {
   assert.strictEqual(sum18.sum, 18);
   assert.strictEqual(sum18.pct, 49.9);
   assert.strictEqual(sum18.q, 2);
+});
+
+test('getDecisionReason - cenários de indeferimento e deferimento', () => {
+  const labels = ['L0', 'L1', 'L2', 'L3', 'L4'];
+  const names = ['N0', 'N1', 'N2', 'N3', 'N4'];
+  const qFull = {
+    amb: ['FA0', 'FA1', 'FA2', 'FA3', 'FA4'],
+    corpo: ['FC0', 'FC1', 'FC2', 'FC3', 'FC4'],
+    ativ: ['AP0', 'AP1', 'AP2', 'AP3', 'AP4']
+  };
+
+  assert.strictEqual(
+    getDecisionReason(2, 2, 1, false, labels, names, qFull),
+    'Funções do Corpo com fc1 — exige-se alteração ≥ moderada'
+  );
+
+  assert.strictEqual(
+    getDecisionReason(2, 1, 2, false, labels, names, qFull),
+    'Atividades e Participação com ap1 — exige-se dificuldade ≥ moderada'
+  );
+
+  assert.strictEqual(
+    getDecisionReason(2, 2, 2, false, labels, names, qFull),
+    'Combinação M-M com Fatores Ambientais com fa2 — exige-se barreira ≥ grave'
+  );
+
+  assert.strictEqual(
+    getDecisionReason(0, 2, 3, true, labels, names, qFull),
+    'Funções do Corpo com fc3 + Atividades e Participação com ap2 — deferimento independente de Fatores Ambientais'
+  );
+
+  assert.strictEqual(
+    getDecisionReason(0, 3, 2, true, labels, names, qFull),
+    'Atividades e Participação com ap3 + Funções do Corpo com fc2 — deferimento independente de Fatores Ambientais'
+  );
+
+  assert.strictEqual(
+    getDecisionReason(3, 2, 2, true, labels, names, qFull),
+    'Funções do Corpo com alteração moderada + Atividades e Participação com dificuldade moderada + Fatores Ambientais com fa3 (≥ grave) — combinação deferida'
+  );
+
+  assert.strictEqual(
+    getDecisionReason(2, 2, 1, false, labels, names, null),
+    'Funções do Corpo com l1 (n1) — exige-se alteração ≥ moderada'
+  );
 });
