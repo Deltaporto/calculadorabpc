@@ -54,42 +54,42 @@ test('Verify Limpar Confirmation Dialogs', async ({ page }) => {
   const rootDir = process.cwd();
   const { server, url } = await startStaticServer(rootDir);
 
-  page.on('console', msg => console.log('BROWSER LOG:', msg.text()));
+  try {
+    await page.goto(`${url}/index.html`);
+
+    await page.click('button[data-mode="simulador"]');
+    await page.click('#domAmb button[data-value="2"]');
+    const ambValue2Btn = page.locator('#domAmb button[data-value="2"]').first();
+    const ambValue0Btn = page.locator('#domAmb button[data-value="0"]').first();
+    await expect(ambValue2Btn).toHaveClass(/active/);
+
+    await page.click('#btnLimpar');
+    await expect(page.locator('#confirmModal')).toBeVisible();
+    await expect(page.locator('#confirmModalTitle')).toHaveText('Limpar calculadora');
+    await expect(page.locator('#confirmModalMessage')).toContainText('limpar todos os dados da calculadora');
+
+    await page.click('#confirmModalCancelBtn');
+    await expect(page.locator('#confirmModal')).toBeHidden();
+    await expect(ambValue2Btn).toHaveClass(/active/);
+
+    await page.click('#btnLimpar');
+    await expect(page.locator('#confirmModal')).toBeVisible();
+    await page.click('#confirmModalConfirmBtn');
+    await expect(page.locator('#confirmModal')).toBeHidden();
+    await expect(ambValue0Btn).toHaveClass(/active/);
+  } finally {
+    await new Promise(resolve => server.close(resolve));
+  }
+});
+
+test('Judicial clear actions use in-app confirmation modal', async ({ page }) => {
+  const rootDir = process.cwd();
+  const { server, url } = await startStaticServer(rootDir);
 
   try {
     await page.goto(`${url}/index.html`);
 
-    // 1. Calculator Limpar
-    await page.click('button[data-mode="simulador"]');
-    await page.click('#domAmb button[data-value="2"]'); // Set Ambient E1 to 2
-
-    // Check if data is set
-    await expect(page.locator('#domAmb button[data-value="2"]').first()).toHaveClass(/active/);
-
-    console.log('Clicking Limpar...');
-
-    let dialogMessage = '';
-    const dialogReceived = new Promise(resolve => {
-        page.once('dialog', async dialog => {
-            dialogMessage = dialog.message();
-            console.log('Dialog appeared:', dialogMessage);
-            await dialog.accept();
-            resolve();
-        });
-    });
-
-    await page.click('#btnLimpar');
-    await dialogReceived;
-
-    if (dialogMessage.includes('limpar')) {
-        console.log('SUCCESS: Calculator dialog appeared');
-    } else {
-        console.log('FAILURE: No Calculator dialog');
-    }
-
-    // 2. Judicial Control Limpar (btnLimparControleJudicial)
     await page.click('button[data-mode="controle"]');
-    // Fix base
     await page.click('#jcAdminAmbButtons button[data-value="0"]');
     await page.click('#jcAdminAtivButtons button[data-value="0"]');
     await page.click('#jcAdminCorpoButtons button[data-value="0"]');
@@ -97,26 +97,38 @@ test('Verify Limpar Confirmation Dialogs', async ({ page }) => {
     await page.click('#jcAdminProgRecButtons button[data-value="nao"]');
     await page.click('#btnFixarBaseAdmin');
 
-    console.log('Clicking Limpar Judicial...');
-
-    let jcDialogMessage = '';
-    const jcDialogReceived = new Promise(resolve => {
-        page.once('dialog', async dialog => {
-            jcDialogMessage = dialog.message();
-            console.log('JC Dialog appeared:', jcDialogMessage);
-            await dialog.accept();
-            resolve();
-        });
-    });
+    await expect(page.locator('#compSection')).toBeVisible();
+    await page.click('#jcImpedimentoButtons button[data-value="sim"]');
+    await expect(page.locator('#jcImpedimentoButtons button[data-value="sim"]')).toHaveClass(/active/);
 
     await page.click('#btnLimparControleJudicial');
-    await jcDialogReceived;
+    await expect(page.locator('#confirmModal')).toBeVisible();
+    await expect(page.locator('#confirmModalTitle')).toHaveText('Limpar etapa médica e triagem');
+    await expect(page.locator('#confirmModalMessage')).toContainText('limpar as etapas médica e triagem');
+    await page.click('#confirmModalCancelBtn');
+    await expect(page.locator('#confirmModal')).toBeHidden();
+    await expect(page.locator('#jcImpedimentoButtons button[data-value="sim"]')).toHaveClass(/active/);
 
-    if (jcDialogMessage.includes('limpar')) {
-        console.log('SUCCESS: JC dialog appeared');
-    } else {
-        console.log('FAILURE: No JC dialog');
-    }
+    await page.click('#btnLimparControleJudicial');
+    await expect(page.locator('#confirmModal')).toBeVisible();
+    await page.click('#confirmModalConfirmBtn');
+    await expect(page.locator('#confirmModal')).toBeHidden();
+    await expect(page.locator('#copyFeedbackControle')).toContainText('Etapa médica e triagem reiniciadas. A base administrativa foi mantida.');
+
+    await page.click('button[data-mode="simulador"]');
+    await expect(page.locator('#btnClearComp')).toBeVisible();
+    await page.click('#btnClearComp');
+    await expect(page.locator('#confirmModal')).toBeVisible();
+    await expect(page.locator('#confirmModalTitle')).toHaveText('Limpar comparação e controle judicial');
+    await page.click('#confirmModalCancelBtn');
+    await expect(page.locator('#confirmModal')).toBeHidden();
+    await expect(page.locator('#btnClearComp')).toBeVisible();
+
+    await page.click('#btnClearComp');
+    await expect(page.locator('#confirmModal')).toBeVisible();
+    await page.click('#confirmModalConfirmBtn');
+    await expect(page.locator('#confirmModal')).toBeHidden();
+    await expect(page.locator('#btnClearComp')).toBeHidden();
 
   } finally {
     await new Promise(resolve => server.close(resolve));

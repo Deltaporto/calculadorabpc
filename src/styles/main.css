@@ -3481,6 +3481,10 @@ footer {
   overflow: auto;
 }
 
+.sim-help-popover.floating {
+  position: fixed;
+}
+
 .portaria-modal {
   width: min(1000px, calc(100vw - 32px));
   max-height: calc(100vh - 38px);
@@ -3583,6 +3587,26 @@ footer {
   flex-wrap: wrap;
 }
 
+.confirm-modal {
+  width: min(560px, calc(100vw - 32px));
+}
+
+.confirm-modal-card {
+  gap: 14px;
+}
+
+.confirm-modal-message {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.confirm-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 [data-theme="dark"] .portaria-modal::backdrop {
   background: rgba(2, 7, 16, .74);
 }
@@ -3609,6 +3633,10 @@ footer {
     width: calc(100vw - 18px);
   }
 
+  .confirm-modal {
+    width: calc(100vw - 18px);
+  }
+
   .portaria-modal-header {
     flex-direction: column;
     align-items: flex-start;
@@ -3625,6 +3653,11 @@ footer {
   }
 
   .padrao-modal-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .confirm-modal-actions .btn {
     width: 100%;
     justify-content: center;
   }

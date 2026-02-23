@@ -34,7 +34,7 @@ import {
 import { DOMAIN_HELP_KEYS, SIM_HELP_CONTENT } from './help-content.js';
 import { initStaticRatingA11yLabels } from './a11y.js';
 import { highlightActiveCell, runMainUpdate } from './ui-render.js';
-import { bindJudicialControlEvents, throttle } from './events.js';
+import { bindJudicialControlEvents } from './events.js';
 import {
   computeJudicialTriage as computeJudicialTriageFlow,
   getAtivReclassContext as getAtivReclassContextFlow,
@@ -106,9 +106,16 @@ let openPortariaModalBySource = null;
 let lastPortariaTrigger = null;
 let pendingPadraoDialogContext = null;
 let lastPadraoDialogTrigger = null;
+let pendingConfirmDialogResolver = null;
+let lastConfirmDialogTrigger = null;
+let confirmDialogElements = null;
 let activeSimHelpKey = null;
 let activeSimHelpTrigger = null;
+let simHelpPositionFrame = null;
+let simHelpResizeObserver = null;
 const SIM_HELP_MOBILE_QUERY = '(max-width: 940px)';
+const SIM_HELP_MARGIN_PX = 12;
+const SIM_HELP_OFFSET_PX = 10;
 
 // ============ CALCULATION ============
 function calcAmbiente() {
@@ -409,10 +416,30 @@ function handleAmbTabClick({ tab, value }) {
   highlightActiveCell(ativ.q, corpo.q);
 }
 
+function clearSimHelpPopoverPosition(popover) {
+  if (!popover) return;
+  popover.style.top = '';
+  popover.style.left = '';
+  popover.style.right = '';
+  popover.style.bottom = '';
+}
+
+function scheduleSimHelpPopoverPosition() {
+  if (simHelpPositionFrame != null) cancelAnimationFrame(simHelpPositionFrame);
+  simHelpPositionFrame = requestAnimationFrame(() => {
+    simHelpPositionFrame = null;
+    positionSimHelpPopover();
+  });
+}
+
 function closeSimHelpPopover() {
   const popover = document.getElementById('simHelpPopover');
   const excerptEl = document.getElementById('simHelpExcerpt');
   const excerptBtn = document.getElementById('simHelpExcerptBtn');
+  if (simHelpPositionFrame != null) {
+    cancelAnimationFrame(simHelpPositionFrame);
+    simHelpPositionFrame = null;
+  }
   if (activeSimHelpTrigger) activeSimHelpTrigger.setAttribute('aria-expanded', 'false');
   activeSimHelpKey = null;
   activeSimHelpTrigger = null;
@@ -420,12 +447,9 @@ function closeSimHelpPopover() {
   if (excerptBtn) excerptBtn.textContent = 'Ver base legal (trecho)';
   if (!popover) return;
   popover.classList.add('hidden');
-  popover.classList.remove('mobile');
+  popover.classList.remove('mobile', 'floating');
   popover.setAttribute('aria-hidden', 'true');
-  popover.style.top = '';
-  popover.style.left = '';
-  popover.style.right = '';
-  popover.style.bottom = '';
+  clearSimHelpPopoverPosition(popover);
 }
 
 function positionSimHelpPopover() {
@@ -435,35 +459,39 @@ function positionSimHelpPopover() {
 
   const isMobile = window.matchMedia(SIM_HELP_MOBILE_QUERY).matches;
   popover.classList.toggle('mobile', isMobile);
+  popover.classList.toggle('floating', !isMobile);
   if (isMobile) {
-    popover.style.top = '';
-    popover.style.left = '';
-    popover.style.right = '';
-    popover.style.bottom = '';
+    clearSimHelpPopoverPosition(popover);
     return;
   }
 
   const triggerRect = activeSimHelpTrigger.getBoundingClientRect();
+  if (triggerRect.width === 0 && triggerRect.height === 0) return;
   const popRect = popover.getBoundingClientRect();
-  const scrollX = window.scrollX;
-  const scrollY = window.scrollY;
-  const margin = 12;
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
 
-  let left = triggerRect.left + scrollX + (triggerRect.width / 2) - (popRect.width / 2);
-  const minLeft = scrollX + margin;
-  const maxLeft = scrollX + window.innerWidth - popRect.width - margin;
-  if (left < minLeft) left = minLeft;
-  if (left > maxLeft) left = maxLeft;
+  let left = triggerRect.left + (triggerRect.width / 2) - (popRect.width / 2);
+  const minLeft = SIM_HELP_MARGIN_PX;
+  const maxLeft = viewportWidth - popRect.width - SIM_HELP_MARGIN_PX;
+  if (maxLeft <= minLeft) {
+    left = Math.max(minLeft, (viewportWidth - popRect.width) / 2);
+  } else {
+    if (left < minLeft) left = minLeft;
+    if (left > maxLeft) left = maxLeft;
+  }
 
-  let top = triggerRect.bottom + scrollY + 10;
-  const maxTop = scrollY + window.innerHeight - popRect.height - margin;
-  if (top > maxTop) top = triggerRect.top + scrollY - popRect.height - 10;
-  if (top < scrollY + margin) top = scrollY + margin;
+  let top = triggerRect.bottom + SIM_HELP_OFFSET_PX;
+  const maxTop = viewportHeight - popRect.height - SIM_HELP_MARGIN_PX;
+  if (top > maxTop) top = triggerRect.top - popRect.height - SIM_HELP_OFFSET_PX;
+  if (top < SIM_HELP_MARGIN_PX) top = SIM_HELP_MARGIN_PX;
 
-  popover.style.left = `${Math.round(left)}px`;
-  popover.style.top = `${Math.round(top)}px`;
-  popover.style.right = 'auto';
-  popover.style.bottom = 'auto';
+  const leftPx = `${Math.round(left)}px`;
+  const topPx = `${Math.round(top)}px`;
+  if (popover.style.left !== leftPx) popover.style.left = leftPx;
+  if (popover.style.top !== topPx) popover.style.top = topPx;
+  if (popover.style.right !== 'auto') popover.style.right = 'auto';
+  if (popover.style.bottom !== 'auto') popover.style.bottom = 'auto';
 }
 
 function openSimHelpPopover(helpKey, trigger) {
@@ -501,6 +529,7 @@ function openSimHelpPopover(helpKey, trigger) {
   popover.classList.remove('hidden');
   popover.setAttribute('aria-hidden', 'false');
   positionSimHelpPopover();
+  scheduleSimHelpPopoverPosition();
 }
 
 function toggleSimHelpPopover(trigger) {
@@ -540,18 +569,73 @@ function applyPadraoEntries(entriesToApply) {
   update();
 }
 
-function applyPadraoWithConfirmFallback(context) {
+function showConfirmDialog({
+  title = 'Confirmar ação',
+  message = '',
+  confirmLabel = 'Confirmar',
+  cancelLabel = 'Cancelar',
+  confirmTone = 'danger'
+} = {}) {
+  if (!confirmDialogElements) return Promise.resolve(false);
+
+  const { modal, titleEl, messageEl, cancelBtn, confirmBtn } = confirmDialogElements;
+  if (pendingConfirmDialogResolver) {
+    pendingConfirmDialogResolver(false);
+    pendingConfirmDialogResolver = null;
+  }
+
+  if (typeof modal.close === 'function' && modal.open) {
+    modal.close('cancel');
+  } else if (modal.hasAttribute('open')) {
+    modal.removeAttribute('open');
+  }
+
+  lastConfirmDialogTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  titleEl.textContent = title;
+  messageEl.textContent = message;
+  cancelBtn.textContent = cancelLabel;
+  confirmBtn.textContent = confirmLabel;
+  confirmBtn.classList.remove('btn-red', 'btn-primary');
+  confirmBtn.classList.add(confirmTone === 'danger' ? 'btn-red' : 'btn-primary');
+
+  return new Promise(resolve => {
+    pendingConfirmDialogResolver = resolve;
+    if (typeof modal.showModal === 'function') {
+      if (!modal.open) modal.showModal();
+    } else {
+      modal.setAttribute('open', '');
+    }
+    try {
+      cancelBtn.focus({ preventScroll: true });
+    } catch {
+      cancelBtn.focus();
+    }
+  });
+}
+
+async function applyPadraoWithConfirmFallback(context) {
   const hasOnlyManual = context.entriesPreserve.length === 0;
   if (hasOnlyManual) {
-    const overwrite = window.confirm('Todos os domínios elegíveis já foram preenchidos manualmente. Deseja sobrescrever esses preenchimentos com o padrão?');
+    const overwrite = await showConfirmDialog({
+      title: 'Aplicar padrão médio',
+      message: 'Todos os domínios elegíveis já foram preenchidos manualmente. Deseja sobrescrever esses preenchimentos com o padrão?',
+      confirmLabel: 'Sobrescrever preenchidos',
+      cancelLabel: 'Cancelar',
+      confirmTone: 'primary'
+    });
     if (overwrite) applyPadraoEntries(context.entriesOverwrite);
     return;
   }
-  const overwrite = window.confirm(
-    `Foram encontrados ${context.manuallyFilledEligible.length} domínios elegíveis já preenchidos manualmente.\n\n` +
-    'Clique em OK para sobrescrever esses domínios com o padrão.\n' +
-    'Clique em Cancelar para preservar os domínios manuais e aplicar o padrão apenas nos domínios vazios.'
-  );
+  const overwrite = await showConfirmDialog({
+    title: 'Aplicar padrão médio',
+    message:
+      `Foram encontrados ${context.manuallyFilledEligible.length} domínios elegíveis já preenchidos manualmente.\n\n` +
+      'Clique em "Sobrescrever preenchidos" para aplicar o padrão a todos os domínios elegíveis.\n' +
+      'Clique em "Preservar preenchidos" para manter os domínios manuais e aplicar o padrão apenas nos domínios vazios.',
+    confirmLabel: 'Sobrescrever preenchidos',
+    cancelLabel: 'Preservar preenchidos',
+    confirmTone: 'primary'
+  });
   applyPadraoEntries(overwrite ? context.entriesOverwrite : context.entriesPreserve);
 }
 
@@ -562,7 +646,7 @@ function openPadraoDecisionDialog(context) {
   const preserveBtn = document.getElementById('padraoPreserveBtn');
   const overwriteBtn = document.getElementById('padraoOverwriteBtn');
   if (!modal || !messageEl || !summaryEl || !preserveBtn || !overwriteBtn) {
-    applyPadraoWithConfirmFallback(context);
+    void applyPadraoWithConfirmFallback(context);
     return;
   }
 
@@ -614,8 +698,15 @@ function handleApplyPadrao() {
 }
 
 // Clear
-function handleLimpar() {
-  if (!window.confirm('Tem certeza que deseja limpar todos os dados da calculadora?')) return;
+async function handleLimpar() {
+  const confirmed = await showConfirmDialog({
+    title: 'Limpar calculadora',
+    message: 'Tem certeza que deseja limpar todos os dados da calculadora?',
+    confirmLabel: 'Limpar tudo',
+    cancelLabel: 'Cancelar',
+    confirmTone: 'danger'
+  });
+  if (!confirmed) return;
   Object.keys(state).forEach(k => state[k] = 0);
   Object.keys(childDomainBackup).forEach(k => delete childDomainBackup[k]);
   userFilledDomains.clear();
@@ -1174,8 +1265,15 @@ function resetJudicialControl() {
   clearJudicialTextArea();
 }
 
-function clearJudicialMedicalAndTriage() {
-  if (!window.confirm('Tem certeza que deseja limpar as etapas médica e triagem?')) return;
+async function clearJudicialMedicalAndTriage() {
+  const confirmed = await showConfirmDialog({
+    title: 'Limpar etapa médica e triagem',
+    message: 'Tem certeza que deseja limpar as etapas médica e triagem?',
+    confirmLabel: 'Limpar etapa',
+    cancelLabel: 'Cancelar',
+    confirmTone: 'danger'
+  });
+  if (!confirmed) return;
   judicialControl.med = createEmptyJudicialMed();
   judicialControl.triage = { ready: false, status: 'pending', testeA: null, testeB: null, reason: '', route: null };
   clearJudicialTextArea();
@@ -1547,8 +1645,15 @@ function handleUseCurrentAsBase() {
   showToast('Rascunho preenchido com os dados da Calculadora.', 'success');
 }
 
-function handleClearComp() {
-  if (!window.confirm('Tem certeza que deseja limpar a comparação e o controle judicial?')) return;
+async function handleClearComp() {
+  const confirmed = await showConfirmDialog({
+    title: 'Limpar comparação e controle judicial',
+    message: 'Tem certeza que deseja limpar a comparação e o controle judicial?',
+    confirmLabel: 'Limpar comparação',
+    cancelLabel: 'Cancelar',
+    confirmTone: 'danger'
+  });
+  if (!confirmed) return;
   savedINSS = null;
   document.getElementById('compSection').classList.add('hidden');
   document.getElementById('btnClearComp').classList.add('hidden');
@@ -1765,6 +1870,64 @@ function initPadraoModal() {
   });
 }
 
+function initConfirmModal() {
+  const modal = document.getElementById('confirmModal');
+  const titleEl = document.getElementById('confirmModalTitle');
+  const messageEl = document.getElementById('confirmModalMessage');
+  const cancelBtn = document.getElementById('confirmModalCancelBtn');
+  const confirmBtn = document.getElementById('confirmModalConfirmBtn');
+  if (!modal || !titleEl || !messageEl || !cancelBtn || !confirmBtn) return;
+
+  confirmDialogElements = { modal, titleEl, messageEl, cancelBtn, confirmBtn };
+
+  const closeModal = (accepted) => {
+    if (typeof modal.close === 'function') {
+      if (modal.open) modal.close(accepted ? 'confirm' : 'cancel');
+      return;
+    }
+    modal.removeAttribute('open');
+    if (pendingConfirmDialogResolver) {
+      const resolve = pendingConfirmDialogResolver;
+      pendingConfirmDialogResolver = null;
+      resolve(Boolean(accepted));
+    }
+    if (lastConfirmDialogTrigger && typeof lastConfirmDialogTrigger.focus === 'function') {
+      try {
+        lastConfirmDialogTrigger.focus({ preventScroll: true });
+      } catch {
+        lastConfirmDialogTrigger.focus();
+      }
+    }
+  };
+
+  cancelBtn.addEventListener('click', () => closeModal(false));
+  confirmBtn.addEventListener('click', () => closeModal(true));
+  modal.querySelectorAll('[data-confirm-close]').forEach(btn => {
+    btn.addEventListener('click', () => closeModal(false));
+  });
+  modal.addEventListener('click', event => {
+    if (event.target === modal) closeModal(false);
+  });
+  modal.addEventListener('cancel', event => {
+    event.preventDefault();
+    closeModal(false);
+  });
+  modal.addEventListener('close', () => {
+    if (pendingConfirmDialogResolver) {
+      const resolve = pendingConfirmDialogResolver;
+      pendingConfirmDialogResolver = null;
+      resolve(modal.returnValue === 'confirm');
+    }
+    if (lastConfirmDialogTrigger && typeof lastConfirmDialogTrigger.focus === 'function') {
+      try {
+        lastConfirmDialogTrigger.focus({ preventScroll: true });
+      } catch {
+        lastConfirmDialogTrigger.focus();
+      }
+    }
+  });
+}
+
 function initSimHelpPopover() {
   const popover = document.getElementById('simHelpPopover');
   const closeBtn = document.getElementById('simHelpCloseBtn');
@@ -1789,6 +1952,7 @@ function initSimHelpPopover() {
   excerptBtn.addEventListener('click', () => {
     const hidden = excerptEl.classList.toggle('hidden');
     excerptBtn.textContent = hidden ? 'Ver base legal (trecho)' : 'Ocultar base legal';
+    if (activeSimHelpKey) scheduleSimHelpPopoverPosition();
   });
   portariaBtn.addEventListener('click', () => {
     const sourceKey = portariaBtn.dataset.portariaSourceKey || DEFAULT_PORTARIA_SOURCE_KEY;
@@ -1805,16 +1969,29 @@ function initSimHelpPopover() {
     if (event.key === 'Escape' && activeSimHelpKey) closeSimHelpPopover();
   });
 
-  // ⚡ Optimization: Throttle popover positioning to reduce layout thrashing
-  window.addEventListener('resize', throttle(() => {
-    if (activeSimHelpKey) positionSimHelpPopover();
-  }, 16));
+  const syncViewportPosition = () => {
+    if (activeSimHelpKey) scheduleSimHelpPopoverPosition();
+  };
 
-  window.addEventListener('scroll', throttle(() => {
+  window.addEventListener('resize', syncViewportPosition);
+  window.addEventListener('scroll', () => {
     if (activeSimHelpKey && !window.matchMedia(SIM_HELP_MOBILE_QUERY).matches) {
-      positionSimHelpPopover();
+      scheduleSimHelpPopoverPosition();
     }
-  }, 16));
+  }, { passive: true });
+
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', syncViewportPosition);
+    window.visualViewport.addEventListener('scroll', syncViewportPosition);
+  }
+
+  if (typeof ResizeObserver === 'function') {
+    if (simHelpResizeObserver) simHelpResizeObserver.disconnect();
+    simHelpResizeObserver = new ResizeObserver(() => {
+      if (activeSimHelpKey) scheduleSimHelpPopoverPosition();
+    });
+    simHelpResizeObserver.observe(popover);
+  }
 }
 
 bindAppEvents({
@@ -1875,6 +2052,7 @@ setUIMode('controle', { preserveAccordionState: false });
 buildTabelaGrid();
 initPortariaModal();
 initPadraoModal();
+initConfirmModal();
 initSimHelpPopover();
 
 update();

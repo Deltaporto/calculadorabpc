@@ -886,6 +886,30 @@
       </article>
     </dialog>
 
+    <dialog class="portaria-modal confirm-modal" id="confirmModal" aria-labelledby="confirmModalTitle"
+      aria-describedby="confirmModalMessage">
+      <article class="portaria-modal-card confirm-modal-card">
+        <header class="portaria-modal-header">
+          <h2 id="confirmModalTitle">Confirmar ação</h2>
+          <button class="btn btn-outline portaria-close-btn" id="confirmModalDismissBtn" type="button"
+            data-confirm-close><svg class="ui-icon sm" aria-hidden="true">
+              <use href="#i-close"></use>
+            </svg>Fechar</button>
+        </header>
+        <p class="portaria-modal-helper confirm-modal-message" id="confirmModalMessage"></p>
+        <div class="confirm-modal-actions">
+          <button class="btn btn-outline" type="button" id="confirmModalCancelBtn" data-confirm-close><svg
+              class="ui-icon sm" aria-hidden="true">
+              <use href="#i-close"></use>
+            </svg>Cancelar</button>
+          <button class="btn btn-red" type="button" id="confirmModalConfirmBtn"><svg class="ui-icon sm"
+              aria-hidden="true">
+              <use href="#i-alert"></use>
+            </svg>Confirmar</button>
+        </div>
+      </article>
+    </dialog>
+
     <div class="sim-help-popover hidden" id="simHelpPopover" role="dialog" aria-modal="false" aria-hidden="true"
       aria-labelledby="simHelpTitle" tabindex="-1">
       <div class="sim-help-popover-header">

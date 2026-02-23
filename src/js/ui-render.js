@@ -1,14 +1,109 @@
-export function setQBadge(id, q, labels) {
+const elementCache = new Map();
+
+function getById(id) {
+  const cached = elementCache.get(id);
+  if (cached && cached.isConnected) return cached;
   const el = document.getElementById(id);
-  el.textContent = labels[q];
-  el.dataset.q = labels[q];
+  if (el) elementCache.set(id, el);
+  return el;
+}
+
+function setTextIfChanged(el, value) {
+  if (el && el.textContent !== value) el.textContent = value;
+}
+
+function setHtmlIfChanged(el, value) {
+  if (el && el.innerHTML !== value) el.innerHTML = value;
+}
+
+function setStyleIfChanged(el, property, value) {
+  if (!el) return;
+  if (el.style[property] !== value) el.style[property] = value;
+}
+
+function setDataQIfChanged(el, value) {
+  if (!el) return;
+  if (el.dataset.q !== value) el.dataset.q = value;
 }
 
 let activeCell = null;
+let activeAmbTab = null;
+let lastAmbTabValue = null;
+let lastDecisionTone = null;
+let lastDecisionIcon = null;
+let lastDecisionSignature = null;
+let decisionPopTimer = null;
+
+function setQBadgeElement(el, q, labels) {
+  if (!el) return;
+  const label = labels[q];
+  setTextIfChanged(el, label);
+  setDataQIfChanged(el, label);
+}
+
+function ensureRefs() {
+  const refs = {
+    fAmb: getById('fAmb'),
+    barAmb: getById('barAmb'),
+    qAmb: getById('qAmb'),
+    nameAmb: getById('nameAmb'),
+    fCorpo: getById('fCorpo'),
+    qCorpo: getById('qCorpo'),
+    nameCorpo: getById('nameCorpo'),
+    fAtiv: getById('fAtiv'),
+    barAtiv: getById('barAtiv'),
+    qAtiv: getById('qAtiv'),
+    nameAtiv: getById('nameAtiv'),
+    rAmb: getById('rAmb'),
+    rAtiv: getById('rAtiv'),
+    rCorpo: getById('rCorpo'),
+    dAmb: getById('dAmb'),
+    dAtiv: getById('dAtiv'),
+    dCorpo: getById('dCorpo'),
+    decision: getById('decision'),
+    decLabel: getById('decLabel'),
+    decReason: getById('decReason'),
+    decItem: getById('decItem'),
+    textoSection: getById('textoSection')
+  };
+  const ambTabs = [...document.querySelectorAll('.amb-tab')];
+  refs.ambTabMap = new Map(ambTabs.map(tab => [+tab.dataset.a, tab]));
+  return refs;
+}
+
+function syncAmbTab(ambValue, refs) {
+  const next = refs.ambTabMap.get(ambValue) || null;
+  if (activeAmbTab === next) return;
+
+  if (activeAmbTab) {
+    activeAmbTab.classList.remove('active');
+    activeAmbTab.setAttribute('aria-pressed', 'false');
+  }
+  if (next) {
+    next.classList.add('active');
+    next.setAttribute('aria-pressed', 'true');
+  }
+  activeAmbTab = next;
+}
+
+function triggerDecisionPop(decisionEl) {
+  if (!decisionEl) return;
+  decisionEl.classList.add('pop');
+  if (decisionPopTimer) clearTimeout(decisionPopTimer);
+  decisionPopTimer = setTimeout(() => {
+    decisionEl.classList.remove('pop');
+    decisionPopTimer = null;
+  }, 300);
+}
+
+export function setQBadge(id, q, labels) {
+  const el = getById(id);
+  setQBadgeElement(el, q, labels);
+}
 
 export function highlightActiveCell(ativQ, corpoQ) {
   const targetId = `tc-${corpoQ}-${ativQ}`;
-  const target = document.getElementById(targetId);
+  const target = getById(targetId);
 
   if (activeCell === target) return;
 
@@ -44,64 +139,87 @@ export function runMainUpdate({
   uiMode,
   updateAdminAutofillShortcut
 }) {
+  const refs = ensureRefs();
   const amb = calcAmbiente();
   const ativ = calcAtividades();
   const corpo = calcCorpo();
 
-  document.getElementById('fAmb').innerHTML = `(<span class="val">${amb.sum}</span> × 5) − 0,1 = <span class="val">${amb.pct}%</span>`;
-  const barAmb = document.getElementById('barAmb');
-  barAmb.style.width = Math.min(100, amb.pct) + '%';
-  barAmb.style.background = `var(--q${qLabels[amb.q]})`;
-  setQBadge('qAmb', amb.q, qLabels);
-  document.getElementById('nameAmb').textContent = qFull.amb[amb.q];
+  setHtmlIfChanged(refs.fAmb, `(<span class="val">${amb.sum}</span> × 5) − 0,1 = <span class="val">${amb.pct}%</span>`);
+  setStyleIfChanged(refs.barAmb, 'width', `${Math.min(100, amb.pct)}%`);
+  setStyleIfChanged(refs.barAmb, 'background', `var(--q${qLabels[amb.q]})`);
+  setQBadgeElement(refs.qAmb, amb.q, qLabels);
+  setTextIfChanged(refs.nameAmb, qFull.amb[amb.q]);
 
   const majoracaoInfo = corpo.majorado ? ` → <span class="val">${corpo.final}</span> (majoração +1)` : '';
-  document.getElementById('fCorpo').innerHTML = `Máximo dos domínios: <span class="val">${corpo.max}</span>${majoracaoInfo}`;
-  setQBadge('qCorpo', corpo.q, qLabels);
-  document.getElementById('nameCorpo').textContent = qFull.corpo[corpo.q];
+  setHtmlIfChanged(refs.fCorpo, `Máximo dos domínios: <span class="val">${corpo.max}</span>${majoracaoInfo}`);
+  setQBadgeElement(refs.qCorpo, corpo.q, qLabels);
+  setTextIfChanged(refs.nameCorpo, qFull.corpo[corpo.q]);
 
-  document.getElementById('fAtiv').innerHTML = `(<span class="val">${ativ.sum}</span> × 2,778) − 0,1 = <span class="val">${ativ.pct}%</span>`;
-  const barAtiv = document.getElementById('barAtiv');
-  barAtiv.style.width = Math.min(100, ativ.pct) + '%';
-  barAtiv.style.background = `var(--q${qLabels[ativ.q]})`;
-  setQBadge('qAtiv', ativ.q, qLabels);
-  document.getElementById('nameAtiv').textContent = qFull.ativ[ativ.q];
+  setHtmlIfChanged(refs.fAtiv, `(<span class="val">${ativ.sum}</span> × 2,778) − 0,1 = <span class="val">${ativ.pct}%</span>`);
+  setStyleIfChanged(refs.barAtiv, 'width', `${Math.min(100, ativ.pct)}%`);
+  setStyleIfChanged(refs.barAtiv, 'background', `var(--q${qLabels[ativ.q]})`);
+  setQBadgeElement(refs.qAtiv, ativ.q, qLabels);
+  setTextIfChanged(refs.nameAtiv, qFull.ativ[ativ.q]);
 
-  setQBadge('rAmb', amb.q, qLabels);
-  setQBadge('rAtiv', ativ.q, qLabels);
-  setQBadge('rCorpo', corpo.q, qLabels);
-  document.getElementById('dAmb').textContent = qNames[amb.q];
-  document.getElementById('dAtiv').textContent = qNames[ativ.q];
-  document.getElementById('dCorpo').textContent = qNames[corpo.q];
+  setQBadgeElement(refs.rAmb, amb.q, qLabels);
+  setQBadgeElement(refs.rAtiv, ativ.q, qLabels);
+  setQBadgeElement(refs.rCorpo, corpo.q, qLabels);
+  setTextIfChanged(refs.dAmb, qNames[amb.q]);
+  setTextIfChanged(refs.dAtiv, qNames[ativ.q]);
+  setTextIfChanged(refs.dCorpo, qNames[corpo.q]);
 
-  setCurrentAmbTab(amb.q);
-  document.querySelectorAll('.amb-tab').forEach(tab => {
-    tab.classList.toggle('active', +tab.dataset.a === amb.q);
-  });
-  buildTabelaGrid();
+  if (lastAmbTabValue !== amb.q) {
+    setCurrentAmbTab(amb.q);
+    syncAmbTab(amb.q, refs);
+    buildTabelaGrid();
+    lastAmbTabValue = amb.q;
+  }
   highlightActiveCell(ativ.q, corpo.q);
 
-  const decision = document.getElementById('decision');
+  const decision = refs.decision;
   const item = getItemNumber(amb.q, ativ.q, corpo.q);
+  let tone;
+  let iconName;
+  let label;
+  let reason;
+  let itemText;
   if (impedimento) {
-    decision.className = 'decision impedimento';
-    setDecisionIcon('alert');
-    document.getElementById('decLabel').textContent = 'INDEFERIDO';
-    document.getElementById('decReason').textContent = 'Impedimento inferior a 2 anos — requisito não satisfeito';
-    document.getElementById('decItem').textContent = 'Art. 20, §§ 2º e 10, Lei 8.742/93';
+    tone = 'impedimento';
+    iconName = 'alert';
+    label = 'INDEFERIDO';
+    reason = 'Impedimento inferior a 2 anos — requisito não satisfeito';
+    itemText = 'Art. 20, §§ 2º e 10, Lei 8.742/93';
   } else {
     const yes = tabelaConclusiva(amb.q, ativ.q, corpo.q);
-    decision.className = `decision ${yes ? 'deferido' : 'indeferido'}`;
-    setDecisionIcon(yes ? 'check-circle' : 'x-circle');
-    document.getElementById('decLabel').textContent = yes ? 'DEFERIDO' : 'INDEFERIDO';
-    document.getElementById('decReason').textContent = getDecisionReason(amb.q, ativ.q, corpo.q, yes);
-    document.getElementById('decItem').textContent = `Item ${item} da Tabela Conclusiva`;
+    tone = yes ? 'deferido' : 'indeferido';
+    iconName = yes ? 'check-circle' : 'x-circle';
+    label = yes ? 'DEFERIDO' : 'INDEFERIDO';
+    reason = getDecisionReason(amb.q, ativ.q, corpo.q, yes);
+    itemText = `Item ${item} da Tabela Conclusiva`;
   }
-  decision.classList.add('pop');
-  setTimeout(() => decision.classList.remove('pop'), 300);
+
+  if (decision && lastDecisionTone !== tone) {
+    decision.classList.remove('deferido', 'indeferido', 'impedimento');
+    decision.classList.add(tone);
+    lastDecisionTone = tone;
+  }
+  if (iconName !== lastDecisionIcon) {
+    setDecisionIcon(iconName);
+    lastDecisionIcon = iconName;
+  }
+
+  setTextIfChanged(refs.decLabel, label);
+  setTextIfChanged(refs.decReason, reason);
+  setTextIfChanged(refs.decItem, itemText);
+
+  const decisionSignature = `${tone}|${iconName}|${label}|${reason}|${itemText}`;
+  if (decisionSignature !== lastDecisionSignature) {
+    triggerDecisionPop(decision);
+    lastDecisionSignature = decisionSignature;
+  }
 
   if (savedINSS) updateComparison(amb, ativ, corpo);
-  if (!document.getElementById('textoSection').classList.contains('hidden')) {
+  if (refs.textoSection && !refs.textoSection.classList.contains('hidden')) {
     renderStandardText(amb, ativ, corpo);
   }
   if (uiMode === 'controle') updateAdminAutofillShortcut();
