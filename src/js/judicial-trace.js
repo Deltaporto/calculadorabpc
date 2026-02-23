@@ -48,9 +48,7 @@ export function createAtivMedTraceLineElement({
   if (med.ativMode === 'simples') {
     const raw = med.ativMedJustification.trim();
     const preview = raw.length > 160 ? `${raw.slice(0, 157)}...` : raw;
-    const line = document.createElement('div');
-    line.className = 'jc-trace-line';
-    line.innerHTML = `<strong>Origem da reclassificação médica de Atividades e Participação</strong>: modo simples, qualificador final de Atividades e Participação em <strong>${qLabels[ativMedResolved]}</strong>; justificativa médica: `;
+    const line = createTraceLine(`<strong>Origem da reclassificação médica de Atividades e Participação</strong>: modo simples, qualificador final de Atividades e Participação em <strong>${qLabels[ativMedResolved]}</strong>; justificativa médica: `);
     line.appendChild(document.createTextNode(`"${preview}".`));
     return line;
   }
