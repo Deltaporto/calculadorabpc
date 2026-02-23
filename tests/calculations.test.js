@@ -59,6 +59,7 @@ const calcAmbienteFromState = buildFunction('calcAmbienteFromState', { pctToQ })
 const calcAtividadesFromState = buildFunction('calcAtividadesFromState', { pctToQ });
 const calcCorpoFromState = buildFunction('calcCorpoFromState');
 const computeAtivFromDomains = buildFunction('computeAtivFromDomains', { pctToQ });
+const getDecisionReason = buildFunction('getDecisionReason');
 
 test('tabelaConclusiva - regras principais', () => {
   assert.strictEqual(tabelaConclusiva(4, 2, 1), false, 'Corpo N/L sempre indefere');
@@ -96,4 +97,42 @@ test('computeAtivFromDomains - completo e incompleto', () => {
 
   const computed = computeAtivFromDomains({ d1: 2, d2: 3, d3: 4 }, ids, pctToQ);
   assert.deepStrictEqual(computed, { sum: 9, pct: 24.9, q: 1 });
+});
+
+test('getDecisionReason - cenários de decisão', () => {
+  const labels = ['L0', 'L1', 'L2', 'L3', 'L4'];
+  const names = ['N0', 'N1', 'N2', 'N3', 'N4'];
+  const qFull = {
+    amb: ['FA0', 'FA1', 'FA2', 'FA3', 'FA4'],
+    corpo: ['FC0', 'FC1', 'FC2', 'FC3', 'FC4'],
+    ativ: ['AP0', 'AP1', 'AP2', 'AP3', 'AP4']
+  };
+
+  // Case 1: Rejection due to Corpo <= 1 (yes=false)
+  const reasonCorpo = getDecisionReason(2, 2, 1, false, labels, names, qFull);
+  assert.strictEqual(reasonCorpo, 'Funções do Corpo = FC1 — exige-se ≥ Moderada');
+
+  // Case 2: Rejection due to Ativ <= 1 (yes=false)
+  const reasonAtiv = getDecisionReason(2, 1, 2, false, labels, names, qFull);
+  assert.strictEqual(reasonAtiv, 'Atividades e Participação = AP1 — exige-se ≥ Moderada');
+
+  // Case 3: Rejection due to Ambient (yes=false) - implied M-M but Amb < 3
+  const reasonAmb = getDecisionReason(2, 2, 2, false, labels, names, qFull);
+  assert.strictEqual(reasonAmb, 'Combinação M-M com Fatores Ambientais L2 — exige-se Fatores Ambientais ≥ Grave');
+
+  // Case 4: Approval via Corpo Dominance (yes=true)
+  const reasonCorpoDom = getDecisionReason(0, 2, 3, true, labels, names, qFull);
+  assert.strictEqual(reasonCorpoDom, 'Funções do Corpo com fc3 + Atividades e Participação com ap2 — deferimento independente de Fatores Ambientais');
+
+  // Case 5: Approval via Ativ Dominance (yes=true)
+  const reasonAtivDom = getDecisionReason(0, 3, 2, true, labels, names, qFull);
+  assert.strictEqual(reasonAtivDom, 'Atividades e Participação com ap3 + Funções do Corpo com fc2 — deferimento independente de Fatores Ambientais');
+
+  // Case 6: Approval via Combination (yes=true)
+  const reasonCombo = getDecisionReason(3, 2, 2, true, labels, names, qFull);
+  assert.strictEqual(reasonCombo, 'Funções do Corpo com alteração moderada + Atividades e Participação com dificuldade moderada + Fatores Ambientais com fa3 (≥ grave) — combinação deferida');
+
+  // Case 7: Fallback to labels/names if qFull is missing
+  const reasonNoFull = getDecisionReason(2, 2, 1, false, labels, names, null);
+  assert.strictEqual(reasonNoFull, 'Funções do Corpo = L1 (N1) — exige-se ≥ Moderada');
 });

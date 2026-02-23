@@ -43,9 +43,9 @@ export function getDecisionReason(ambQ, ativQ, corpoQ, yes, labels, names, qFull
   const fCorpo = qFull ? qFull.corpo[corpoQ] : `${labels[corpoQ]} (${names[corpoQ]})`;
   const fAtiv = qFull ? qFull.ativ[ativQ] : `${labels[ativQ]} (${names[ativQ]})`;
   if (!yes) {
-    if (corpoQ <= 1) return `Funções do Corpo com ${fCorpo.toLowerCase()} — exige-se alteração ≥ moderada`;
-    if (ativQ <= 1) return `Atividades e Participação com ${fAtiv.toLowerCase()} — exige-se dificuldade ≥ moderada`;
-    return `Combinação M-M com Fatores Ambientais com ${fAmb.toLowerCase()} — exige-se barreira ≥ grave`;
+    if (corpoQ <= 1) return `Funções do Corpo = ${fCorpo} — exige-se ≥ Moderada`;
+    if (ativQ <= 1) return `Atividades e Participação = ${fAtiv} — exige-se ≥ Moderada`;
+    return `Combinação M-M com Fatores Ambientais ${labels[ambQ]} — exige-se Fatores Ambientais ≥ Grave`;
   }
   if (corpoQ >= 3 && ativQ >= 2) {
     return `Funções do Corpo com ${fCorpo.toLowerCase()} + Atividades e Participação com ${fAtiv.toLowerCase()} — deferimento independente de Fatores Ambientais`;
