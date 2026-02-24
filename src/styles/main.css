@@ -3998,15 +3998,16 @@ footer {
 @media print {
   body { background: #fff; color: #000; }
   .app { max-width: none; padding: 0; margin: 0; }
-  .skip-link, .app-mode-switch, .header-row, .toolbar, .footer-actions, footer, .toast-container, .sim-help-btn, .btn, .majoracao-toggles, .jc-actions-main, .jc-autofill-details { display: none !important; }
+  .skip-link, .app-mode-switch, .header-row, .toolbar, .footer-actions, footer, .toast-container, .sim-help-btn, .btn, .majoracao-toggles, .jc-actions-main, .jc-autofill-details, .header-portaria-link { display: none !important; }
   header { background: 0 0; color: #000; box-shadow: none; border: 0; padding: 0; margin: 0 0 20px; text-align: left; }
   header::before, header::after { display: none; }
   header h1 { font-size: 1.5rem; color: #000; }
   header p { color: #333; }
   header .badge { border: 1px solid #000; color: #000; background: 0 0; box-shadow: none; }
   .panel, .resultado, .judicial-control, .standard-text, .comparison { box-shadow: none; border: 1px solid #ccc; background: #fff; page-break-inside: avoid; }
+  .panel-header { background: #f4f4f4; border-bottom: 1px solid #ccc; }
   textarea { border: 0; resize: none; overflow: visible; height: auto !important; min-height: 0; }
   .tc.yes { background: #eee; color: #000; border: 1px solid #ccc; }
   .tc.no { background: #fff; color: #000; border: 1px solid #ccc; }
-  .decision.deferido, .decision.indeferido, .decision.impedimento { background: #fff; color: #000; border: 1px solid #000; }
+  .decision.deferido, .decision.indeferido, .decision.impedimento { background: #fff; color: #000; border: 2px solid #000; break-inside: avoid; }
 }
