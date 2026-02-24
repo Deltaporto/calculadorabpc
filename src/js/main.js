@@ -287,9 +287,21 @@ function update() {
 }
 
 // ============ EVENT HANDLERS ============
+const domainButtonsCache = new Map();
+
+function getDomainButtons(domain) {
+  let btns = domainButtonsCache.get(domain);
+  if (!btns || btns.length === 0) {
+    btns = document.querySelectorAll(`[data-domain="${domain}"] .note-btn`);
+    if (btns.length > 0) domainButtonsCache.set(domain, btns);
+  }
+  return btns;
+}
+
 function handleDomainButtonClick({ button, group, domain, value }) {
   if (!button || button.classList.contains('locked')) return;
-  group.querySelectorAll('.note-btn').forEach(noteButton => {
+  const btns = getDomainButtons(domain);
+  btns.forEach(noteButton => {
     noteButton.classList.remove('active');
     noteButton.setAttribute('aria-pressed', 'false');
   });
@@ -376,7 +388,7 @@ function handleChangeIdadeUnidade(nextUnit) {
 
 function applyChildRules() {
   [...DOM_ATIV_M, ...DOM_ATIV_S].forEach(d => {
-    const btns = document.querySelectorAll(`[data-domain="${d.id}"] .note-btn`);
+    const btns = getDomainButtons(d.id);
     if (crianca && idadeMeses < d.cut) {
       if (!(d.id in childDomainBackup)) childDomainBackup[d.id] = state[d.id];
       state[d.id] = 4;
@@ -563,7 +575,7 @@ function getPadraoApplyContext() {
 function applyPadraoEntries(entriesToApply) {
   entriesToApply.forEach(([id, v]) => {
     state[id] = v;
-    const btns = document.querySelectorAll(`[data-domain="${id}"] .note-btn`);
+    const btns = getDomainButtons(id);
     btns.forEach(b => { b.classList.remove('active'); if (+b.dataset.value === v) b.classList.add('active'); });
   });
   update();
