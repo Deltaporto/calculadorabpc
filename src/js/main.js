@@ -1054,7 +1054,9 @@ function renderJudicialProgress() {
   judicialControl.ui.activeStep = activeStep;
   judicialControl.ui.progressPct = progressPct;
 
-  document.getElementById('jcProgressBar').style.width = `${progressPct}%`;
+  const bar = document.getElementById('jcProgressBar');
+  bar.style.width = `${progressPct}%`;
+  bar.setAttribute('aria-valuenow', String(progressPct));
   document.getElementById('jcProgressPct').textContent = `${progressPct}%`;
   document.getElementById('jcProgressLabel').textContent = `Etapa ${activeStep} de 4 · ${labels[activeStep - 1]}`;
   stepIds.forEach((id, idx) => {
