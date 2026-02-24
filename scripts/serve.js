@@ -32,6 +32,25 @@ function resolvePath(urlPathname) {
   const parts = relative.split(path.sep);
   if (parts.some(part => part.startsWith('.') && part !== '.' && part !== '..')) return null;
 
+  // Security: Allowlist check
+  // Convert to POSIX style for consistent checking against allowed paths
+  const relativePosix = relative.split(path.sep).join('/');
+
+  const ALLOWED_FILES = [
+    '/index.html',
+    '/fluxograma-controle-judicial.html',
+    '/fluxograma-controle-judicial-bpc.svg'
+  ];
+  const ALLOWED_DIRS = [
+    '/src/',
+    '/docs/'
+  ];
+
+  const isAllowed = ALLOWED_FILES.includes(relativePosix) ||
+                    ALLOWED_DIRS.some(dir => relativePosix.startsWith(dir));
+
+  if (!isAllowed) return null;
+
   const filePath = path.join(root, relative);
   if (!filePath.startsWith(root)) return null;
   return filePath;
