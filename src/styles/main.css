@@ -4011,3 +4011,61 @@ footer {
   .tc.no { background: #fff; color: #000; border: 1px solid #ccc; }
   .decision.deferido, .decision.indeferido, .decision.impedimento { background: #fff; color: #000; border: 2px solid #000; break-inside: avoid; }
 }
+
+/* BACK TO TOP */
+.back-to-top {
+  position: fixed;
+  bottom: 80px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity .3s ease, transform .3s ease, background-color .2s;
+  z-index: 9000;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.back-to-top:hover {
+  background: color-mix(in srgb, var(--accent) 85%, black);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, .2);
+}
+
+.back-to-top:focus-visible {
+  outline: 2px solid transparent;
+  box-shadow: 0 0 0 2px var(--blue), 0 0 0 4px rgba(255, 255, 255, .8);
+}
+
+.back-to-top.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+}
+
+.back-to-top .ui-icon {
+  width: 1.4rem;
+  height: 1.4rem;
+  stroke-width: 2.5;
+}
+
+@media (max-width: 600px) {
+  .back-to-top {
+    bottom: 70px;
+    right: 16px;
+  }
+}
+
+@media print {
+  .back-to-top {
+    display: none !important;
+  }
+}

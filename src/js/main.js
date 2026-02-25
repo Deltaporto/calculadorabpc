@@ -1072,7 +1072,11 @@ function renderJudicialProgress() {
   document.getElementById('jcProgressPct').textContent = `${progressPct}%`;
   document.getElementById('jcProgressLabel').textContent = `Etapa ${activeStep} de 4 · ${labels[activeStep - 1]}`;
   stepIds.forEach((id, idx) => {
-    document.getElementById(id).classList.toggle('active-step', idx + 1 === activeStep);
+    const el = document.getElementById(id);
+    const isActive = idx + 1 === activeStep;
+    el.classList.toggle('active-step', isActive);
+    if (isActive) el.setAttribute('aria-current', 'step');
+    else el.removeAttribute('aria-current');
   });
 }
 
@@ -1942,6 +1946,20 @@ function initConfirmModal() {
   });
 }
 
+function initBackToTop() {
+  const btn = document.getElementById('btnBackToTop');
+  if (!btn) return;
+
+  const toggleVisibility = () => {
+    btn.classList.toggle('hidden', window.scrollY < 300);
+  };
+
+  window.addEventListener('scroll', toggleVisibility, { passive: true });
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
 function initSimHelpPopover() {
   const popover = document.getElementById('simHelpPopover');
   const closeBtn = document.getElementById('simHelpCloseBtn');
@@ -2068,5 +2086,6 @@ initPortariaModal();
 initPadraoModal();
 initConfirmModal();
 initSimHelpPopover();
+initBackToTop();
 
 update();

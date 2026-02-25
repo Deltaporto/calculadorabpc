@@ -33,6 +33,10 @@
       <symbol id="i-moon" viewBox="0 0 24 24">
         <path d="M20 14.5A8 8 0 1 1 9.5 4 6.5 6.5 0 0 0 20 14.5z" />
       </symbol>
+      <symbol id="i-arrow-up" viewBox="0 0 24 24">
+        <path d="M12 19V5" />
+        <path d="m5 12 7-7 7 7" />
+      </symbol>
       <symbol id="i-child" viewBox="0 0 24 24">
         <rect x="2.5" y="5.5" width="19" height="13" rx="2" />
         <circle cx="8.5" cy="11.2" r="1.8" />
@@ -326,7 +330,7 @@
       <h3>Minuta Padronizada para Decisão</h3>
       <p class="helper">Texto automático para copiar e colar na fundamentação sobre o enquadramento da parte autora no
         conceito de pessoa com deficiência para fins de BPC/LOAS.</p>
-      <textarea id="textoPadrao" readonly></textarea>
+      <textarea id="textoPadrao" readonly placeholder="O texto da decisão será gerado aqui automaticamente..."></textarea>
       <div class="standard-text-actions">
         <span class="copy-feedback" id="copyFeedback" role="status" aria-live="polite"></span>
         <button class="btn btn-outline" id="btnCopiarTexto"><svg class="ui-icon sm" aria-hidden="true">
@@ -817,7 +821,7 @@
                 <use href="#i-close"></use>
               </svg>Limpar controle judicial</button>
           </div>
-          <textarea id="textoControleJudicial" class="jc-textarea" readonly></textarea>
+          <textarea id="textoControleJudicial" class="jc-textarea" readonly placeholder="A minuta da decisão será gerada aqui após a conclusão da triagem..."></textarea>
         </section>
       </div>
     </div>
@@ -929,6 +933,10 @@
       </div>
     </div>
   </div>
+
+  <button id="btnBackToTop" class="back-to-top hidden" aria-label="Voltar ao topo" title="Voltar ao topo">
+    <svg class="ui-icon" aria-hidden="true"><use href="#i-arrow-up"></use></svg>
+  </button>
 
   <script src="src/js/loader.js"></script>
 </body>
