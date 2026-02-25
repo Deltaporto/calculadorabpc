@@ -17,3 +17,7 @@
 ## 2025-02-19 - Entry Animations for Popovers
 **Learning:** Adding entry animations (fade+scale for popovers, fade+slide for dialogs) significantly improves the perceived responsiveness and polish of the interface without adding JavaScript overhead.
 **Action:** Use CSS keyframe animations for entry states of interactive overlays, ensuring they respect `prefers-reduced-motion`.
+
+## 2025-05-23 - Accessibility for Dynamic Progress Indicators
+**Learning:** Progress bars implemented with `div` elements and CSS width updates are not perceivable by screen readers unless they have the appropriate `role="progressbar"` and `aria-valuenow` attributes.
+**Action:** When creating or updating custom progress bars, always ensure the element has `role="progressbar"`, `aria-valuemin`, `aria-valuemax`, and update `aria-valuenow` in sync with the visual change.
