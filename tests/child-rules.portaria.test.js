@@ -192,7 +192,8 @@ test('applyChildRules forces q4 with lock and restores backed-up values on unloc
     idadeMeses: 5,
     state,
     childDomainBackup,
-    updateChildAutoSummary: () => { summaryCalls += 1; }
+    updateChildAutoSummary: () => { summaryCalls += 1; },
+    getDomainButtons: (id) => document.querySelectorAll(`[data-domain="${id}"] .note-btn`)
   };
 
   runApplyChildRules(ctx);

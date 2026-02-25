@@ -220,7 +220,8 @@ test('applyPadraoEntries updates state, button activation, and triggers one upda
   const ctx = {
     state,
     document,
-    update: () => { updates += 1; }
+    update: () => { updates += 1; },
+    getDomainButtons: (id) => document.querySelectorAll(`[data-domain="${id}"] .note-btn`)
   };
 
   runApplyPadraoEntries(ctx, [['e1', 2], ['d6', 3], ['d9', 3]]);
