@@ -18,7 +18,7 @@ export function buildDomainRows(container, domains, labels, names, domainHelpKey
   });
 }
 
-export function buildTabelaGrid(container, labels, ambTab, tabelaConclusivaFn) {
+export function buildTabelaGrid(container, labels, names, ambTab, tabelaConclusivaFn) {
   // ⚡ Optimization: Reuse existing DOM nodes if grid is already built
   const existingCells = container.querySelectorAll('.tc[data-c]');
   if (existingCells.length > 0) {
@@ -26,11 +26,16 @@ export function buildTabelaGrid(container, labels, ambTab, tabelaConclusivaFn) {
       const c = Math.floor(i / 5);
       const a = i % 5;
       const yes = tabelaConclusivaFn(ambTab, a, c);
+      const labelText = `Ambiente: ${labels[ambTab]} (${names[ambTab]}) · Atividades: ${labels[a]} (${names[a]}) · Funções do Corpo: ${labels[c]} (${names[c]}) → ${yes ? 'Deferido' : 'Indeferido'}`;
 
       // Update text content
       const newText = yes ? 'Sim' : 'Não';
       if (cell.textContent !== newText) {
         cell.textContent = newText;
+      }
+      if (cell.title !== labelText) {
+        cell.title = labelText;
+        cell.setAttribute('aria-label', labelText);
       }
 
       // Update classes efficiently
@@ -72,6 +77,7 @@ export function buildTabelaGrid(container, labels, ambTab, tabelaConclusivaFn) {
       const yes = tabelaConclusivaFn(ambTab, a, c);
       const isSensitivityPoint = c === 2 && a === 2;
       const sensitivityClass = isSensitivityPoint ? ` tc-sensitivity tc-sensitivity-${yes ? 'yes' : 'no'}` : '';
+      const labelText = `Ambiente: ${labels[ambTab]} (${names[ambTab]}) · Atividades: ${labels[a]} (${names[a]}) · Funções do Corpo: ${labels[c]} (${names[c]}) → ${yes ? 'Deferido' : 'Indeferido'}`;
 
       const cell = document.createElement('div');
       cell.id = `tc-${c}-${a}`;
@@ -79,6 +85,9 @@ export function buildTabelaGrid(container, labels, ambTab, tabelaConclusivaFn) {
       cell.dataset.c = c;
       cell.dataset.a = a;
       cell.textContent = yes ? 'Sim' : 'Não';
+      cell.title = labelText;
+      cell.setAttribute('aria-label', labelText);
+      cell.setAttribute('role', 'img');
       fragment.appendChild(cell);
     }
   }

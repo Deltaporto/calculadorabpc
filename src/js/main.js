@@ -259,7 +259,7 @@ let lastAmbTabForGrid = null;
 function buildTabelaGrid() {
   if (lastAmbTabForGrid === currentAmbTab) return;
   lastAmbTabForGrid = currentAmbTab;
-  buildTabelaGridView(document.getElementById('tGrid'), Q_LABELS, currentAmbTab, tabelaConclusiva);
+  buildTabelaGridView(document.getElementById('tGrid'), Q_LABELS, Q_NAMES, currentAmbTab, tabelaConclusiva);
 }
 
 // ============ UI UPDATE ============
