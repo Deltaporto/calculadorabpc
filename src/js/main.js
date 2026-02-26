@@ -32,7 +32,7 @@ import {
   buildTabelaGrid as buildTabelaGridView
 } from './dom-builders.js';
 import { DOMAIN_HELP_KEYS, SIM_HELP_CONTENT } from './help-content.js';
-import { initStaticRatingA11yLabels } from './a11y.js';
+import { initStaticRatingA11yLabels, initKeyboardNav } from './a11y.js';
 import { highlightActiveCell, runMainUpdate } from './ui-render.js';
 import { bindJudicialControlEvents } from './events.js';
 import {
@@ -2058,6 +2058,7 @@ buildDomainRows(document.getElementById('domAmb'), DOM_AMB);
 buildDomainRows(document.getElementById('domCorpo'), DOM_CORPO);
 buildDomainRows(document.getElementById('domAtivM'), DOM_ATIV_M);
 buildDomainRows(document.getElementById('domAtivS'), DOM_ATIV_S);
+initKeyboardNav();
 syncChildModeByControls();
 applyChildRules();
 resetJudicialControl();
