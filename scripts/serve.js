@@ -24,7 +24,12 @@ const MIME_TYPES = {
 };
 
 function resolvePath(urlPathname) {
-  const decoded = decodeURIComponent(urlPathname.split('?')[0]);
+  let decoded;
+  try {
+    decoded = decodeURIComponent(urlPathname.split('?')[0]);
+  } catch (e) {
+    return null;
+  }
   const normalized = path.normalize(decoded).replace(/^([.][.][/\\])+/, '');
   const relative = normalized === '/' ? '/index.html' : normalized;
 
