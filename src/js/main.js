@@ -51,6 +51,7 @@ import {
 import { buildJudicialControlText } from './judicial-text.js';
 import { bindAppEvents } from './app-events.js';
 import { showToast } from './toast.js';
+import { initFlowchartView } from './flowchart-view.js';
 
 // ============ STATE ============
 const ALL_DOMAINS = [...DOM_AMB, ...DOM_CORPO, ...DOM_ATIV_M, ...DOM_ATIV_S];
@@ -2101,6 +2102,7 @@ buildDomainRows(document.getElementById('domCorpo'), DOM_CORPO);
 buildDomainRows(document.getElementById('domAtivM'), DOM_ATIV_M);
 buildDomainRows(document.getElementById('domAtivS'), DOM_ATIV_S);
 initKeyboardNav();
+initFlowchartView();
 syncChildModeByControls();
 applyChildRules();
 resetJudicialControl();

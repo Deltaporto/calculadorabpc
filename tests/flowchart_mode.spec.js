@@ -61,7 +61,8 @@ test('switches to Fluxograma mode and keeps sections isolated', async ({ page })
 
     const flowchartSection = page.locator('#flowchartSection');
     await expect(flowchartSection).toBeVisible();
-    await expect(page.locator('#flowchartFrame')).toBeVisible();
+    await expect(page.locator('#flowchartCanvas')).toBeVisible();
+    await expect(page.locator('#flowchartMobileList')).toBeVisible();
     await expect(page.locator('#judicialControlSection')).toBeHidden();
     await expect(page.locator('#simuladorDetails')).toBeHidden();
 
@@ -69,9 +70,41 @@ test('switches to Fluxograma mode and keeps sections isolated', async ({ page })
       return page.evaluate(() => document.activeElement && document.activeElement.id);
     }).toBe('flowchartSection');
 
+    await page.click('#flowchartStepNav button[data-flow-step-target="3"]');
+    await expect(page.locator('#etapa-3')).toHaveClass(/is-active/);
+    await expect(page).toHaveURL(/#etapa-3$/);
+
     await page.click('button[data-mode="simulador"]');
     await expect(page.locator('#simuladorDetails')).toBeVisible();
     await expect(page.locator('#flowchartSection')).toBeHidden();
+  } finally {
+    await new Promise(resolve => server.close(resolve));
+  }
+});
+
+test('uses guided card layout on mobile without horizontal overflow', async ({ page }) => {
+  const rootDir = process.cwd();
+  const { server, url } = await startStaticServer(rootDir);
+
+  try {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(`${url}/index.html`);
+
+    await page.click('button[data-mode="fluxograma"]');
+
+    await expect(page.locator('#flowchartCanvas')).toBeHidden();
+    await expect(page.locator('#flowchartMobileList')).toBeVisible();
+    await expect(page.locator('#etapa-1')).toHaveClass(/is-active/);
+    await expect(page.locator('.flow-step-card.is-active')).toHaveCount(1);
+
+    await page.click('#flowchartStepNav button[data-flow-step-target="5"]');
+    await expect(page.locator('#etapa-5')).toHaveClass(/is-active/);
+    await expect(page.locator('.flow-step-card.is-active')).toHaveCount(1);
+
+    const hasHorizontalOverflow = await page.evaluate(() => {
+      return document.documentElement.scrollWidth > window.innerWidth + 1;
+    });
+    expect(hasHorizontalOverflow).toBe(false);
   } finally {
     await new Promise(resolve => server.close(resolve));
   }

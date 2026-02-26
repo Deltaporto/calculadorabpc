@@ -831,12 +831,92 @@
     <section class="flowchart-view hidden" id="flowchartSection" tabindex="-1" aria-labelledby="flowchartSectionTitle">
       <h3 id="flowchartSectionTitle"><svg class="ui-icon sm" aria-hidden="true">
           <use href="#i-chart"></use>
-        </svg>Fluxograma Interativo</h3>
-      <p class="helper">Navegue por etapas para visualizar o caminho decisório de forma guiada.</p>
-      <div class="flowchart-frame-wrap">
-        <iframe id="flowchartFrame" class="flowchart-frame" src="fluxograma-decisao-interativo.html"
-          title="Fluxograma interativo de decisão para avaliação biopsicossocial no BPC" loading="lazy"
-          referrerpolicy="no-referrer"></iframe>
+        </svg>Fluxograma Decisório</h3>
+      <p class="helper">No celular, use as etapas para leitura guiada. No desktop, a visão geral permanece disponível.</p>
+
+      <nav class="flowchart-step-nav" id="flowchartStepNav" aria-label="Navegação por etapas do fluxograma">
+        <button type="button" class="is-active" data-flow-step-target="all" aria-pressed="true">Visão geral</button>
+        <button type="button" data-flow-step-target="1" aria-pressed="false">Etapa 1</button>
+        <button type="button" data-flow-step-target="2" aria-pressed="false">Etapa 2</button>
+        <button type="button" data-flow-step-target="3" aria-pressed="false">Etapa 3</button>
+        <button type="button" data-flow-step-target="4" aria-pressed="false">Etapa 4</button>
+        <button type="button" data-flow-step-target="5" aria-pressed="false">Etapa 5</button>
+        <button type="button" data-flow-step-target="6" aria-pressed="false">Etapa 6</button>
+      </nav>
+
+      <div class="flowchart-layout">
+        <article class="flowchart-overview" id="flowchartCanvas" aria-labelledby="flowchartOverviewTitle">
+          <h4 id="flowchartOverviewTitle">Visão geral do fluxo</h4>
+          <p class="flowchart-overview-helper">Diagrama completo para leitura panorâmica e validação rápida da trilha decisória.</p>
+          <div class="flowchart-overview-media-wrap">
+            <img class="flowchart-overview-media" src="fluxograma-controle-judicial-bpc.svg"
+              alt="Fluxograma completo de decisão para avaliação biopsicossocial no BPC" loading="lazy">
+          </div>
+          <a class="flowchart-overview-link" href="fluxograma-controle-judicial-bpc.svg" target="_blank"
+            rel="noopener noreferrer">Abrir visão geral ampliada (SVG)</a>
+        </article>
+
+        <div class="flowchart-mobile-list" id="flowchartMobileList" role="list" aria-label="Resumo guiado por etapas">
+          <article class="flow-step-card" id="etapa-1" data-flow-step="1" tabindex="-1" role="listitem">
+            <p class="flow-step-eyebrow">Etapa 1</p>
+            <h4>Impedimento de longo prazo (&gt; 2 anos)?</h4>
+            <p class="flow-step-body">Verifique na perícia se a condição é duradoura e produz limitação funcional contínua.</p>
+            <ul class="flow-step-branches">
+              <li><span class="flow-branch-tag yes">SIM</span><span>Prosseguir para a análise de Funções do Corpo.</span></li>
+              <li><span class="flow-branch-tag no">NÃO</span><span>Resultado imediato: <strong>INDEFERIDO</strong>.</span></li>
+            </ul>
+          </article>
+
+          <article class="flow-step-card" id="etapa-2" data-flow-step="2" tabindex="-1" role="listitem">
+            <p class="flow-step-eyebrow">Etapa 2</p>
+            <h4>Qualificador de Funções do Corpo</h4>
+            <p class="flow-step-body">Considere o maior valor entre b1-b8 e aplique majoração quando houver prognóstico desfavorável ou Estrutura &gt; Função.</p>
+            <ul class="flow-step-branches">
+              <li><span class="flow-branch-tag yes">≥ M</span><span>Prosseguir para Atividades e Participação.</span></li>
+              <li><span class="flow-branch-tag no">N/L</span><span>Resultado imediato: <strong>INDEFERIDO</strong> (Regra 2).</span></li>
+            </ul>
+          </article>
+
+          <article class="flow-step-card" id="etapa-3" data-flow-step="3" tabindex="-1" role="listitem">
+            <p class="flow-step-eyebrow">Etapa 3</p>
+            <h4>Qualificador de Atividades e Participação</h4>
+            <p class="flow-step-body">Avalie d1-d5 (médico) e d6-d9 (social). Sem avaliação social, use o padrão médio apenas como referência de cálculo.</p>
+            <ul class="flow-step-branches">
+              <li><span class="flow-branch-tag yes">≥ M</span><span>Prosseguir para cruzamento na Tabela Conclusiva.</span></li>
+              <li><span class="flow-branch-tag no">N/L</span><span>Resultado imediato: <strong>INDEFERIDO</strong> (Regra 1).</span></li>
+            </ul>
+          </article>
+
+          <article class="flow-step-card" id="etapa-4" data-flow-step="4" tabindex="-1" role="listitem">
+            <p class="flow-step-eyebrow">Etapa 4</p>
+            <h4>Cruzamento na Tabela Conclusiva</h4>
+            <p class="flow-step-body">Com Funções e Atividades em moderada ou superior, verifique os cruzamentos com decisão direta.</p>
+            <ul class="flow-step-branches">
+              <li><span class="flow-branch-tag yes">G/C em ambos</span><span><strong>DEFERIDO</strong> imediato.</span></li>
+              <li><span class="flow-branch-tag yes">Combos M-G/G-M</span><span><strong>DEFERIDO</strong> com padrão médio suficiente.</span></li>
+              <li><span class="flow-branch-tag next">M-M</span><span>Prosseguir para exceção ambiental.</span></li>
+            </ul>
+          </article>
+
+          <article class="flow-step-card" id="etapa-5" data-flow-step="5" tabindex="-1" role="listitem">
+            <p class="flow-step-eyebrow">Etapa 5</p>
+            <h4>Exceção Moderada-Moderada (M-M)</h4>
+            <p class="flow-step-body">Quando Funções e Atividades ficam em M, os Fatores Ambientais passam a decidir o desfecho.</p>
+            <ul class="flow-step-branches">
+              <li><span class="flow-branch-tag next">Regra</span><span>Necessária avaliação social real; padrão médio isolado é insuficiente.</span></li>
+            </ul>
+          </article>
+
+          <article class="flow-step-card" id="etapa-6" data-flow-step="6" tabindex="-1" role="listitem">
+            <p class="flow-step-eyebrow">Etapa 6</p>
+            <h4>Fatores Ambientais (e1-e5)</h4>
+            <p class="flow-step-body">Feche a análise da exceção M-M com o qualificador ambiental final.</p>
+            <ul class="flow-step-branches">
+              <li><span class="flow-branch-tag yes">Amb ≥ G</span><span>Resultado: <strong>DEFERIDO</strong>.</span></li>
+              <li><span class="flow-branch-tag no">Amb &lt; G</span><span>Resultado: <strong>INDEFERIDO</strong>.</span></li>
+            </ul>
+          </article>
+        </div>
       </div>
     </section>
 

@@ -43,7 +43,6 @@ function resolvePath(urlPathname) {
 
   const ALLOWED_FILES = [
     '/index.html',
-    '/fluxograma-controle-judicial.html',
     '/fluxograma-controle-judicial-bpc.svg'
   ];
   const ALLOWED_DIRS = [
