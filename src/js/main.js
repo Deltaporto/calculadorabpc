@@ -1018,14 +1018,36 @@ function scrollToJudicialControlSection() {
   });
 }
 
+function scrollToFlowchartSection() {
+  const section = document.getElementById('flowchartSection');
+  if (!section) return;
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      section.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+      section.focus({ preventScroll: true });
+    });
+  });
+}
+
 function renderModeVisibility(options = {}) {
   const app = document.querySelector('.app');
   const details = document.getElementById('simuladorDetails');
   const textoSection = document.getElementById('textoSection');
-  app.classList.toggle('mode-simulador', uiMode === 'simulador');
-  app.classList.toggle('mode-controle', uiMode === 'controle');
-  textoSection.classList.toggle('hidden', uiMode !== 'simulador');
-  if (uiMode === 'simulador') {
+  const flowchartSection = document.getElementById('flowchartSection');
+  const isSimulador = uiMode === 'simulador';
+  const isControle = uiMode === 'controle';
+  const isFluxograma = uiMode === 'fluxograma';
+
+  app.classList.toggle('mode-simulador', isSimulador);
+  app.classList.toggle('mode-controle', isControle);
+  app.classList.toggle('mode-fluxograma', isFluxograma);
+  textoSection.classList.toggle('hidden', !isSimulador);
+  if (flowchartSection) {
+    flowchartSection.classList.toggle('hidden', !isFluxograma);
+  }
+
+  if (isSimulador) {
     details.open = true;
   } else if (!options.preserveAccordionState) {
     details.open = false;
@@ -1034,16 +1056,18 @@ function renderModeVisibility(options = {}) {
 }
 
 function setUIMode(mode, options = {}) {
-  if (!['simulador', 'controle'].includes(mode)) return;
+  if (!['simulador', 'controle', 'fluxograma'].includes(mode)) return;
   if (uiMode === mode) {
     renderModeVisibility({ preserveAccordionState: true, ...options });
     if (mode === 'controle' && options.scrollToJudicial) scrollToJudicialControlSection();
+    if (mode === 'fluxograma' && options.scrollToFlowchart) scrollToFlowchartSection();
     return;
   }
   uiMode = mode;
   renderModeVisibility(options);
   if (mode === 'simulador') renderStandardText();
   if (mode === 'controle' && options.scrollToJudicial) scrollToJudicialControlSection();
+  if (mode === 'fluxograma' && options.scrollToFlowchart) scrollToFlowchartSection();
 }
 
 function getActiveJudicialStep() {
@@ -1750,7 +1774,7 @@ async function copyStandardText(event) {
 }
 
 function handleModeSwitcherClick(mode) {
-  setUIMode(mode, { scrollToJudicial: mode === 'controle' });
+  setUIMode(mode, { scrollToJudicial: mode === 'controle', scrollToFlowchart: mode === 'fluxograma' });
 }
 
 function getPortariaSource(sourceKey = DEFAULT_PORTARIA_SOURCE_KEY) {

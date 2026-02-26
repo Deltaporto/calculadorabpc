@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Caminho Cognitivo do Magistrado - Fluxo BPC</title>
+  <link rel="icon" href="data:,">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Source+Sans+3:wght@400;600;700&display=swap');
+
+    :root {
+      --c-primary: #1b2a4a;
+      --c-primary-soft: #2d4a7a;
+      --c-yes: #2e7d32;
+      --c-no: #c62828;
+      --c-gold: #d4a843;
+      --c-muted: #5f6f84;
+      --c-panel: #ffffff;
+      --c-panel-line: #d7e0ea;
+      --shadow-md: 0 10px 28px rgba(27, 42, 74, 0.12);
+      --shadow-sm: 0 3px 12px rgba(27, 42, 74, 0.12);
+      --radius-sm: 10px;
+      --flow-width: 1300px;
+      --flow-height: 1900px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+      color: var(--c-primary);
+      background:
+        radial-gradient(circle at 8% 0%, #f9fcff 0%, #edf3f8 38%, #f5f7fa 100%);
+    }
+
+    .page {
+      max-width: 1520px;
+      margin: 0 auto;
+      padding: clamp(20px, 3vw, 42px);
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    .title {
+      font-family: 'Merriweather', Georgia, serif;
+      font-size: clamp(1.8rem, 2.8vw, 2.3rem);
+      font-weight: 700;
+      color: var(--c-primary);
+      letter-spacing: 0.01em;
+    }
+
+    .subtitle {
+      margin-top: 4px;
+      font-size: clamp(1rem, 1.5vw, 1.06rem);
+      color: var(--c-muted);
+      font-style: italic;
+    }
+
+    .gold-bar {
+      width: 220px;
+      height: 3px;
+      background: linear-gradient(90deg, #be9336 0%, #e1bc63 50%, #be9336 100%);
+      margin: 16px auto 14px;
+      border-radius: 999px;
+    }
+
+    .hint {
+      text-align: center;
+      color: #516277;
+      font-size: 0.96rem;
+      margin-bottom: 16px;
+      line-height: 1.35;
+    }
+
+    .step-nav {
+      position: sticky;
+      top: 8px;
+      z-index: 20;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 0 auto 16px;
+      max-width: 940px;
+      padding: 10px 12px;
+      background: rgba(244, 248, 252, 0.9);
+      border: 1px solid #cfd9e7;
+      border-radius: 16px;
+      backdrop-filter: blur(6px);
+    }
+
+    .step-nav button {
+      border: 1px solid #bdc8d6;
+      background: #f8fbff;
+      color: var(--c-primary);
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease, color 0.18s ease;
+    }
+
+    .step-nav button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(27, 42, 74, 0.12);
+      background: #f0f6ff;
+    }
+
+    .step-nav button.is-active {
+      background: var(--c-primary);
+      border-color: var(--c-primary);
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(27, 42, 74, 0.25);
+    }
+
+    .step-nav button:focus-visible {
+      outline: 3px solid #8bb8ff;
+      outline-offset: 2px;
+    }
+
+    .flow-shell {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid var(--c-panel-line);
+      border-radius: 18px;
+      box-shadow: var(--shadow-md);
+      padding: clamp(10px, 1.3vw, 18px);
+      overflow: auto;
+      overscroll-behavior: contain;
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: #93a9c2 #edf3fa;
+      height: min(82vh, 1180px);
+      max-height: min(82vh, 1180px);
+      cursor: grab;
+      touch-action: pan-x pan-y;
+    }
+
+    .flow-shell::-webkit-scrollbar {
+      height: 12px;
+      width: 12px;
+    }
+
+    .flow-shell::-webkit-scrollbar-thumb {
+      background: #93a9c2;
+      border-radius: 999px;
+      border: 2px solid #edf3fa;
+    }
+
+    .flow-shell::-webkit-scrollbar-track {
+      background: #edf3fa;
+    }
+
+    .flow-shell.is-dragging {
+      cursor: grabbing;
+    }
+
+    .flow-stage {
+      width: var(--flow-width);
+      min-width: var(--flow-width);
+      height: var(--flow-height);
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .flow {
+      position: relative;
+      width: var(--flow-width);
+      height: var(--flow-height);
+    }
+
+    .node {
+      position: absolute;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 12px 16px;
+      font-size: 13px;
+      line-height: 1.35;
+      box-shadow: var(--shadow-sm);
+      transition: opacity 0.22s ease, filter 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
+      will-change: opacity, transform;
+    }
+
+    .node-start {
+      background: linear-gradient(135deg, var(--c-primary), var(--c-primary-soft));
+      color: white;
+      font-weight: 700;
+      font-size: 15px;
+      border-radius: 50%;
+      width: 130px;
+      height: 130px;
+      border: 3px solid rgba(255, 255, 255, 0.7);
+    }
+
+    .node-decision {
+      background: #fff8e7;
+      border: 2px solid var(--c-gold);
+      border-radius: 8px;
+    }
+
+    .node-decision .label {
+      font-weight: 700;
+      color: var(--c-primary);
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .node-decision .desc {
+      font-size: 12px;
+      color: var(--c-muted);
+    }
+
+    .node-action {
+      background: #e8eef6;
+      border: 2px solid var(--c-primary-soft);
+      border-radius: 8px;
+    }
+
+    .node-action .label {
+      font-weight: 700;
+      color: var(--c-primary);
+      font-size: 14px;
+    }
+
+    .node-action .desc {
+      font-size: 12px;
+      color: var(--c-muted);
+      margin-top: 3px;
+    }
+
+    .node-result-yes {
+      background: linear-gradient(135deg, #2e7d32, #4caf50);
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(46, 125, 50, 0.28);
+    }
+
+    .node-result-no {
+      background: linear-gradient(135deg, #c62828, #e53935);
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(198, 40, 40, 0.28);
+    }
+
+    .node-result-yes .sub,
+    .node-result-no .sub {
+      font-size: 12px;
+      font-weight: 400;
+      opacity: 0.92;
+      margin-top: 3px;
+    }
+
+    .node-info {
+      background: #f4f6fa;
+      border: 1px dashed #7a8797;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #5c6a7e;
+    }
+
+    .node-padrao {
+      background: linear-gradient(135deg, #d4a843, #e8c874);
+      color: var(--c-primary);
+      font-weight: 600;
+      font-size: 12px;
+      border-radius: 20px;
+      box-shadow: 0 3px 10px rgba(212, 168, 67, 0.24);
+    }
+
+    svg.arrows {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: var(--flow-width);
+      height: var(--flow-height);
+      pointer-events: none;
+    }
+
+    .arrow,
+    .arrow-yes,
+    .arrow-no,
+    .arrow-gold,
+    .arrow-note {
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    .arrow {
+      stroke: var(--c-primary);
+      stroke-width: 2;
+    }
+
+    .arrow-yes {
+      stroke: var(--c-yes);
+      stroke-width: 2.5;
+    }
+
+    .arrow-no {
+      stroke: var(--c-no);
+      stroke-width: 2.5;
+    }
+
+    .arrow-gold {
+      stroke: var(--c-gold);
+      stroke-width: 2;
+      stroke-dasharray: 6 3;
+    }
+
+    .arrow-note {
+      stroke: #6b7b8d;
+      stroke-width: 1;
+      stroke-dasharray: 4 2;
+    }
+
+    .arrow-label {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .step-badge {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      background: var(--c-primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      transition: opacity 0.22s ease, filter 0.22s ease, transform 0.22s ease;
+      will-change: opacity, transform;
+    }
+
+    .legend {
+      position: absolute;
+      bottom: 40px;
+      left: 0;
+      display: flex;
+      gap: 30px;
+      font-size: 12px;
+      color: var(--c-muted);
+      align-items: center;
+      flex-wrap: wrap;
+      max-width: 1240px;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+      will-change: opacity, transform;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      flex: 0 0 auto;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 11px;
+      color: #6a7685;
+      border-top: 1px solid #d8e1eb;
+      padding-top: 8px;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+      will-change: opacity, transform;
+    }
+
+    .flow.has-focus [data-step] {
+      opacity: 0.72;
+      filter: saturate(0.88);
+    }
+
+    .flow.has-focus [data-step].is-active {
+      opacity: 1;
+      filter: saturate(1);
+    }
+
+    .flow.has-focus .node[data-step].is-active,
+    .flow.has-focus .step-badge[data-step].is-active {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(27, 42, 74, 0.24);
+    }
+
+    .flow.has-focus .node[data-step].is-active {
+      outline: 3px solid rgba(27, 42, 74, 0.22);
+      outline-offset: 2px;
+    }
+
+    body:not(.is-ready) .node,
+    body:not(.is-ready) .step-badge,
+    body:not(.is-ready) .arrow-label,
+    body:not(.is-ready) .legend,
+    body:not(.is-ready) .footer {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    body.is-ready .node,
+    body.is-ready .step-badge,
+    body.is-ready .arrow-label,
+    body.is-ready .legend,
+    body.is-ready .footer {
+      animation: rise-in 420ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+      animation-delay: calc(var(--delay, 0) * 36ms);
+    }
+
+    body.is-ready .arrows .arrow,
+    body.is-ready .arrows .arrow-yes,
+    body.is-ready .arrows .arrow-no {
+      animation: draw-stroke 560ms ease-out forwards;
+      animation-delay: calc(var(--draw-delay, 0) * 24ms);
+    }
+
+    @keyframes rise-in {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes draw-stroke {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .page {
+        padding: 12px;
+      }
+
+      .hint {
+        text-align: left;
+        font-size: 0.92rem;
+      }
+
+      .step-nav {
+        top: 4px;
+        padding: 8px;
+        border-radius: 14px;
+      }
+
+      .step-nav button {
+        padding: 7px 12px;
+        font-size: 0.84rem;
+      }
+
+      .flow-shell {
+        height: 74vh;
+        max-height: 74vh;
+        border-radius: 14px;
+      }
+    }
+
+    @media (pointer: coarse) {
+      .flow-shell {
+        cursor: auto;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition-duration: 0.01ms !important;
+        transition-delay: 0ms !important;
+        scroll-behavior: auto !important;
+      }
+
+      body:not(.is-ready) .node,
+      body:not(.is-ready) .step-badge,
+      body:not(.is-ready) .arrow-label,
+      body:not(.is-ready) .legend,
+      body:not(.is-ready) .footer {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <header class="hero">
+      <h1 class="title">Caminho Cognitivo do Magistrado</h1>
+      <p class="subtitle">Fluxo de decisão para avaliação biopsicossocial no BPC</p>
+      <div class="gold-bar" aria-hidden="true"></div>
+      <p class="hint">Navegue por etapa para destacar o trecho correspondente. Role dentro do quadro do diagrama e, em telas pequenas, arraste para os lados.</p>
+    </header>
+
+    <nav class="step-nav" aria-label="Navegação por etapas" aria-controls="fluxograma">
+      <button type="button" data-step-target="all" class="is-active" aria-pressed="true">Visão geral</button>
+      <button type="button" data-step-target="1" aria-pressed="false">Etapa 1</button>
+      <button type="button" data-step-target="2" aria-pressed="false">Etapa 2</button>
+      <button type="button" data-step-target="3" aria-pressed="false">Etapa 3</button>
+      <button type="button" data-step-target="4" aria-pressed="false">Etapa 4</button>
+      <button type="button" data-step-target="5" aria-pressed="false">Etapa 5</button>
+      <button type="button" data-step-target="6" aria-pressed="false">Etapa 6</button>
+    </nav>
+
+    <section class="flow-shell" id="flow-shell" tabindex="0" aria-label="Fluxograma de decisão BPC">
+      <div class="flow-stage" id="fluxograma" role="region" aria-label="Fluxograma interativo de decisão">
+        <div class="flow">
+          <svg class="arrows" aria-hidden="true" focusable="false">
+            <defs>
+              <marker id="ah" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#1b2a4a" />
+              </marker>
+              <marker id="ah-yes" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#2e7d32" />
+              </marker>
+              <marker id="ah-no" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#c62828" />
+              </marker>
+              <marker id="ah-gold" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#d4a843" />
+              </marker>
+            </defs>
+
+            <line x1="650" y1="100" x2="650" y2="145" class="arrow" data-step="1" marker-end="url(#ah)" />
+
+            <line x1="650" y1="225" x2="650" y2="290" class="arrow-yes" data-step="1" marker-end="url(#ah-yes)" />
+            <text x="665" y="265" class="arrow-label" data-step="1" fill="#2e7d32">SIM</text>
+
+            <line x1="840" y1="185" x2="1050" y2="185" class="arrow-no" data-step="1" marker-end="url(#ah-no)" />
+            <text x="910" y="178" class="arrow-label" data-step="1" fill="#c62828">NÃO</text>
+
+            <line x1="460" y1="360" x2="280" y2="360" class="arrow-gold" data-step="2" marker-end="url(#ah-gold)" />
+
+            <line x1="650" y1="400" x2="650" y2="445" class="arrow" data-step="2" marker-end="url(#ah)" />
+
+            <line x1="650" y1="525" x2="650" y2="585" class="arrow-yes" data-step="2" marker-end="url(#ah-yes)" />
+            <text x="665" y="560" class="arrow-label" data-step="2" fill="#2e7d32">≥ M</text>
+
+            <line x1="840" y1="485" x2="1050" y2="485" class="arrow-no" data-step="2" marker-end="url(#ah-no)" />
+            <text x="910" y="478" class="arrow-label" data-step="2" fill="#c62828">N ou L</text>
+
+            <line x1="650" y1="665" x2="650" y2="720" class="arrow" data-step="3" marker-end="url(#ah)" />
+
+            <line x1="840" y1="760" x2="1050" y2="760" class="arrow-no" data-step="3" marker-end="url(#ah-no)" />
+            <text x="910" y="753" class="arrow-label" data-step="3" fill="#c62828">N ou L</text>
+
+            <line x1="650" y1="800" x2="650" y2="878" class="arrow-yes" data-step="3" marker-end="url(#ah-yes)" />
+            <text x="665" y="850" class="arrow-label" data-step="3" fill="#2e7d32">≥ M</text>
+
+            <polyline points="460,930 130,930 130,1070" class="arrow-yes" data-step="4" marker-end="url(#ah-yes)" />
+            <text x="220" y="922" class="arrow-label" data-step="4" fill="#2e7d32">Ambos G ou C</text>
+
+            <line x1="650" y1="970" x2="650" y2="1058" class="arrow" data-step="4 5" marker-end="url(#ah)" />
+            <text x="665" y="1020" class="arrow-label" data-step="4 5" fill="#1b2a4a">M em ambos?</text>
+
+            <polyline points="840,930 1100,930 1100,1070" class="arrow-yes" data-step="4" marker-end="url(#ah-yes)" />
+            <text x="880" y="922" class="arrow-label" data-step="4" fill="#2e7d32">M-G, G-M etc.</text>
+
+            <line x1="650" y1="1150" x2="650" y2="1253" class="arrow" data-step="5" marker-end="url(#ah)" />
+
+            <line x1="460" y1="1110" x2="255" y2="1110" class="arrow-gold" data-step="5" marker-end="url(#ah-gold)" />
+
+            <line x1="650" y1="1340" x2="650" y2="1418" class="arrow" data-step="6" marker-end="url(#ah)" />
+
+            <polyline points="460,1460 130,1460 130,1570" class="arrow-yes" data-step="6" marker-end="url(#ah-yes)" />
+            <text x="220" y="1453" class="arrow-label" data-step="6" fill="#2e7d32">≥ G</text>
+
+            <polyline points="840,1460 1100,1460 1100,1570" class="arrow-no" data-step="6" marker-end="url(#ah-no)" />
+            <text x="930" y="1453" class="arrow-label" data-step="6" fill="#c62828">&lt; G</text>
+
+            <line x1="1100" y1="220" x2="1100" y2="485" class="arrow-note" data-step="2" />
+            <line x1="1100" y1="520" x2="1100" y2="760" class="arrow-note" data-step="3" />
+          </svg>
+
+          <div class="node node-start" style="left:585px; top:20px;" data-step="1">
+            PROCESSO<br>BPC
+          </div>
+
+          <div class="step-badge" style="left:428px; top:148px;" data-step="1">1</div>
+          <div class="step-badge" style="left:428px; top:298px;" data-step="2">2</div>
+          <div class="step-badge" style="left:428px; top:590px;" data-step="3">3</div>
+          <div class="step-badge" style="left:428px; top:885px;" data-step="4">4</div>
+          <div class="step-badge" style="left:428px; top:1065px;" data-step="5">5</div>
+          <div class="step-badge" style="left:428px; top:1255px;" data-step="6">6</div>
+
+          <div class="node node-decision" id="etapa-1" tabindex="-1" data-step="1"
+            style="left:460px; top:148px; width:380px; height:75px;">
+            <div class="label">Impedimento de longo prazo (&gt; 2 anos)?</div>
+            <div class="desc">Verificar na perícia: duração esperada da condição</div>
+          </div>
+
+          <div class="node node-result-no" style="left:1050px; top:155px; width:180px; height:60px;" data-step="1">
+            INDEFERIDO
+            <div class="sub">Sem impedimento LP</div>
+          </div>
+
+          <div class="node node-action" id="etapa-2" tabindex="-1" data-step="2"
+            style="left:460px; top:295px; width:380px; height:105px;">
+            <div class="label">Avaliar Funções do Corpo (b1-b8)</div>
+            <div class="desc">
+              Maior valor entre os 8 domínios<br>
+              Verificar majoração: prognóstico desfavorável<br>
+              ou Estrutura &gt; Função -> +1 nível
+            </div>
+          </div>
+
+          <div class="node node-padrao" style="left:60px; top:330px; width:210px; height:60px;" data-step="2">
+            Majoração<br>
+            Prog. desfav. ou Estrutura &gt; Função
+          </div>
+
+          <div class="node node-decision" style="left:460px; top:448px; width:380px; height:75px;" data-step="2">
+            <div class="label">Qualificador Funções do Corpo?</div>
+            <div class="desc">N ou L = sempre indeferido (Regra 2)</div>
+          </div>
+
+          <div class="node node-result-no" style="left:1050px; top:455px; width:180px; height:60px;" data-step="2">
+            INDEFERIDO
+            <div class="sub">Regra 2: Func N/L</div>
+          </div>
+
+          <div class="node node-info" style="left:1060px; top:260px; width:170px; height:55px;" data-step="2">
+            Dispensa avaliação<br>social se Func = N/L
+          </div>
+
+          <div class="node node-action" id="etapa-3" tabindex="-1" data-step="3"
+            style="left:460px; top:588px; width:380px; height:80px;">
+            <div class="label">Avaliar Atividades e Participação (d1-d9)</div>
+            <div class="desc">
+              d1-d5 = perito médico | d6-d9 = assist. social<br>
+              Sem aval. social? -> Usar padrão médio (d6=3, d7=2, d8=3, d9=3)
+            </div>
+          </div>
+
+          <div class="node node-decision" style="left:460px; top:723px; width:380px; height:75px;" data-step="3">
+            <div class="label">Qualificador Atividades?</div>
+            <div class="desc">N ou L = sempre indeferido (Regra 1)</div>
+          </div>
+
+          <div class="node node-result-no" style="left:1050px; top:730px; width:180px; height:60px;" data-step="3">
+            INDEFERIDO
+            <div class="sub">Regra 1: Ativ N/L</div>
+          </div>
+
+          <div class="node node-info" style="left:1060px; top:560px; width:170px; height:55px;" data-step="3">
+            Dispensa avaliação<br>social se Ativ = N/L
+          </div>
+
+          <div class="node node-action" id="etapa-4" tabindex="-1" data-step="4"
+            style="left:460px; top:880px; width:380px; height:90px;">
+            <div class="label">Cruzar na Tabela Conclusiva</div>
+            <div class="desc">
+              Func ≥ M + Ativ ≥ M<br>
+              Se ambos G ou C -> DEFERIDO direto<br>
+              Se M-G, G-M -> DEFERIDO (padrão médio basta)
+            </div>
+          </div>
+
+          <div class="node node-result-yes" style="left:50px; top:1070px; width:180px; height:60px;" data-step="4">
+            DEFERIDO
+            <div class="sub">Ambos G/C</div>
+          </div>
+
+          <div class="node node-result-yes" style="left:1020px; top:1070px; width:180px; height:60px;" data-step="4">
+            DEFERIDO
+            <div class="sub">Combos M-G, G-M etc.</div>
+          </div>
+
+          <div class="node node-decision" id="etapa-5" tabindex="-1" data-step="5"
+            style="left:460px; top:1060px; width:380px; height:90px;">
+            <div class="label">Exceção M-M</div>
+            <div class="desc">Ambos = Moderada -> Fatores Ambientais decidem<br>Única situação que exige avaliação social real
+            </div>
+          </div>
+
+          <div class="node node-padrao" style="left:40px; top:1180px; width:210px; height:55px;" data-step="5">
+            Padrão médio social<br>
+            Amb = M (44,9%) - insuficiente
+          </div>
+
+          <div class="node node-action" id="etapa-6" tabindex="-1" data-step="6"
+            style="left:460px; top:1255px; width:380px; height:85px;">
+            <div class="label">Avaliar Fatores Ambientais (e1-e5)</div>
+            <div class="desc">
+              Avaliação social INDISPENSÁVEL neste cenário<br>
+              Padrão médio insuficiente (Amb = M pelo padrão)
+            </div>
+          </div>
+
+          <div class="node node-decision" style="left:460px; top:1420px; width:380px; height:80px;" data-step="6">
+            <div class="label">Qualificador Fatores Ambientais?</div>
+            <div class="desc">Amb ≥ G -> DEFERE | Amb &lt; G -> INDEFERE</div>
+          </div>
+
+          <div class="node node-result-yes" style="left:40px; top:1570px; width:210px; height:70px;" data-step="6">
+            DEFERIDO
+            <div class="sub">M-M + Amb ≥ G</div>
+          </div>
+
+          <div class="node node-result-no" style="left:1010px; top:1570px; width:210px; height:70px;" data-step="6">
+            INDEFERIDO
+            <div class="sub">M-M + Amb &lt; G (M-M-M)</div>
+          </div>
+
+          <div class="legend">
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#e8eef6; border:2px solid #2d4a7a;"></div> Etapa de análise
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#fff8e7; border:2px solid #d4a843;"></div> Decisão
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#4caf50;"></div> Deferido
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#e53935;"></div> Indeferido
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:linear-gradient(135deg,#d4a843,#e8c874);"></div> Padrão médio /
+              Majoração
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#f4f6fa; border:1px dashed #6b7b8d;"></div> Observação
+            </div>
+          </div>
+
+          <div class="footer">
+            Avaliação Biopsicossocial no BPC - Guia para Magistrados Federais | Gabinete 3 - 2ª Turma Recursal SJRJ |
+            Port. 2/2015 + Port. 34/2025
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var flow = document.querySelector('.flow');
+      var flowShell = document.getElementById('flow-shell');
+      var flowStage = document.getElementById('fluxograma');
+      var buttons = Array.prototype.slice.call(document.querySelectorAll('.step-nav button[data-step-target]'));
+      var stepItems = Array.prototype.slice.call(document.querySelectorAll('.flow [data-step]'));
+      var animatedItems = Array.prototype.slice.call(document.querySelectorAll('.flow .node, .flow .step-badge, .flow .arrow-label, .flow .legend, .flow .footer'));
+      var strokeItems = Array.prototype.slice.call(document.querySelectorAll('.arrows .arrow, .arrows .arrow-yes, .arrows .arrow-no'));
+      var reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      var prefersReducedMotion = reduceMotionQuery.matches;
+      var currentStep = 'all';
+
+      function splitSteps(value) {
+        return (value || '').trim().split(/\s+/).filter(Boolean);
+      }
+
+      function isMatch(el, targetStep) {
+        return splitSteps(el.getAttribute('data-step')).indexOf(targetStep) !== -1;
+      }
+
+      function clamp(value, min, max) {
+        return Math.min(max, Math.max(min, value));
+      }
+
+      function centerOverview() {
+        var maxLeft = Math.max(0, flowStage.scrollWidth - flowShell.clientWidth);
+        var left = clamp((flowStage.scrollWidth - flowShell.clientWidth) / 2, 0, maxLeft);
+        flowShell.scrollTo({
+          left: left,
+          top: 0,
+          behavior: prefersReducedMotion ? 'auto' : 'smooth'
+        });
+      }
+
+      function centerTarget(target) {
+        var maxLeft = Math.max(0, flowStage.scrollWidth - flowShell.clientWidth);
+        var maxTop = Math.max(0, flowStage.scrollHeight - flowShell.clientHeight);
+        var left = clamp(target.offsetLeft - ((flowShell.clientWidth - target.offsetWidth) / 2), 0, maxLeft);
+        var top = clamp(target.offsetTop - ((flowShell.clientHeight - target.offsetHeight) / 2), 0, maxTop);
+        flowShell.scrollTo({
+          left: left,
+          top: top,
+          behavior: prefersReducedMotion ? 'auto' : 'smooth'
+        });
+      }
+
+      function setActiveStep(step, updateHash) {
+        var isAll = step === 'all';
+        currentStep = step;
+
+        flow.classList.toggle('has-focus', !isAll);
+
+        stepItems.forEach(function (item) {
+          var active = !isAll && isMatch(item, step);
+          item.classList.toggle('is-active', active);
+        });
+
+        buttons.forEach(function (button) {
+          var active = button.getAttribute('data-step-target') === step;
+          button.classList.toggle('is-active', active);
+          button.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+
+        if (updateHash) {
+          if (isAll) {
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+          } else {
+            history.replaceState(null, '', '#etapa-' + step);
+          }
+        }
+
+        if (isAll) {
+          centerOverview();
+          return;
+        }
+
+        var target = document.getElementById('etapa-' + step);
+        if (target) {
+          target.focus({ preventScroll: true });
+          centerTarget(target);
+        }
+      }
+
+      buttons.forEach(function (button) {
+        button.addEventListener('click', function () {
+          setActiveStep(button.getAttribute('data-step-target'), true);
+        });
+      });
+
+      function syncFromHash() {
+        var match = window.location.hash.match(/^#etapa-([1-6])$/);
+        if (match) {
+          setActiveStep(match[1], false);
+        } else {
+          if (window.innerWidth <= 900) {
+            setActiveStep('1', false);
+          } else {
+            setActiveStep('all', false);
+          }
+        }
+      }
+
+      window.addEventListener('hashchange', syncFromHash);
+
+      if (typeof reduceMotionQuery.addEventListener === 'function') {
+        reduceMotionQuery.addEventListener('change', function (event) {
+          prefersReducedMotion = event.matches;
+        });
+      }
+
+      var dragState = null;
+
+      flowShell.addEventListener('pointerdown', function (event) {
+        if (event.pointerType !== 'mouse' || event.button !== 0) {
+          return;
+        }
+        dragState = {
+          id: event.pointerId,
+          startX: event.clientX,
+          startY: event.clientY,
+          left: flowShell.scrollLeft,
+          top: flowShell.scrollTop
+        };
+        flowShell.classList.add('is-dragging');
+        flowShell.setPointerCapture(event.pointerId);
+      });
+
+      flowShell.addEventListener('pointermove', function (event) {
+        if (!dragState || event.pointerId !== dragState.id) {
+          return;
+        }
+        flowShell.scrollLeft = dragState.left - (event.clientX - dragState.startX);
+        flowShell.scrollTop = dragState.top - (event.clientY - dragState.startY);
+      });
+
+      function endDrag(event) {
+        if (!dragState || (event && event.pointerId !== dragState.id)) {
+          return;
+        }
+        if (event && flowShell.hasPointerCapture(event.pointerId)) {
+          flowShell.releasePointerCapture(event.pointerId);
+        }
+        flowShell.classList.remove('is-dragging');
+        dragState = null;
+      }
+
+      flowShell.addEventListener('pointerup', endDrag);
+      flowShell.addEventListener('pointercancel', endDrag);
+
+      animatedItems.forEach(function (item, index) {
+        item.style.setProperty('--delay', String(Math.min(index, 12)));
+      });
+
+      strokeItems.forEach(function (stroke, index) {
+        var length = 1;
+        if (typeof stroke.getTotalLength === 'function') {
+          try {
+            length = stroke.getTotalLength();
+          } catch (error) {
+            length = 1;
+          }
+        }
+        stroke.style.setProperty('stroke-dasharray', String(length));
+        stroke.style.setProperty('stroke-dashoffset', String(length));
+        stroke.style.setProperty('--draw-delay', String(Math.min(index, 14)));
+      });
+
+      syncFromHash();
+
+      window.addEventListener('resize', function () {
+        if (currentStep === 'all') {
+          centerOverview();
+        } else {
+          var target = document.getElementById('etapa-' + currentStep);
+          if (target) {
+            centerTarget(target);
+          }
+        }
+      });
+
+      requestAnimationFrame(function () {
+        document.body.classList.add('is-ready');
+      });
+    })();
+  </script>
+</body>
+
+</html>

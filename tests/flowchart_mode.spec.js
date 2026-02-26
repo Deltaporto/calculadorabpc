@@ -1,8 +1,7 @@
-// @ts-check
-const { test, expect } = require('@playwright/test');
-const fs = require('node:fs');
-const http = require('node:http');
-const path = require('node:path');
+import { test, expect } from '@playwright/test';
+import fs from 'node:fs';
+import http from 'node:http';
+import path from 'node:path';
 
 function getContentType(filePath) {
   if (filePath.endsWith('.html')) return 'text/html; charset=utf-8';
@@ -51,35 +50,29 @@ async function startStaticServer(rootDir) {
   };
 }
 
-test.describe('Focus Management', () => {
-  test('focus moves to Judicial Control section when switching from Simulator via "Levar para Controle"', async ({ page }) => {
-    const rootDir = process.cwd();
-    const { server, url } = await startStaticServer(rootDir);
+test('switches to Fluxograma mode and keeps sections isolated', async ({ page }) => {
+  const rootDir = process.cwd();
+  const { server, url } = await startStaticServer(rootDir);
 
-    try {
-      await page.goto(`${url}/index.html`);
+  try {
+    await page.goto(`${url}/index.html`);
 
-      // Switch to Simulator mode
-      await page.click('button[data-mode="simulador"]');
+    await page.click('button[data-mode="fluxograma"]');
 
-      // Ensure we are in Simulator mode
-      const simulatorDetails = page.locator('#simuladorDetails');
-      await expect(simulatorDetails).toBeVisible();
+    const flowchartSection = page.locator('#flowchartSection');
+    await expect(flowchartSection).toBeVisible();
+    await expect(page.locator('#flowchartFrame')).toBeVisible();
+    await expect(page.locator('#judicialControlSection')).toBeHidden();
+    await expect(page.locator('#simuladorDetails')).toBeHidden();
 
-      // The button should now be visible
-      const btnLevar = page.locator('#btnLevarParaControle');
-      await expect(btnLevar).toBeVisible();
+    await expect.poll(async () => {
+      return page.evaluate(() => document.activeElement && document.activeElement.id);
+    }).toBe('flowchartSection');
 
-      await btnLevar.click();
-
-      // Expect Judicial Control section to be visible
-      const judicialSection = page.locator('#judicialControlSection');
-      await expect(judicialSection).toBeVisible();
-
-      // Verify focus is on the Judicial Control section
-      await expect(judicialSection).toBeFocused();
-    } finally {
-      await new Promise(resolve => server.close(resolve));
-    }
-  });
+    await page.click('button[data-mode="simulador"]');
+    await expect(page.locator('#simuladorDetails')).toBeVisible();
+    await expect(page.locator('#flowchartSection')).toBeHidden();
+  } finally {
+    await new Promise(resolve => server.close(resolve));
+  }
 });
