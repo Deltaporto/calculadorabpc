@@ -1550,7 +1550,7 @@ input:checked+.toggle-switch::after {
 
 .flowchart-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.18fr) minmax(0, .82fr);
+  grid-template-columns: minmax(0, 1.42fr) minmax(250px, .58fr);
   gap: 14px;
   align-items: start
 }
@@ -1705,6 +1705,71 @@ input:checked+.toggle-switch::after {
   opacity: 1;
   border-color: color-mix(in srgb, var(--blue) 42%, var(--border));
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--blue) 20%, transparent), 0 10px 18px rgba(37, 99, 235, .14)
+}
+
+@media (min-width:941px) {
+  .flowchart-layout {
+    gap: 10px;
+  }
+
+  .flowchart-overview {
+    padding: 10px;
+  }
+
+  .flowchart-overview-helper {
+    font-size: .72rem;
+    margin-bottom: 8px;
+  }
+
+  .flowchart-overview-link {
+    margin-top: 8px;
+    font-size: .76rem;
+  }
+
+  .flowchart-mobile-list {
+    max-height: min(78vh, 980px);
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    scrollbar-width: thin;
+    padding-right: 2px;
+  }
+
+  .flow-step-card {
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  .flow-step-eyebrow {
+    font-size: .68rem;
+  }
+
+  .flow-step-card h4 {
+    font-size: .9rem;
+    margin-bottom: 5px;
+  }
+
+  .flow-step-body {
+    font-size: .8rem;
+    line-height: 1.4;
+    margin-bottom: 7px;
+  }
+
+  .flow-step-branches li {
+    font-size: .8rem;
+    line-height: 1.35;
+  }
+
+  .flow-branch-tag {
+    min-height: 18px;
+    padding: 1px 6px;
+    font-size: .63rem;
+  }
+}
+
+@media (min-width:1280px) {
+  .flowchart-layout {
+    grid-template-columns: minmax(0, 1.58fr) minmax(230px, .42fr);
+  }
 }
 
 [data-theme="dark"] .flowchart-overview {
