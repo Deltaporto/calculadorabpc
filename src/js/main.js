@@ -150,13 +150,9 @@ function setDecisionIcon(name) {
   document.getElementById('decIcon').innerHTML = iconMarkup(name, 'ui-icon lg');
 }
 function getItemNumber(amb, ativ, corpo) {
-  // Items ordered: corpo C→N, for each corpo: ativ C→N, for each ativ: amb C→N
-  const corpoOrder = [4, 3, 2, 1, 0], ativOrder = [4, 3, 2, 1, 0], ambOrder = [4, 3, 2, 1, 0];
-  let n = 0;
-  for (const c of corpoOrder) for (const a of ativOrder) for (const e of ambOrder) {
-    n++; if (c === corpo && a === ativ && e === amb) return n;
-  }
-  return n;
+  // Formula derived from the loop structure (corpo 4->0, ativ 4->0, amb 4->0)
+  // Index (0-based) = (4 - corpo) * 25 + (4 - ativ) * 5 + (4 - amb)
+  return ((4 - corpo) * 25) + ((4 - ativ) * 5) + (4 - amb) + 1;
 }
 
 function renderSafeHTML(content) {
