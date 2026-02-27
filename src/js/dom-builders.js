@@ -1,19 +1,78 @@
 export function buildDomainRows(container, domains, labels, names, domainHelpKeys = {}) {
   const scale = document.createElement('div');
   scale.className = 'note-scale-row';
-  scale.innerHTML = `<div class="note-scale-spacer"></div>
-  <div class="note-scale">${labels.map(l => `<span>${l}</span>`).join('')}</div>`;
+
+  const spacer = document.createElement('div');
+  spacer.className = 'note-scale-spacer';
+  scale.appendChild(spacer);
+
+  const noteScale = document.createElement('div');
+  noteScale.className = 'note-scale';
+  labels.forEach(l => {
+    const span = document.createElement('span');
+    span.textContent = l;
+    noteScale.appendChild(span);
+  });
+  scale.appendChild(noteScale);
   container.appendChild(scale);
 
   domains.forEach(d => {
-    const helpKey = domainHelpKeys[d.id];
-    const helpButton = helpKey
-      ? `<button type="button" class="sim-help-btn domain-help-btn" data-help-key="${helpKey}" aria-label="Entender ${d.id.toUpperCase()} (${d.name})" aria-controls="simHelpPopover" aria-expanded="false">i</button>`
-      : '';
     const row = document.createElement('div');
     row.className = 'domain-row';
-    row.innerHTML = `<div class="domain-label"><span class="domain-code">${d.id}</span><span class="domain-name-wrap"><span class="domain-name">${d.name}</span>${helpButton}</span></div>
-  <div class="note-buttons" data-domain="${d.id}" role="group">${[0, 1, 2, 3, 4].map(v => `<button class="note-btn${v === 0 ? ' active' : ''}" data-value="${v}" aria-label="Nota ${v}: ${names[v]}" title="Nota ${v}: ${names[v]}" aria-pressed="${v === 0}" tabindex="${v === 0 ? '0' : '-1'}">${v}</button>`).join('')}</div>`;
+
+    // Domain Label Section
+    const labelDiv = document.createElement('div');
+    labelDiv.className = 'domain-label';
+
+    const codeSpan = document.createElement('span');
+    codeSpan.className = 'domain-code';
+    codeSpan.textContent = d.id;
+    labelDiv.appendChild(codeSpan);
+
+    const nameWrap = document.createElement('span');
+    nameWrap.className = 'domain-name-wrap';
+
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'domain-name';
+    nameSpan.textContent = d.name;
+    nameWrap.appendChild(nameSpan);
+
+    const helpKey = domainHelpKeys[d.id];
+    if (helpKey) {
+      const helpBtn = document.createElement('button');
+      helpBtn.type = 'button';
+      helpBtn.className = 'sim-help-btn domain-help-btn';
+      helpBtn.dataset.helpKey = helpKey;
+      helpBtn.setAttribute('aria-label', `Entender ${d.id.toUpperCase()} (${d.name})`);
+      helpBtn.setAttribute('aria-controls', 'simHelpPopover');
+      helpBtn.setAttribute('aria-expanded', 'false');
+      helpBtn.textContent = 'i';
+      nameWrap.appendChild(helpBtn);
+    }
+
+    labelDiv.appendChild(nameWrap);
+    row.appendChild(labelDiv);
+
+    // Note Buttons Section
+    const buttonsDiv = document.createElement('div');
+    buttonsDiv.className = 'note-buttons';
+    buttonsDiv.dataset.domain = d.id;
+    buttonsDiv.setAttribute('role', 'group');
+
+    [0, 1, 2, 3, 4].forEach(v => {
+      const btn = document.createElement('button');
+      btn.className = `note-btn${v === 0 ? ' active' : ''}`;
+      btn.dataset.value = String(v);
+      const labelText = `Nota ${v}: ${names[v]}`;
+      btn.setAttribute('aria-label', labelText);
+      btn.title = labelText;
+      btn.setAttribute('aria-pressed', v === 0 ? 'true' : 'false');
+      btn.tabIndex = v === 0 ? 0 : -1;
+      btn.textContent = String(v);
+      buttonsDiv.appendChild(btn);
+    });
+
+    row.appendChild(buttonsDiv);
     container.appendChild(row);
   });
 }
