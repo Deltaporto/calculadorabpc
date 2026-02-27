@@ -21,3 +21,7 @@
 ## 2025-05-23 - Accessibility for Dynamic Progress Indicators
 **Learning:** Progress bars implemented with `div` elements and CSS width updates are not perceivable by screen readers unless they have the appropriate `role="progressbar"` and `aria-valuenow` attributes.
 **Action:** When creating or updating custom progress bars, always ensure the element has `role="progressbar"`, `aria-valuemin`, `aria-valuemax`, and update `aria-valuenow` in sync with the visual change.
+
+## 2026-02-27 - Keyboard Focus on Checkbox Labels
+**Learning:** Custom toggle buttons implemented as a `label` containing a visually hidden or accent-colored `input[type="checkbox"]` may not show a clear focus outline when navigating via keyboard, rendering them inaccessible to keyboard users.
+**Action:** Use the CSS `:has()` pseudo-class (e.g., `label:has(input:focus-visible)`) to apply a visible outline to the entire label container when its child input receives focus.
