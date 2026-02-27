@@ -1978,6 +1978,11 @@ function initBackToTop() {
   window.addEventListener('scroll', toggleVisibility, { passive: true });
   btn.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    const header = document.querySelector('header h1');
+    if (header) {
+      header.setAttribute('tabindex', '-1');
+      header.focus({ preventScroll: true });
+    }
   });
 }
 
