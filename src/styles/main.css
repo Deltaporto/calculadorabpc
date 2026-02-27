@@ -4407,9 +4407,10 @@ footer {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: opacity .3s ease, transform .3s ease, background-color .2s;
+  transition: opacity .3s ease, transform .3s ease, background-color .2s, visibility 0s 0s;
   z-index: 9000;
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
 }
 
@@ -4426,8 +4427,10 @@ footer {
 
 .back-to-top.hidden {
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
   transform: translateY(10px);
+  transition: opacity .3s ease, transform .3s ease, background-color .2s, visibility 0s .3s;
 }
 
 .back-to-top .ui-icon {
