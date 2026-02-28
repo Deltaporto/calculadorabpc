@@ -308,7 +308,7 @@
             <p class="tabela-sensitivity-legend"><span class="dot-sensitivity" aria-hidden="true"></span> Realce
               discreto: ponto em que a variação de Fatores Ambientais altera o resultado.</p>
           </div>
-          <div class="decision indeferido" id="decision">
+          <div class="decision indeferido" id="decision" role="status" aria-live="polite">
             <div class="decision-icon" id="decIcon"><svg class="ui-icon lg" aria-hidden="true">
                 <use href="#i-alert"></use>
               </svg></div>
@@ -354,7 +354,7 @@
           <div class="comp-result" id="compPERr"></div>
         </div>
       </div>
-      <div class="comp-change" id="compChange"></div>
+      <div class="comp-change" id="compChange" role="status" aria-live="polite"></div>
     </div>
     <div class="judicial-control" id="judicialControlSection" tabindex="-1">
       <h3><svg class="ui-icon sm" aria-hidden="true">
@@ -792,7 +792,7 @@
             <span class="jc-step-guidance-text" id="jcTriagemGuidanceText">Conclua as etapas anteriores para liberar a
               triagem.</span>
           </div>
-          <div class="jc-status-badge pending" id="jcStatusBadge">Preencha as etapas 1 e 2 para liberar a conclusão
+          <div class="jc-status-badge pending" id="jcStatusBadge" role="status" aria-live="polite">Preencha as etapas 1 e 2 para liberar a conclusão
             probatória.</div>
           <div class="jc-trace" id="jcTrace"></div>
         </section>
