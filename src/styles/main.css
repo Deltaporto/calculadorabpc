@@ -340,6 +340,11 @@ header p {
   border: 1.5px solid #FECACA
 }
 
+.btn-red:hover {
+  background: #FECACA;
+  border-color: #FCA5A5;
+}
+
 .idade-input {
   display: inline-flex;
   align-items: center;
@@ -3308,8 +3313,18 @@ header .badge {
   background: linear-gradient(180deg, #fff8f8, #ffecec);
 }
 
+.btn-red:hover {
+  background: linear-gradient(180deg, #ffecec, #ffdfdf);
+  border-color: #d16b6b;
+}
+
 [data-theme="dark"] .btn-red {
   background: linear-gradient(180deg, #3b1d2a, #321825);
+}
+
+[data-theme="dark"] .btn-red:hover {
+  background: linear-gradient(180deg, #4d2637, #401e2e);
+  border-color: #6a364b;
 }
 
 .calculator {
@@ -3745,6 +3760,11 @@ footer {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+}
+
+.sim-help-close:hover {
+  background: var(--bg);
+  color: var(--text);
 }
 
 .sim-help-close:focus-visible {
