@@ -71,6 +71,19 @@ test('Server Security', async (t) => {
         }
     });
 
+    await t.test('Server handles null bytes (%00) without crashing', async () => {
+        try {
+            const res = await makeRequest('/src/%00');
+            assert.ok(res.statusCode === 400 || res.statusCode === 403 || res.statusCode === 404, 'Should return an error status code, got ' + res.statusCode);
+        } catch (e) {
+            if (e.code === 'ECONNRESET' || e.message === 'socket hang up') {
+                assert.fail('Server crashed: ' + e.message);
+            } else {
+                throw e;
+            }
+        }
+    });
+
     // Verify server is still running by making a valid request
     await t.test('Server is still alive', async () => {
          try {
