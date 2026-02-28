@@ -791,11 +791,15 @@ function uniquePendingTargetIds(items = []) {
   return [...new Set(items.map(item => item.invalidId || item.targetId).filter(Boolean))];
 }
 
+// ⚡ Optimization: Track invalid elements in a Set to avoid full DOM traversal on every render
+const currentInvalidElements = new Set();
+
 function clearJudicialInvalidHighlights() {
-  document.querySelectorAll('.jc-invalid').forEach(el => {
+  currentInvalidElements.forEach(el => {
     el.classList.remove('jc-invalid');
     el.removeAttribute('aria-invalid');
   });
+  currentInvalidElements.clear();
 }
 
 function markJudicialInvalidTargets(targetIds = []) {
@@ -804,6 +808,7 @@ function markJudicialInvalidTargets(targetIds = []) {
     if (el) {
       el.classList.add('jc-invalid');
       el.setAttribute('aria-invalid', 'true');
+      currentInvalidElements.add(el);
     }
   });
 }
