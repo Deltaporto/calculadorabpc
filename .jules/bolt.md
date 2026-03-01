@@ -3,3 +3,7 @@
 **Learning:** Attempting to cache global `document.querySelectorAll` NodeLists directly (like caching `.jc-q-btn` arrays) leads to memory leaks from strong references and stale arrays if DOM elements detach.
 Instead, a significantly safer optimization is removing global queries like `document.querySelectorAll('.jc-invalid')` used in `clearJudicialInvalidHighlights()` which are called continuously during frequent re-renders.
 **Action:** Replaced the global selector query with a local trackable `Set` (`currentInvalidElements`) inside `src/js/main.js` that explicitly adds and removes targeted DOM elements. This eliminates an O(N) DOM crawl per render while preventing leak vulnerabilities.
+
+## 2026-02-28 - [DOM Query Optimization in a11y.js]
+**Learning:** In highly repeated initialization routines (like `initKeyboardNav` running over many button groups), using `Array.from(nodeList)` and array iterators (`.some`, `.findIndex`) causes unnecessary object allocations and slow iterations. A single `querySelector` for specific attributes (e.g., `button[tabindex="0"]`) is exponentially faster because it offloads the search to the browser's native C++ engine.
+**Action:** Replaced `Array.from()` conversions and `.some()`/`.findIndex()` array loops with targeted `querySelector()` calls. This creates a fast exit path and removes array allocation overhead during frequent dynamic DOM updates.

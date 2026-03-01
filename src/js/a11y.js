@@ -24,18 +24,19 @@ export function initKeyboardNav() {
 
   // Initialize static groups
   document.querySelectorAll(groupSelector).forEach(group => {
-    const buttons = getGroupButtons(group);
+    // ⚡ Optimization: Fast path using single DOM query instead of array creation
+    if (group.querySelector('button[tabindex="0"]')) return;
+
+    const buttons = group.querySelectorAll('button:not([disabled])');
     if (buttons.length === 0) return;
 
-    // Check if any is already active/checked (tabindex="0" might already be set by builders)
-    const hasTabindex0 = buttons.some(b => b.getAttribute('tabindex') === '0');
-    if (hasTabindex0) return;
+    let activeBtn = group.querySelector('button.active, button[aria-pressed="true"]');
+    if (!activeBtn || activeBtn.disabled) {
+      activeBtn = buttons[0];
+    }
 
-    let activeIndex = buttons.findIndex(b => b.classList.contains('active') || b.getAttribute('aria-pressed') === 'true');
-    if (activeIndex === -1) activeIndex = 0;
-
-    buttons.forEach((btn, index) => {
-      btn.setAttribute('tabindex', index === activeIndex ? '0' : '-1');
+    buttons.forEach(btn => {
+      btn.setAttribute('tabindex', btn === activeBtn ? '0' : '-1');
     });
   });
 
