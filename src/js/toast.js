@@ -34,6 +34,7 @@ export function showToast(message, type = 'info', duration = 4000) {
   const closeBtn = document.createElement('button');
   closeBtn.className = 'toast-close';
   closeBtn.setAttribute('aria-label', 'Fechar notificação');
+  closeBtn.setAttribute('title', 'Fechar notificação');
   closeBtn.textContent = '×';
 
   toast.appendChild(iconDiv);

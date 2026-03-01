@@ -10,6 +10,12 @@ export function initStaticRatingA11yLabels(labels) {
   document.querySelectorAll('.jc-seg-btn').forEach(btn => {
     btn.setAttribute('aria-pressed', btn.classList.contains('active'));
   });
+  document.querySelectorAll('.sim-help-btn, .sim-help-close, .portaria-close-btn').forEach(btn => {
+    const ariaLabel = btn.getAttribute('aria-label');
+    if (ariaLabel && !btn.hasAttribute('title')) {
+      btn.setAttribute('title', ariaLabel);
+    }
+  });
 }
 
 export function initKeyboardNav() {

@@ -453,7 +453,10 @@ function closeSimHelpPopover() {
   activeSimHelpKey = null;
   activeSimHelpTrigger = null;
   if (excerptEl) excerptEl.classList.add('hidden');
-  if (excerptBtn) excerptBtn.textContent = 'Ver base legal (trecho)';
+  if (excerptBtn) {
+    excerptBtn.textContent = 'Ver base legal (trecho)';
+    excerptBtn.removeAttribute('title');
+  }
   if (!popover) return;
   popover.classList.add('hidden');
   popover.classList.remove('mobile', 'floating');
@@ -528,6 +531,11 @@ function openSimHelpPopover(helpKey, trigger) {
   excerptBtn.textContent = 'Ver base legal (trecho)';
   excerptBtn.disabled = !entry.legalExcerpt;
   excerptBtn.setAttribute('aria-disabled', String(!entry.legalExcerpt));
+  if (!entry.legalExcerpt) {
+    excerptBtn.setAttribute('title', 'Não há trecho legal específico disponível para este item.');
+  } else {
+    excerptBtn.removeAttribute('title');
+  }
   portariaBtn.dataset.helpKey = helpKey;
   portariaBtn.dataset.portariaSourceKey = entry.portariaSourceKey || DEFAULT_PORTARIA_SOURCE_KEY;
 
