@@ -1,3 +1,7 @@
 ## 2024-05-24 - Accessibility of Dynamic Evaluation Containers
 **Learning:** Screen readers might miss crucial dynamic updates like the final evaluation result or changes in the evaluation state if the dynamic containers holding this text do not explicitly specify ARIA live regions. In this app, the final decision (`#decision`), status badges (`#jcStatusBadge`), and comparison blocks (`#compChange`) needed `role="status"` and `aria-live="polite"` to correctly announce their contents without stealing immediate focus, which significantly improves the non-visual UX of evaluating eligibility criteria.
 **Action:** Always ensure that dynamic text components summarizing final states, steps status, or complex logic evaluations have explicit ARIA live roles (e.g., `role="status" aria-live="polite"`) applied to their root container.
+
+## $(date +%Y-%m-%d) - Adding :hover states to button types
+**Learning:** Certain button types like `.btn-red` and `.sim-help-close` were missing a distinct `:hover` state, unlike `.btn-primary` and `.btn-outline`. This makes them feel unresponsive to mouse users. Dark mode themes specifically need their own customized hover states for contrast.
+**Action:** When creating or maintaining button variants in a design system (like `.btn-red`), ensure that all interactive states (`:hover`, `:focus-visible`, `:active`, `:disabled`) are defined for both light and dark themes to provide consistent interaction feedback.
