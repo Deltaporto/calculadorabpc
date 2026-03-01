@@ -30,6 +30,8 @@ function resolvePath(urlPathname) {
   } catch (e) {
     return null;
   }
+  if (decoded.includes('\0')) return null;
+
   const normalized = path.normalize(decoded).replace(/^([.][.][/\\])+/, '');
   const relative = normalized === '/' ? '/index.html' : normalized;
 
