@@ -43,7 +43,9 @@ export function buildDomainRows(container, domains, labels, names, domainHelpKey
       helpBtn.type = 'button';
       helpBtn.className = 'sim-help-btn domain-help-btn';
       helpBtn.dataset.helpKey = helpKey;
-      helpBtn.setAttribute('aria-label', `Entender ${d.id.toUpperCase()} (${d.name})`);
+      const helpLabel = `Entender ${d.id.toUpperCase()} (${d.name})`;
+      helpBtn.setAttribute('aria-label', helpLabel);
+      helpBtn.setAttribute('title', helpLabel);
       helpBtn.setAttribute('aria-controls', 'simHelpPopover');
       helpBtn.setAttribute('aria-expanded', 'false');
       helpBtn.textContent = 'i';
