@@ -17,15 +17,20 @@ export function showToast(message, type = 'info', duration = 4000) {
   const iconDiv = document.createElement('div');
   iconDiv.className = 'toast-icon';
 
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('class', 'ui-icon');
+  svg.setAttribute('aria-hidden', 'true');
+  const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+
   if (type === 'success') {
-    iconDiv.innerHTML = '<svg class="ui-icon" aria-hidden="true"><use href="#i-check-circle"></use></svg>';
-  } else if (type === 'error') {
-    iconDiv.innerHTML = '<svg class="ui-icon" aria-hidden="true"><use href="#i-alert"></use></svg>';
-  } else if (type === 'warning') {
-    iconDiv.innerHTML = '<svg class="ui-icon" aria-hidden="true"><use href="#i-alert"></use></svg>';
+    use.setAttribute('href', '#i-check-circle');
+  } else if (type === 'error' || type === 'warning') {
+    use.setAttribute('href', '#i-alert');
   } else {
-    iconDiv.innerHTML = '<svg class="ui-icon" aria-hidden="true"><use href="#i-document"></use></svg>';
+    use.setAttribute('href', '#i-document');
   }
+  svg.appendChild(use);
+  iconDiv.appendChild(svg);
 
   const messageDiv = document.createElement('div');
   messageDiv.className = 'toast-message';
