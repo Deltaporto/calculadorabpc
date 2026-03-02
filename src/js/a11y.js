@@ -19,7 +19,8 @@ export function initStaticRatingA11yLabels(labels) {
 }
 
 export function initKeyboardNav() {
-  const getGroupButtons = (group) => Array.from(group.querySelectorAll('button:not([disabled])'));
+  // ⚡ Optimization: Direct querySelectorAll (NodeList) instead of Array.from to avoid array allocation on every interaction
+  const getGroupButtons = (group) => group.querySelectorAll('button:not([disabled])');
   const groupSelector = '.note-buttons, .jc-q-buttons, .jc-segmented, .amb-tabs, .jc-segmented-wide';
 
   // Initialize static groups
@@ -52,7 +53,8 @@ export function initKeyboardNav() {
     if (!group) return;
 
     const buttons = getGroupButtons(group);
-    const index = buttons.indexOf(btn);
+    // ⚡ Optimization: Borrow indexOf from Array to use directly on the NodeList without converting to an Array
+    const index = Array.prototype.indexOf.call(buttons, btn);
     if (index === -1) return;
 
     e.preventDefault();
@@ -82,7 +84,8 @@ export function initKeyboardNav() {
 
     const buttons = getGroupButtons(group);
     // Only update if this button is part of the group
-    if (buttons.includes(btn)) {
+    // ⚡ Optimization: Borrow includes from Array to use directly on the NodeList
+    if (Array.prototype.includes.call(buttons, btn)) {
         buttons.forEach(b => b.setAttribute('tabindex', b === btn ? '0' : '-1'));
     }
   });

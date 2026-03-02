@@ -7,10 +7,12 @@ export function createDomainState(domains) {
 }
 
 export function createDomainNameById(domains) {
-  return domains.reduce((acc, d) => {
-    acc[d.id] = d.name;
-    return acc;
-  }, {});
+  // ⚡ Optimization: Native for-loop to avoid Array.prototype.reduce callback allocation overhead
+  const acc = {};
+  for (let i = 0; i < domains.length; i++) {
+    acc[domains[i].id] = domains[i].name;
+  }
+  return acc;
 }
 
 export function createEmptyAdminCorpoRecognition() {
@@ -18,10 +20,12 @@ export function createEmptyAdminCorpoRecognition() {
 }
 
 export function createEmptyDomains(domainIds) {
-  return domainIds.reduce((acc, id) => {
-    acc[id] = null;
-    return acc;
-  }, {});
+  // ⚡ Optimization: Native for-loop to avoid Array.prototype.reduce callback allocation overhead
+  const acc = {};
+  for (let i = 0; i < domainIds.length; i++) {
+    acc[domainIds[i]] = null;
+  }
+  return acc;
 }
 
 export function createEmptyJudicialMed(corpoDomainIds, ativDomainIds) {

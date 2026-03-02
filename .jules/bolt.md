@@ -7,3 +7,7 @@ Instead, a significantly safer optimization is removing global queries like `doc
 ## 2026-02-28 - [DOM Query Optimization in a11y.js]
 **Learning:** In highly repeated initialization routines (like `initKeyboardNav` running over many button groups), using `Array.from(nodeList)` and array iterators (`.some`, `.findIndex`) causes unnecessary object allocations and slow iterations. A single `querySelector` for specific attributes (e.g., `button[tabindex="0"]`) is exponentially faster because it offloads the search to the browser's native C++ engine.
 **Action:** Replaced `Array.from()` conversions and `.some()`/`.findIndex()` array loops with targeted `querySelector()` calls. This creates a fast exit path and removes array allocation overhead during frequent dynamic DOM updates.
+
+## 2025-03-01 - Avoid Array Conversions and Callbacks in Hot Paths
+**Learning:** In highly repeated DOM initialization and dynamic interactions (e.g. keyboard navigation via `keydown`), converting `NodeList` to `Array` via `Array.from` incurs significant allocation overhead. Similarly, utilizing `Array.prototype.reduce` within object initialization sequences (`createEmptyDomains`, `createDomainNameById`) adds callback dispatch overhead compared to native C++ backed standard loops.
+**Action:** Always prefer native `for` loops or directly invoke methods via `Array.prototype.call` on `NodeList` collections to avoid allocation and dispatch taxes in performance-sensitive contexts.
