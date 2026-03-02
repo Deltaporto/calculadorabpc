@@ -12,10 +12,6 @@ function setTextIfChanged(el, value) {
   if (el && el.textContent !== value) el.textContent = value;
 }
 
-function setHtmlIfChanged(el, value) {
-  if (el && el.innerHTML !== value) el.innerHTML = value;
-}
-
 function setStyleIfChanged(el, property, value) {
   if (!el) return;
   if (el.style[property] !== value) el.style[property] = value;
@@ -147,18 +143,55 @@ export function runMainUpdate({
   const ativ = calcAtividades();
   const corpo = calcCorpo();
 
-  setHtmlIfChanged(refs.fAmb, `(<span class="val">${amb.sum}</span> × 5) − 0,1 = <span class="val">${amb.pct}%</span>`);
+  const fAmbFrag = document.createDocumentFragment();
+  fAmbFrag.appendChild(document.createTextNode('('));
+  const fAmbSpan1 = document.createElement('span');
+  fAmbSpan1.className = 'val';
+  fAmbSpan1.textContent = String(amb.sum);
+  fAmbFrag.appendChild(fAmbSpan1);
+  fAmbFrag.appendChild(document.createTextNode(' × 5) − 0,1 = '));
+  const fAmbSpan2 = document.createElement('span');
+  fAmbSpan2.className = 'val';
+  fAmbSpan2.textContent = `${amb.pct}%`;
+  fAmbFrag.appendChild(fAmbSpan2);
+  refs.fAmb.replaceChildren(fAmbFrag);
+
   setStyleIfChanged(refs.barAmb, 'width', `${Math.min(100, amb.pct)}%`);
   setStyleIfChanged(refs.barAmb, 'background', `var(--q${qLabels[amb.q]})`);
   setQBadgeElement(refs.qAmb, amb.q, qLabels);
   setTextIfChanged(refs.nameAmb, qFull.amb[amb.q]);
 
-  const majoracaoInfo = corpo.majorado ? ` → <span class="val">${corpo.final}</span> (majoração +1)` : '';
-  setHtmlIfChanged(refs.fCorpo, `Máximo dos domínios: <span class="val">${corpo.max}</span>${majoracaoInfo}`);
+  const fCorpoFrag = document.createDocumentFragment();
+  fCorpoFrag.appendChild(document.createTextNode('Máximo dos domínios: '));
+  const fCorpoSpan1 = document.createElement('span');
+  fCorpoSpan1.className = 'val';
+  fCorpoSpan1.textContent = String(corpo.max);
+  fCorpoFrag.appendChild(fCorpoSpan1);
+  if (corpo.majorado) {
+    fCorpoFrag.appendChild(document.createTextNode(' → '));
+    const fCorpoSpan2 = document.createElement('span');
+    fCorpoSpan2.className = 'val';
+    fCorpoSpan2.textContent = String(corpo.final);
+    fCorpoFrag.appendChild(fCorpoSpan2);
+    fCorpoFrag.appendChild(document.createTextNode(' (majoração +1)'));
+  }
+  refs.fCorpo.replaceChildren(fCorpoFrag);
+
   setQBadgeElement(refs.qCorpo, corpo.q, qLabels);
   setTextIfChanged(refs.nameCorpo, qFull.corpo[corpo.q]);
 
-  setHtmlIfChanged(refs.fAtiv, `(<span class="val">${ativ.sum}</span> × 2,778) − 0,1 = <span class="val">${ativ.pct}%</span>`);
+  const fAtivFrag = document.createDocumentFragment();
+  fAtivFrag.appendChild(document.createTextNode('('));
+  const fAtivSpan1 = document.createElement('span');
+  fAtivSpan1.className = 'val';
+  fAtivSpan1.textContent = String(ativ.sum);
+  fAtivFrag.appendChild(fAtivSpan1);
+  fAtivFrag.appendChild(document.createTextNode(' × 2,778) − 0,1 = '));
+  const fAtivSpan2 = document.createElement('span');
+  fAtivSpan2.className = 'val';
+  fAtivSpan2.textContent = `${ativ.pct}%`;
+  fAtivFrag.appendChild(fAtivSpan2);
+  refs.fAtiv.replaceChildren(fAtivFrag);
   setStyleIfChanged(refs.barAtiv, 'width', `${Math.min(100, ativ.pct)}%`);
   setStyleIfChanged(refs.barAtiv, 'background', `var(--q${qLabels[ativ.q]})`);
   setQBadgeElement(refs.qAtiv, ativ.q, qLabels);

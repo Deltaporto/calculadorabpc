@@ -147,7 +147,7 @@ function createIcon(name, cls = 'ui-icon') {
   return svg;
 }
 function setDecisionIcon(name) {
-  document.getElementById('decIcon').innerHTML = iconMarkup(name, 'ui-icon lg');
+  document.getElementById('decIcon').replaceChildren(createIcon(name, 'ui-icon lg'));
 }
 function getItemNumber(amb, ativ, corpo) {
   // Formula derived from the loop structure (corpo 4->0, ativ 4->0, amb 4->0)
@@ -524,7 +524,13 @@ function openSimHelpPopover(helpKey, trigger) {
 
   titleEl.textContent = entry.title;
   summaryEl.textContent = entry.summary;
-  listEl.innerHTML = entry.bullets.map(item => `<li>${item}</li>`).join('');
+  const listFragment = document.createDocumentFragment();
+  entry.bullets.forEach(item => {
+    const li = document.createElement('li');
+    li.textContent = item;
+    listFragment.appendChild(li);
+  });
+  listEl.replaceChildren(listFragment);
   sourceEl.textContent = `Base legal: ${entry.source}`;
   excerptEl.textContent = entry.legalExcerpt || '';
   excerptEl.classList.add('hidden');
@@ -675,12 +681,22 @@ function openPadraoDecisionDialog(context) {
     ? 'Todos os domínios elegíveis deste padrão já foram preenchidos manualmente. Escolha se deseja sobrescrever esses preenchimentos.'
     : `Foram encontrados ${context.manuallyFilledEligible.length} domínios elegíveis já preenchidos manualmente.`;
 
-  summaryEl.innerHTML = [
-    `<div><strong>Atualizações preservando preenchidos:</strong> ${context.entriesPreserve.length}</div>`,
-    `<div><strong>Atualizações sobrescrevendo preenchidos:</strong> ${context.entriesOverwrite.length}</div>`,
-    `<div><strong>Domínios manuais elegíveis:</strong> ${context.manuallyFilledEligible.length}</div>`,
-    `<div><strong>Não aplicáveis por corte etário:</strong> ${context.skippedByAgeCut}</div>`
-  ].join('');
+  const summaryFragment = document.createDocumentFragment();
+  const summaryLines = [
+    { label: 'Atualizações preservando preenchidos: ', val: context.entriesPreserve.length },
+    { label: 'Atualizações sobrescrevendo preenchidos: ', val: context.entriesOverwrite.length },
+    { label: 'Domínios manuais elegíveis: ', val: context.manuallyFilledEligible.length },
+    { label: 'Não aplicáveis por corte etário: ', val: context.skippedByAgeCut }
+  ];
+  summaryLines.forEach(line => {
+    const div = document.createElement('div');
+    const strong = document.createElement('strong');
+    strong.textContent = line.label;
+    div.appendChild(strong);
+    div.appendChild(document.createTextNode(String(line.val)));
+    summaryFragment.appendChild(div);
+  });
+  summaryEl.replaceChildren(summaryFragment);
 
   preserveBtn.disabled = hasOnlyManual;
   preserveBtn.setAttribute('aria-disabled', String(hasOnlyManual));
@@ -746,19 +762,47 @@ function updateComparison(amb, ativ, corpo) {
   if (!savedINSS) return;
   const s = savedINSS;
   document.getElementById('compINSSq').textContent = `Fatores Ambientais: ${Q_LABELS[s.amb]} · Atividades e Participação: ${Q_LABELS[s.ativ]} · Funções do Corpo: ${Q_LABELS[s.corpo]}`;
-  document.getElementById('compINSSr').innerHTML = `${iconMarkup(s.result ? 'check-circle' : 'x-circle', 'ui-icon sm')} ${s.result ? 'DEFERIDO' : 'INDEFERIDO'}`;
-  document.getElementById('compINSSr').className = 'comp-result ' + (s.result ? 'yes' : 'no');
+
+  const inssrEl = document.getElementById('compINSSr');
+  inssrEl.replaceChildren(createIcon(s.result ? 'check-circle' : 'x-circle', 'ui-icon sm'));
+  inssrEl.appendChild(document.createTextNode(` ${s.result ? 'DEFERIDO' : 'INDEFERIDO'}`));
+  inssrEl.className = 'comp-result ' + (s.result ? 'yes' : 'no');
+
   const curResult = impedimento ? false : tabelaConclusiva(amb.q, ativ.q, corpo.q);
   document.getElementById('compPERq').textContent = `Fatores Ambientais: ${Q_LABELS[amb.q]} · Atividades e Participação: ${Q_LABELS[ativ.q]} · Funções do Corpo: ${Q_LABELS[corpo.q]}`;
-  document.getElementById('compPERr').innerHTML = `${iconMarkup(curResult ? 'check-circle' : 'x-circle', 'ui-icon sm')} ${curResult ? 'DEFERIDO' : 'INDEFERIDO'}`;
-  document.getElementById('compPERr').className = 'comp-result ' + (curResult ? 'yes' : 'no');
+
+  const perrrEl = document.getElementById('compPERr');
+  perrrEl.replaceChildren(createIcon(curResult ? 'check-circle' : 'x-circle', 'ui-icon sm'));
+  perrrEl.appendChild(document.createTextNode(` ${curResult ? 'DEFERIDO' : 'INDEFERIDO'}`));
+  perrrEl.className = 'comp-result ' + (curResult ? 'yes' : 'no');
+
   let changes = [];
   if (s.amb !== amb.q) changes.push(`Fatores Ambientais: ${Q_LABELS[s.amb]}→${Q_LABELS[amb.q]}`);
   if (s.ativ !== ativ.q) changes.push(`Atividades e Participação: ${Q_LABELS[s.ativ]}→${Q_LABELS[ativ.q]}`);
   if (s.corpo !== corpo.q) changes.push(`Funções do Corpo: ${Q_LABELS[s.corpo]}→${Q_LABELS[corpo.q]}`);
-  if (!s.result && curResult) changes.push(`${iconMarkup('swap', 'ui-icon sm')} Resultado REVERTIDO: Indeferido → Deferido`);
-  else if (s.result && !curResult) changes.push(`${iconMarkup('swap', 'ui-icon sm')} Resultado REVERTIDO: Deferido → Indeferido`);
-  document.getElementById('compChange').innerHTML = changes.length ? changes.join(' · ') : 'Sem alteração no resultado';
+
+  const compChangeEl = document.getElementById('compChange');
+  compChangeEl.replaceChildren();
+
+  let hasReversal = false;
+  if (!s.result && curResult) {
+    compChangeEl.appendChild(createIcon('swap', 'ui-icon sm'));
+    compChangeEl.appendChild(document.createTextNode(' Resultado REVERTIDO: Indeferido → Deferido'));
+    hasReversal = true;
+  } else if (s.result && !curResult) {
+    compChangeEl.appendChild(createIcon('swap', 'ui-icon sm'));
+    compChangeEl.appendChild(document.createTextNode(' Resultado REVERTIDO: Deferido → Indeferido'));
+    hasReversal = true;
+  }
+
+  if (changes.length > 0) {
+    if (hasReversal) {
+      compChangeEl.appendChild(document.createTextNode(' · '));
+    }
+    compChangeEl.appendChild(document.createTextNode(changes.join(' · ')));
+  } else if (!hasReversal) {
+    compChangeEl.textContent = 'Sem alteração no resultado';
+  }
 }
 
 function setStepState(id, state, text) {
@@ -1646,15 +1690,24 @@ async function copyToClipboard(area, feedback, triggerButton = null) {
     if (triggerButton) {
       if (triggerButton.dataset.timerId) {
         clearTimeout(Number(triggerButton.dataset.timerId));
-      } else if (!triggerButton.dataset.originalHtml) {
-        triggerButton.dataset.originalHtml = triggerButton.innerHTML;
-        triggerButton.innerHTML = `<svg class="ui-icon sm" aria-hidden="true"><use href="#i-check-circle"></use></svg>Copiado!`;
+      } else if (!triggerButton.dataset.originalStateSaved) {
+        // Clear old state but keep track that we have replaced content
+        const frag = document.createDocumentFragment();
+        while (triggerButton.firstChild) {
+          frag.appendChild(triggerButton.firstChild);
+        }
+        triggerButton.dataset.originalStateSaved = "true";
+        triggerButton._originalNodes = frag;
+
+        triggerButton.replaceChildren(createIcon('check-circle', 'ui-icon sm'));
+        triggerButton.appendChild(document.createTextNode('Copiado!'));
       }
 
       const timerId = setTimeout(() => {
-        if (triggerButton.dataset.originalHtml) {
-          triggerButton.innerHTML = triggerButton.dataset.originalHtml;
-          delete triggerButton.dataset.originalHtml;
+        if (triggerButton.dataset.originalStateSaved && triggerButton._originalNodes) {
+          triggerButton.replaceChildren(triggerButton._originalNodes);
+          delete triggerButton.dataset.originalStateSaved;
+          delete triggerButton._originalNodes;
           delete triggerButton.dataset.timerId;
         }
       }, 2000);
