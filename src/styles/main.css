@@ -4299,7 +4299,8 @@ footer {
 .jc-textarea:focus-visible,
 .jc-mini-textarea:focus-visible,
 .jc-select:focus-visible,
-.standard-text textarea:focus-visible {
+.standard-text textarea:focus-visible,
+.toast-close:focus-visible {
   outline: 2px solid transparent;
   box-shadow: 0 0 0 2px var(--blue);
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--blue) 72%, #fff 28%);
