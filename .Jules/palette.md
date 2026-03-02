@@ -25,3 +25,7 @@
 ## 2026-02-27 - Keyboard Focus on Checkbox Labels
 **Learning:** Custom toggle buttons implemented as a `label` containing a visually hidden or accent-colored `input[type="checkbox"]` may not show a clear focus outline when navigating via keyboard, rendering them inaccessible to keyboard users.
 **Action:** Use the CSS `:has()` pseudo-class (e.g., `label:has(input:focus-visible)`) to apply a visible outline to the entire label container when its child input receives focus.
+
+## 2025-05-24 - Focus Visibility on Dynamically Injected Interactive Elements
+**Learning:** Dynamically injected transient UI components, such as toast notification close buttons (`.toast-close`), are often missed during static DOM a11y audits and may lack `:focus-visible` styles, rendering them invisible to keyboard navigation.
+**Action:** When adding transient or dynamic interactive components, ensure they explicitly receive `:focus-visible` outline rules in the global accessibility stylesheet section.
