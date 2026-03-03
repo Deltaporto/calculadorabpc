@@ -296,9 +296,9 @@ No celular, a navegação por etapas é o modo padrão; no desktop, a visão ger
 
 ---
 
-## 7. Regras de negócio implementadas
+## 7. Critérios normativos aplicados
 
-Esta seção detalha as regras normativas que a ferramenta automatiza, para que o operador possa verificar a conformidade dos cálculos.
+Esta seção detalha os critérios normativos que a ferramenta automatiza, para que o operador possa verificar a conformidade dos cálculos.
 
 ### 7.1. Escala de qualificadores (CIF)
 
@@ -427,36 +427,7 @@ Ao rolar a página para baixo, um botão flutuante **"Voltar ao topo"** aparece 
 
 ---
 
-## 11. Como executar localmente
-
-A ferramenta funciona integralmente no navegador, mas requer um servidor HTTP local (não é possível abrir o arquivo `index.html` diretamente via `file://` devido a restrições de CORS dos módulos ES).
-
-### Opção recomendada (Node.js)
-
-```bash
-npm install
-npm run start
-```
-
-Acesse: `http://127.0.0.1:8000/index.html`
-
-Para usar uma porta diferente:
-
-```bash
-PORT=9000 npm run start
-```
-
-### Alternativa (Python)
-
-```bash
-python3 -m http.server 8000
-```
-
-Acesse: `http://127.0.0.1:8000/index.html`
-
----
-
-## 12. Aviso importante
+## 11. Aviso importante
 
 Esta ferramenta é de apoio técnico e organizacional. A decisão judicial deve sempre observar:
 
