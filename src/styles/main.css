@@ -198,6 +198,11 @@ header p {
   border-radius: 8px;
 }
 
+.header-sep {
+  margin: 0 6px;
+  color: rgba(255, 255, 255, .4);
+}
+
 .app-mode-switch {
   margin: 14px auto 0;
   display: inline-flex;

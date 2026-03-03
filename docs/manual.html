@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manual de Uso | Calculadora Biopsicossocial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F0F2F7;
+      --surface: #FFFFFF;
+      --text: #0F1B2D;
+      --text2: #4B5563;
+      --border: #E5E7EB;
+      --navy: #0F1B2D;
+      --accent: #2855B6;
+      --accent-soft: #1D4ED8;
+      --shadow: 0 1px 3px rgba(0, 0, 0, .08), 0 1px 2px rgba(0, 0, 0, .04);
+      --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, .12);
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Source Sans 3', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: 'DM Sans', sans-serif;
+      color: var(--navy);
+      letter-spacing: -0.01em;
+      line-height: 1.25;
+      margin-top: 1.35em;
+      margin-bottom: .5em;
+    }
+
+    p,
+    ul,
+    ol,
+    pre,
+    table {
+      margin-top: .75em;
+      margin-bottom: .85em;
+    }
+
+    a {
+      color: var(--accent-soft);
+      text-underline-offset: 3px;
+      text-decoration-thickness: 1.5px;
+    }
+
+    a:hover {
+      color: var(--accent);
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 6px;
+    }
+
+    .manual-header {
+      margin: 0 auto;
+      max-width: 1200px;
+      background: var(--navy);
+      color: #fff;
+      padding: 24px 28px;
+      border-radius: 0 0 20px 20px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .manual-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font: 700 .73rem/1 'DM Sans', sans-serif;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .manual-header h1 {
+      color: #fff;
+      margin: 12px 0 4px;
+      font-size: clamp(1.55rem, 1.2rem + 1.6vw, 2.2rem);
+    }
+
+    .manual-header p {
+      margin: 0;
+      color: rgba(255, 255, 255, .78);
+      font-size: .98rem;
+    }
+
+    .manual-header-link {
+      margin-top: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(236, 244, 255, .95);
+      font-weight: 600;
+    }
+
+    .manual-shell {
+      max-width: 1200px;
+      margin: 24px auto 0;
+      padding: 0 16px 28px;
+      display: grid;
+      grid-template-columns: minmax(250px, 290px) minmax(0, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .manual-toc {
+      position: sticky;
+      top: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      max-height: calc(100vh - 26px);
+      overflow: auto;
+    }
+
+    .manual-toc h2 {
+      margin-top: 0;
+      margin-bottom: .75rem;
+      font-size: 1.05rem;
+    }
+
+    .manual-toc > ul {
+      font-size: .95rem;
+      line-height: 1.45;
+      margin: .35rem 0 .45rem;
+      padding-left: 1rem;
+    }
+
+    .manual-toc ul {
+      margin: .35rem 0 .45rem;
+      padding-left: 1rem;
+    }
+
+    .manual-toc li {
+      margin: .2rem 0;
+    }
+
+    .manual-content {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    .manual-content > section:first-child h2 {
+      margin-top: 0;
+    }
+
+    .manual-content section {
+      scroll-margin-top: 18px;
+    }
+
+    .manual-content h2 {
+      font-size: clamp(1.35rem, 1.2rem + .7vw, 1.75rem);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: .45rem;
+    }
+
+    .manual-content h3 {
+      font-size: clamp(1.08rem, 1rem + .4vw, 1.28rem);
+    }
+
+    .manual-content ul,
+    .manual-content ol {
+      padding-left: 1.2rem;
+    }
+
+    .manual-content li + li {
+      margin-top: .28rem;
+    }
+
+    .manual-content pre {
+      padding: 14px;
+      border-radius: 10px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      overflow-x: auto;
+    }
+
+    .manual-content code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+      font-size: .92em;
+    }
+
+    .manual-content p code,
+    .manual-content li code {
+      background: #EEF2FF;
+      border-radius: 6px;
+      padding: 1px 6px;
+      border: 1px solid #DDE5FF;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin: .8rem 0 1rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .manual-content table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 520px;
+      margin: 0;
+    }
+
+    .manual-content th,
+    .manual-content td {
+      text-align: left;
+      padding: .55rem .7rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .manual-content th {
+      background: #F8FAFC;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .92rem;
+      color: var(--navy);
+    }
+
+    .manual-content tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .manual-footer {
+      max-width: 1200px;
+      margin: 4px auto 34px;
+      padding: 0 16px;
+      color: var(--text2);
+      font-size: .95rem;
+    }
+
+    @media (max-width: 960px) {
+      .manual-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .manual-toc {
+        position: static;
+        max-height: none;
+      }
+    }
+
+    @media (max-width: 680px) {
+      html {
+        font-size: 15px;
+      }
+
+      .manual-header {
+        border-radius: 0 0 14px 14px;
+        padding: 18px 18px;
+      }
+
+      .manual-shell {
+        margin-top: 16px;
+        padding: 0 10px 22px;
+        gap: 12px;
+      }
+
+      .manual-content {
+        padding: 16px 14px;
+      }
+
+      .manual-content table {
+        min-width: 460px;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        color: #000;
+      }
+
+      .manual-header,
+      .manual-toc,
+      .manual-footer {
+        display: none;
+      }
+
+      .manual-shell {
+        display: block;
+        margin: 0;
+        padding: 0;
+      }
+
+      .manual-content {
+        border: 0;
+        box-shadow: none;
+        padding: 0;
+      }
+
+      .table-wrap {
+        overflow: visible;
+        border: 0;
+      }
+
+      .manual-content th,
+      .manual-content td {
+        border-color: #666;
+      }
+
+      .manual-content h2,
+      .manual-content h3 {
+        page-break-after: avoid;
+      }
+
+      .manual-content p,
+      .manual-content li {
+        orphans: 3;
+        widows: 3;
+      }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0A0F1A;
+        --surface: #141B2D;
+        --text: #F1F5F9;
+        --text2: #9FB0C9;
+        --border: #243248;
+        --navy: #E5EDFA;
+        --accent: #5D8DFF;
+        --accent-soft: #8CB1FF;
+        --shadow: 0 1px 3px rgba(0, 0, 0, .5);
+        --shadow-lg: 0 16px 26px rgba(0, 0, 0, .45);
+      }
+
+      .manual-header {
+        background: #0F1B2D;
+      }
+
+      .manual-content pre {
+        background: #0F172A;
+        border-color: #243248;
+      }
+
+      .manual-content p code,
+      .manual-content li code {
+        background: #102241;
+        border-color: #1E3A70;
+      }
+
+      .table-wrap {
+        background: #0F172A;
+      }
+
+      .manual-content th {
+        background: #17233A;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="manual-header">
+    <span class="manual-badge">BPC / LOAS</span>
+    <h1>Manual de Uso</h1>
+    <p>Calculadora Biopsicossocial — BPC/LOAS</p>
+    <a class="manual-header-link" href="../index.html" title="Voltar para a calculadora">Voltar para a calculadora</a>
+  </header>
+
+  <main class="manual-shell">
+    <aside class="manual-toc" aria-labelledby="manualTocTitle">
+      <h2 id="manualTocTitle">Sumário</h2>
+<ul>
+<li><a href="#objetivo-da-ferramenta" id="toc-objetivo-da-ferramenta">1.
+Objetivo da ferramenta</a></li>
+<li><a href="#acesso-à-base-normativa-portarias-em-pdf"
+id="toc-acesso-à-base-normativa-portarias-em-pdf">2. Acesso à base
+normativa (Portarias em PDF)</a>
+<ul>
+<li><a href="#link-no-cabeçalho" id="toc-link-no-cabeçalho">Link no
+cabeçalho</a></li>
+<li><a href="#link-no-rodapé" id="toc-link-no-rodapé">Link no
+rodapé</a></li>
+<li><a href="#botões-de-ajuda-contextual-ícone-i"
+id="toc-botões-de-ajuda-contextual-ícone-i">Botões de ajuda contextual
+(ícone “i”)</a></li>
+</ul></li>
+<li><a href="#estrutura-da-interface" id="toc-estrutura-da-interface">3.
+Estrutura da interface</a></li>
+<li><a href="#modo-simulador" id="toc-modo-simulador">4. Modo
+Simulador</a>
+<ul>
+<li><a href="#visão-geral-da-tela" id="toc-visão-geral-da-tela">4.1.
+Visão geral da tela</a></li>
+<li><a href="#como-preencher-os-domínios"
+id="toc-como-preencher-os-domínios">4.2. Como preencher os
+domínios</a></li>
+<li><a href="#opções-de-majoração-funções-do-corpo"
+id="toc-opções-de-majoração-funções-do-corpo">4.3. Opções de majoração
+(Funções do Corpo)</a></li>
+<li><a href="#barra-de-ferramentas" id="toc-barra-de-ferramentas">4.4.
+Barra de ferramentas</a></li>
+<li><a href="#resultado-da-avaliação"
+id="toc-resultado-da-avaliação">4.5. Resultado da Avaliação</a></li>
+<li><a href="#regime-etário-crianças-menores-de-16-anos"
+id="toc-regime-etário-crianças-menores-de-16-anos">4.6. Regime etário
+(crianças menores de 16 anos)</a></li>
+<li><a href="#transição-para-o-controle-judicial"
+id="toc-transição-para-o-controle-judicial">4.7. Transição para o
+Controle Judicial</a></li>
+</ul></li>
+<li><a href="#modo-controle-judicial" id="toc-modo-controle-judicial">5.
+Modo Controle Judicial</a>
+<ul>
+<li><a href="#etapa-1-fixar-avaliação-administrativa-inss"
+id="toc-etapa-1-fixar-avaliação-administrativa-inss">5.1. Etapa 1 —
+Fixar avaliação administrativa (INSS)</a></li>
+<li><a href="#etapa-2-informações-da-perícia-médica-judicial"
+id="toc-etapa-2-informações-da-perícia-médica-judicial">5.2. Etapa 2 —
+Informações da perícia médica judicial</a></li>
+<li><a href="#etapa-3-triagem-probatória"
+id="toc-etapa-3-triagem-probatória">5.3. Etapa 3 — Triagem
+probatória</a></li>
+<li><a href="#etapa-4-texto-para-decisão"
+id="toc-etapa-4-texto-para-decisão">5.4. Etapa 4 — Texto para
+decisão</a></li>
+</ul></li>
+<li><a href="#modo-fluxograma" id="toc-modo-fluxograma">6. Modo
+Fluxograma</a>
+<ul>
+<li><a href="#navegação" id="toc-navegação">Navegação</a></li>
+</ul></li>
+<li><a href="#critérios-normativos-aplicados"
+id="toc-critérios-normativos-aplicados">7. Critérios normativos
+aplicados</a>
+<ul>
+<li><a href="#escala-de-qualificadores-cif"
+id="toc-escala-de-qualificadores-cif">7.1. Escala de qualificadores
+(CIF)</a></li>
+<li><a href="#fórmulas-de-cálculo" id="toc-fórmulas-de-cálculo">7.2.
+Fórmulas de cálculo</a></li>
+<li><a href="#tabela-conclusiva-anexo-iv-portaria-22015"
+id="toc-tabela-conclusiva-anexo-iv-portaria-22015">7.3. Tabela
+Conclusiva (Anexo IV, Portaria 2/2015)</a></li>
+<li><a href="#padrão-médio-social-portaria-342025"
+id="toc-padrão-médio-social-portaria-342025">7.4. Padrão Médio Social
+(Portaria 34/2025)</a></li>
+<li><a href="#regime-etário-crianças-e-adolescentes-menores-de-16-anos"
+id="toc-regime-etário-crianças-e-adolescentes-menores-de-16-anos">7.5.
+Regime etário (crianças e adolescentes menores de 16 anos)</a></li>
+</ul></li>
+<li><a href="#fluxo-recomendado-de-uso"
+id="toc-fluxo-recomendado-de-uso">8. Fluxo recomendado de uso</a>
+<ul>
+<li><a href="#cenário-1-análise-rápida-de-cenário-simulador"
+id="toc-cenário-1-análise-rápida-de-cenário-simulador">Cenário 1:
+Análise rápida de cenário (Simulador)</a></li>
+<li><a
+href="#cenário-2-controle-judicial-completo-uso-recomendado-em-gabinete"
+id="toc-cenário-2-controle-judicial-completo-uso-recomendado-em-gabinete">Cenário
+2: Controle judicial completo (uso recomendado em gabinete)</a></li>
+<li><a href="#cenário-3-do-simulador-ao-controle-judicial"
+id="toc-cenário-3-do-simulador-ao-controle-judicial">Cenário 3: Do
+Simulador ao Controle Judicial</a></li>
+<li><a href="#cenário-4-consulta-normativa-rápida"
+id="toc-cenário-4-consulta-normativa-rápida">Cenário 4: Consulta
+normativa rápida</a></li>
+</ul></li>
+<li><a href="#comparação-inss-reclassificação-judicial"
+id="toc-comparação-inss-reclassificação-judicial">9. Comparação INSS ×
+Reclassificação Judicial</a></li>
+<li><a href="#recursos-adicionais" id="toc-recursos-adicionais">10.
+Recursos adicionais</a>
+<ul>
+<li><a href="#modo-escuro" id="toc-modo-escuro">Modo escuro</a></li>
+<li><a href="#navegação-por-teclado"
+id="toc-navegação-por-teclado">Navegação por teclado</a></li>
+<li><a href="#botão-voltar-ao-topo" id="toc-botão-voltar-ao-topo">Botão
+“Voltar ao topo”</a></li>
+</ul></li>
+<li><a href="#aviso-importante" id="toc-aviso-importante">11. Aviso
+importante</a></li>
+</ul>
+    </aside>
+    <article class="manual-content">
+<section id="objetivo-da-ferramenta" class="level2">
+<h2>1. Objetivo da ferramenta</h2>
+<p>A Calculadora Biopsicossocial é uma aplicação web de apoio técnico
+destinada a magistrados(as), assessorias e servidores(as) que atuam em
+processos de concessão do Benefício de Prestação Continuada (BPC/LOAS)
+envolvendo o requisito de deficiência.</p>
+<p>A ferramenta implementa integralmente as regras da <strong>Portaria
+Conjunta MDS/INSS nº 2/2015</strong> (Anexo IV — Tabela Conclusiva) e
+incorpora o <strong>Padrão Médio Social</strong> introduzido pela
+<strong>Portaria Conjunta MDS/INSS nº 34/2025</strong> (Anexo II). Seu
+propósito é:</p>
+<ul>
+<li><strong>Calcular automaticamente</strong> os qualificadores finais
+de Fatores Ambientais, Atividades e Participação e Funções do Corpo a
+partir dos domínios individuais, aplicando as fórmulas normativas da CIF
+(Classificação Internacional de Funcionalidade).</li>
+<li><strong>Exibir visualmente</strong> o cruzamento na Tabela
+Conclusiva do Anexo IV, indicando de forma objetiva se a combinação de
+qualificadores resulta em deferimento ou indeferimento do requisito
+biopsicossocial.</li>
+<li><strong>Conduzir o controle judicial</strong> da prova técnica num
+fluxo guiado de 4 etapas, determinando se a avaliação social judicial é
+dispensável ou necessária com base exclusivamente na perícia médica e
+nos dados administrativos.</li>
+<li><strong>Gerar texto padronizado</strong> para fundamentação da
+decisão, em linguagem técnica e com referência normativa, pronto para
+colar na minuta.</li>
+</ul>
+<p><strong>O que a ferramenta não faz:</strong> não substitui a análise
+judicial integral do caso concreto. Não cobre, por si só, todos os
+requisitos legais do BPC (renda, inscrição no CadÚnico, etc.). A decisão
+judicial deve sempre considerar o conjunto probatório completo, a
+legislação e a jurisprudência aplicáveis, e o convencimento motivado
+do(a) magistrado(a).</p>
+<hr />
+</section>
+<section id="acesso-à-base-normativa-portarias-em-pdf" class="level2">
+<h2>2. Acesso à base normativa (Portarias em PDF)</h2>
+<p>A aplicação disponibiliza acesso direto aos textos normativos que
+fundamentam os cálculos.</p>
+<section id="link-no-cabeçalho" class="level3">
+<h3>Link no cabeçalho</h3>
+<p>No topo da página, logo abaixo do título “Calculadora
+Biopsicossocial”, há um link clicável com o texto <strong>“Portaria
+Conjunta MDS/INSS nº 2/2015”</strong>. Ao clicar nele, o PDF oficial da
+Portaria 2/2015 é aberto em uma nova aba do navegador. Esse link está
+sempre visível, independentemente do modo de uso selecionado.</p>
+</section>
+<section id="link-no-rodapé" class="level3">
+<h3>Link no rodapé</h3>
+<p>No rodapé da página, na seção “Base normativa”, há um segundo link
+com ícone de documento: <strong>“Portaria Conjunta MDS/INSS nº 2/2015
+(PDF)”</strong>. Este link também abre o PDF em nova aba. Ao lado, há
+uma referência à Portaria MDS/INSS nº 34/2025 e um botão <strong>“Ler
+versão texto na aplicação”</strong>, que abre uma janela modal com o
+texto integral da Portaria para consulta rápida sem sair da
+ferramenta.</p>
+</section>
+<section id="botões-de-ajuda-contextual-ícone-i" class="level3">
+<h3>Botões de ajuda contextual (ícone “i”)</h3>
+<p>Ao longo de toda a interface — tanto no Simulador quanto no Controle
+Judicial — há pequenos botões circulares com a letra
+<strong>“i”</strong> ao lado de cada componente, domínio ou conceito. Ao
+clicar em qualquer um deles, abre-se um painel de ajuda contextual
+contendo:</p>
+<ul>
+<li>Definição do conceito ou domínio.</li>
+<li>Indicadores práticos para qualificação.</li>
+<li>Referência à Portaria (com número de linha e artigo).</li>
+<li>Trecho literal da base legal.</li>
+<li>Botões para ver a base legal completa ou abrir a Portaria dentro da
+aplicação.</li>
+</ul>
+<p>Esses botões de ajuda estão disponíveis para todos os domínios
+(e1–e5, b1–b8, d1–d9), para os conceitos de Fatores Ambientais,
+Atividades e Participação, Funções do Corpo, Impedimento de Longo Prazo
+e Padrão Médio Social.</p>
+<hr />
+</section>
+</section>
+<section id="estrutura-da-interface" class="level2">
+<h2>3. Estrutura da interface</h2>
+<p>A aplicação possui três modos de visualização, acessíveis por meio
+dos botões no cabeçalho da página:</p>
+<div class="table-wrap"><table>
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 64%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Modo</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Controle Judicial</strong></td>
+<td>Fluxo guiado de 4 etapas para controle probatório da prova
+técnica</td>
+</tr>
+<tr class="even">
+<td><strong>Simulador</strong></td>
+<td>Calculadora interativa para montar cenários e visualizar a Tabela
+Conclusiva</td>
+</tr>
+<tr class="odd">
+<td><strong>Fluxograma</strong></td>
+<td>Diagrama decisório visual do raciocínio de avaliação
+biopsicossocial</td>
+</tr>
+</tbody>
+</table></div>
+<p>Além dos modos, o cabeçalho oferece:</p>
+<ul>
+<li><strong>Modo escuro:</strong> alternância de tema visual para
+leitura confortável em ambientes com pouca luz.</li>
+<li><strong>Idade inferior a 16 anos:</strong> ativação do regime etário
+especial para crianças e adolescentes, com campo para informar a idade
+em anos ou meses.</li>
+</ul>
+<hr />
+</section>
+<section id="modo-simulador" class="level2">
+<h2>4. Modo Simulador</h2>
+<p>O Simulador é a calculadora propriamente dita. Permite atribuir
+qualificadores individuais a cada domínio da CIF e visualizar
+instantaneamente o resultado na Tabela Conclusiva. É especialmente útil
+para explorar hipóteses, verificar cenários alternativos ou conferir os
+dados de uma avaliação administrativa já realizada.</p>
+<section id="visão-geral-da-tela" class="level3">
+<h3>4.1. Visão geral da tela</h3>
+<p>A calculadora é organizada em três painéis, cada um correspondendo a
+um componente da avaliação biopsicossocial:</p>
+<p><strong>Painel Fatores Ambientais (azul)</strong> — Avaliação Social
+— 5 domínios: - e1 — Produtos e Tecnologia - e2 — Condições de
+Habitabilidade - e3 — Apoio e Relacionamentos - e4 — Atitudes - e5 —
+Serviços, Sistemas e Políticas</p>
+<p><strong>Painel Atividades e Participação (roxo)</strong> — Avaliação
+Mista — 9 domínios: - d1 — Aprendizagem <em>(Perito Médico)</em> - d2 —
+Tarefas Gerais <em>(Perito Médico)</em> - d3 — Comunicação <em>(Perito
+Médico)</em> - d4 — Mobilidade <em>(Perito Médico)</em> - d5 — Cuidado
+Pessoal <em>(Perito Médico)</em> - d6 — Vida Doméstica <em>(Assistente
+Social)</em> - d7 — Relações Interpessoais <em>(Assistente Social)</em>
+- d8 — Áreas Principais da Vida <em>(Assistente Social)</em> - d9 — Vida
+Comunitária <em>(Assistente Social)</em></p>
+<p><strong>Painel Funções do Corpo (vermelho)</strong> — Avaliação
+Médica — 8 domínios: - b1 — Funções Mentais - b2 — Funções Sensoriais -
+b3 — Voz e Fala - b4 — Cardiovascular / Hematológico / Imunológico /
+Respiratório - b5 — Digestivo / Metabólico-Endócrino - b6 —
+Geniturinário e Reprodutivo - b7 — Neuromusculoesquelético e Movimento -
+b8 — Pele e Estruturas Relacionadas</p>
+</section>
+<section id="como-preencher-os-domínios" class="level3">
+<h3>4.2. Como preencher os domínios</h3>
+<p>Cada domínio apresenta uma fileira de 5 botões numerados de
+<strong>0</strong> a <strong>4</strong>, correspondendo à escala de
+qualificadores da CIF:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Valor</th>
+<th>Letra</th>
+<th>Qualificador</th>
+<th>Faixa percentual</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>N</td>
+<td>Nenhuma</td>
+<td>0–4%</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>L</td>
+<td>Leve</td>
+<td>5–24%</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>M</td>
+<td>Moderada</td>
+<td>25–49%</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>G</td>
+<td>Grave</td>
+<td>50–95%</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>C</td>
+<td>Completa</td>
+<td>96–100%</td>
+</tr>
+</tbody>
+</table></div>
+<p>Clique no botão correspondente ao valor atribuído pela avaliação. O
+botão selecionado ficará destacado. Para cada painel, o sistema calcula
+automaticamente:</p>
+<ul>
+<li><strong>Fatores Ambientais:</strong> fórmula
+<code>pct = (soma_e1_a_e5 × 5) − 0,1</code> → qualificador N/L/M/G/C,
+exibido com barra de progresso e rótulo descritivo (ex.: “Barreira
+Moderada”).</li>
+<li><strong>Atividades e Participação:</strong> fórmula
+<code>pct = (soma_d1_a_d9 × 2,778) − 0,1</code> → qualificador
+N/L/M/G/C, com barra de progresso.</li>
+<li><strong>Funções do Corpo:</strong> o qualificador final é o
+<strong>maior valor</strong> entre b1 e b8. Se ativadas as opções de
+majoração (descritas abaixo), o sistema pode elevar o qualificador em um
+nível.</li>
+</ul>
+</section>
+<section id="opções-de-majoração-funções-do-corpo" class="level3">
+<h3>4.3. Opções de majoração (Funções do Corpo)</h3>
+<p>Abaixo dos domínios b1–b8, há dois interruptores:</p>
+<ul>
+<li><strong>Prognóstico desfavorável:</strong> quando ativado, aplica
+majoração de +1 ao qualificador final de Funções do Corpo.</li>
+<li><strong>Estrutura do Corpo &gt; Função:</strong> quando ativado,
+aplica majoração de +1, caso as alterações em Estruturas do Corpo
+configurem maiores limitações do que as observadas em Funções do
+Corpo.</li>
+</ul>
+<p>A majoração não é cumulativa: se ambas estiverem ativadas, o
+qualificador ainda sobe apenas um nível.</p>
+</section>
+<section id="barra-de-ferramentas" class="level3">
+<h3>4.4. Barra de ferramentas</h3>
+<p>A barra de ferramentas acima dos painéis oferece:</p>
+<ul>
+<li><strong>Aplicar padrão médio:</strong> preenche automaticamente os
+domínios previstos pelo padrão médio social da Portaria 34/2025 (Anexo
+II): e1=2, e2=2, e3=2, e4=1, e5=2, d6=3, d7=2, d8=3 e d9=3. Se já houver
+domínios preenchidos manualmente, o sistema exibe uma janela de
+confirmação com duas opções: <em>Preservar preenchidos</em> (preenche
+apenas os domínios ainda vazios) ou <em>Sobrescrever preenchidos</em>
+(substitui todos pelos valores do padrão).</li>
+<li><strong>Limpar tudo:</strong> redefine todos os domínios para 0 e
+desativa as opções auxiliares, retornando a calculadora ao estado
+inicial.</li>
+<li><strong>Impedimento &lt; 2 anos:</strong> interruptor que sinaliza
+que o impedimento tem duração inferior a 2 anos. Quando ativado, o
+resultado final automaticamente indica indeferimento, independentemente
+dos qualificadores, conforme art. 20, §§ 2º e 10, da Lei 8.742/93.</li>
+</ul>
+</section>
+<section id="resultado-da-avaliação" class="level3">
+<h3>4.5. Resultado da Avaliação</h3>
+<p>Abaixo dos painéis, a seção “Resultado da Avaliação” exibe:</p>
+<ol type="1">
+<li><p><strong>Qualificadores finais consolidados:</strong> três cartões
+lado a lado mostrando o qualificador final (letra e nome) de Fatores
+Ambientais, Atividades e Participação e Funções do Corpo.</p></li>
+<li><p><strong>Tabela Conclusiva (Anexo IV):</strong> uma matriz 5×5 com
+os qualificadores de Atividades e Participação no eixo horizontal e
+Funções do Corpo no eixo vertical. Cada célula indica “Sim” (deferido,
+em verde) ou “Não” (indeferido, em vermelho). A célula correspondente à
+combinação atual fica destacada. Acima da matriz, há abas (N, L, M, G,
+C) que permitem visualizar a Tabela para diferentes níveis de Fatores
+Ambientais — o sistema seleciona automaticamente a aba correspondente ao
+qualificador atual, mas o usuário pode clicar em outra aba para explorar
+cenários hipotéticos.</p>
+<p>Uma nota prática sob a tabela explica: <em>“Fatores Ambientais
+costuma ser decisivo sobretudo no cenário M×M (Funções do Corpo e
+Atividades em Moderada). Fora desse ponto, moradia modesta porém
+funcional não implica, por si só, indeferimento.”</em> Um realce
+discreto marca o ponto M×M quando a variação de Fatores Ambientais pode
+alterar o resultado.</p></li>
+<li><p><strong>Card de decisão:</strong> exibe o resultado final
+(DEFERIDO ou INDEFERIDO), com ícone visual, o motivo objetivo da decisão
+e a referência ao item correspondente na Tabela Conclusiva.</p></li>
+</ol>
+</section>
+<section id="regime-etário-crianças-menores-de-16-anos" class="level3">
+<h3>4.6. Regime etário (crianças menores de 16 anos)</h3>
+<p>Quando a opção “Idade inferior a 16 anos” é ativada no cabeçalho,
+surge um campo para informar a idade (em anos ou meses). O sistema
+aplica automaticamente os pontos de corte etários definidos na Portaria
+para os domínios de Atividades e Participação. Se a criança estiver
+abaixo do ponto de corte de um domínio específico, esse domínio é
+automaticamente fixado no qualificador 4 (Completa), indicando que a
+atividade ainda não é esperada para aquela faixa etária.</p>
+<p>Os pontos de corte são: - d1 (Aprendizagem): 6 meses - d2 (Tarefas
+Gerais): 6 meses - d3 (Comunicação): 12 meses - d4 (Mobilidade): 6 meses
+- d5 (Cuidado Pessoal): 36 meses - d6 (Vida Doméstica): 84 meses (7
+anos) - d7 (Relações Interpessoais): 12 meses - d8 (Áreas Principais da
+Vida): 6 meses - d9 (Vida Comunitária): 36 meses</p>
+</section>
+<section id="transição-para-o-controle-judicial" class="level3">
+<h3>4.7. Transição para o Controle Judicial</h3>
+<p>Abaixo da seção de resultado, o botão <strong>“Levar cenário para
+Controle Judicial”</strong> transfere os qualificadores finais
+calculados pelo Simulador como rascunho para a Etapa 1 do Controle
+Judicial, permitindo iniciar rapidamente o fluxo probatório com os dados
+da simulação em curso.</p>
+<hr />
+</section>
+</section>
+<section id="modo-controle-judicial" class="level2">
+<h2>5. Modo Controle Judicial</h2>
+<p>O Controle Judicial é o núcleo da ferramenta para uso em gabinete.
+Trata-se de um fluxo guiado em <strong>4 etapas sequenciais</strong> que
+organiza o raciocínio probatório para decidir se a perícia médica
+judicial, por si só, é suficiente para definir o requisito
+biopsicossocial ou se é necessário determinar avaliação social
+judicial.</p>
+<p>Cada etapa possui: - Um <strong>número de passo</strong> e título
+descritivo. - Um <strong>indicador de estado</strong> (Pendente,
+Bloqueada, Concluída). - Um <strong>painel de orientação</strong> que
+informa a pendência atual ou confirma a conclusão, atualizado em tempo
+real conforme os campos são preenchidos. - Uma <strong>nota “O que
+fazer”</strong> explicando de forma direta o que se espera do operador
+naquela etapa.</p>
+<p>Uma <strong>barra de progresso</strong> no topo da seção mostra
+visualmente o avanço pelas 4 etapas (ex.: “Etapa 2 de 4 · Perícia médica
+— 50%”).</p>
+<section id="etapa-1-fixar-avaliação-administrativa-inss"
+class="level3">
+<h3>5.1. Etapa 1 — Fixar avaliação administrativa (INSS)</h3>
+<p><strong>Objetivo:</strong> registrar os qualificadores finais da
+avaliação biopsicossocial realizada na esfera administrativa (INSS), bem
+como os reconhecimentos prévios relativos a Funções do Corpo.</p>
+<p><strong>Campos a preencher:</strong></p>
+<ol type="1">
+<li><p><strong>Fatores Ambientais (final):</strong> selecione o
+qualificador final atribuído pelo INSS (N, L, M, G ou C).</p></li>
+<li><p><strong>Atividades e Participação (final):</strong> selecione o
+qualificador final atribuído pelo INSS.</p></li>
+<li><p><strong>Funções do Corpo (final):</strong> selecione o
+qualificador final atribuído pelo INSS.</p></li>
+<li><p><strong>Reconhecimentos administrativos do INSS (Funções do
+Corpo):</strong></p>
+<ul>
+<li><em>“INSS reconheceu alterações em Estruturas do Corpo que
+configurem maiores limitações ou restrições ao avaliado do que as
+alterações observadas em Funções do Corpo?”</em> — Responda Sim ou
+Não.</li>
+<li><em>“INSS reconheceu prognóstico desfavorável?”</em> — Responda Sim
+ou Não.</li>
+</ul>
+<p>Essas respostas controlam quais motivos de requalificação estarão
+disponíveis na Etapa 2. Se o INSS já reconheceu estruturas mais
+limitantes, por exemplo, esse motivo ficará bloqueado para
+reclassificação judicial (pois o reconhecimento já está na base).</p>
+<p>Se houver dúvida sobre como responder, clique em <strong>“Não sabe
+como responder? Ver explicação”</strong> para expandir um guia detalhado
+com exemplos e base legal.</p></li>
+</ol>
+<p><strong>Atalho opcional:</strong> se o Simulador já estiver
+preenchido com os dados da avaliação administrativa, clique em
+<strong>“Preencher automaticamente com a Calculadora”</strong> para
+importar os qualificadores calculados como rascunho.</p>
+<p><strong>Para concluir a etapa:</strong> clique em <strong>“Fixar base
+administrativa”</strong>. A base fica travada e a Etapa 2 é
+desbloqueada. Se precisar alterar a base depois, é possível
+refixá-la.</p>
+</section>
+<section id="etapa-2-informações-da-perícia-médica-judicial"
+class="level3">
+<h3>5.2. Etapa 2 — Informações da perícia médica judicial</h3>
+<p><strong>Objetivo:</strong> registrar os achados relevantes da perícia
+médica judicial, decidindo sobre impedimento de longo prazo, Funções do
+Corpo judiciais e, quando pertinente, Atividades e Participação.</p>
+<p><strong>Campos a preencher (nesta ordem):</strong></p>
+<ol type="1">
+<li><p><strong>Impedimento de longo prazo:</strong> Sim ou Não. Se
+“Não”, a triagem será concluída imediatamente na Etapa 3 com dispensa da
+avaliação social (ausente o pressuposto do impedimento, a análise
+biopsicossocial fica prejudicada).</p></li>
+<li><p><strong>Funções do Corpo (judicial):</strong> duas opções:</p>
+<ul>
+<li><strong>Manter qualificador administrativo:</strong> o qualificador
+fixado na Etapa 1 é preservado.</li>
+<li><strong>Alterar na fase judicial:</strong> permite requalificar
+Funções do Corpo com base em motivo técnico fechado. Ao selecionar esta
+opção, deve-se escolher um dos seguintes motivos:</li>
+</ul>
+<div class="table-wrap"><table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Motivo</th>
+<th>Efeito</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><em>Estruturas do corpo mais graves (não reconhecidas pelo
+INSS)</em></td>
+<td>Majoração de +1 sobre o qualificador administrativo</td>
+</tr>
+<tr class="even">
+<td><em>Prognóstico desfavorável (não reconhecido pelo INSS)</em></td>
+<td>Majoração de +1 sobre o qualificador administrativo</td>
+</tr>
+<tr class="odd">
+<td><em>Domínio administrativo b1–b8 mais grave</em></td>
+<td>Informa-se a pontuação por domínio (b1–b8) e o sistema aplica o
+domínio mais grave</td>
+</tr>
+<tr class="even">
+<td><em>Rebaixamento por prova superveniente</em></td>
+<td>Seleção manual do qualificador judicial, com confirmação quando
+houver redução</td>
+</tr>
+</tbody>
+</table></div>
+<p>Os dois primeiros motivos ficam bloqueados se o INSS já reconheceu o
+respectivo fator na Etapa 1 (o sistema exibe mensagem explicativa).</p>
+<p>No motivo “Rebaixamento”, se o qualificador judicial ficar inferior
+ao administrativo, o sistema exige confirmação explícita antes de
+prosseguir.</p></li>
+<li><p><strong>Perícia médica trouxe elementos para requalificar
+Atividades e Participação?</strong> — Este campo é exibido apenas quando
+a reclassificação pode ser decisiva para o desfecho. Se o sistema já
+detecta que, com os dados atuais, a reclassificação é irrelevante (por
+exemplo, Funções do Corpo ficaram em N ou L, ou o Teste A já é
+positivo), a pergunta é suprimida com nota explicativa.</p>
+<p>Se “Sim”, escolha o modo de requalificação:</p>
+<ul>
+<li><strong>Simples:</strong> informe diretamente o qualificador final
+de Atividades e Participação e uma justificativa médica
+obrigatória.</li>
+<li><strong>Completa (d1–d9):</strong> preencha cada um dos 9 domínios
+(d1 a d9) e o sistema calcula automaticamente o qualificador final pela
+fórmula normativa. Cada domínio possui botão de ajuda contextual (ícone
+“i”) com a definição do conceito e a base legal.</li>
+</ul></li>
+</ol>
+<p>O painel de orientação da Etapa 2 indica em tempo real qual campo
+está pendente. A etapa só se conclui quando todos os campos obrigatórios
+estiverem preenchidos.</p>
+</section>
+<section id="etapa-3-triagem-probatória" class="level3">
+<h3>5.3. Etapa 3 — Triagem probatória</h3>
+<p><strong>Objetivo:</strong> apresentar automaticamente o resultado da
+triagem, indicando se a avaliação social judicial é dispensável ou
+necessária.</p>
+<p>Esta etapa é calculada pelo sistema — não exige preenchimento manual.
+Assim que as Etapas 1 e 2 estiverem completas, a triagem é processada
+automaticamente.</p>
+<p><strong>Testes realizados:</strong></p>
+<ul>
+<li><p><strong>Teste A (verificação administrativa):</strong> cruza os
+qualificadores administrativos de Fatores Ambientais e Atividades e
+Participação com o qualificador judicial de Funções do Corpo na Tabela
+Conclusiva. Se o resultado for positivo, a avaliação social é
+dispensável.</p></li>
+<li><p><strong>Teste B (verificação com reclassificação médica de
+Atividades):</strong> quando houver requalificação médica de Atividades
+e Participação (Etapa 2), cruza o qualificador médico com Funções do
+Corpo judiciais, mantendo Fatores Ambientais administrativos. Se
+positivo, a avaliação social é dispensável.</p></li>
+</ul>
+<p><strong>Resultados possíveis:</strong></p>
+<div class="table-wrap"><table>
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 54%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Resultado</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Avaliação social judicial dispensável</strong></td>
+<td>A prova técnica médica já é suficiente para definir o requisito
+biopsicossocial. Não é necessário determinar avaliação social em
+juízo.</td>
+</tr>
+<tr class="even">
+<td><strong>Avaliação social judicial necessária</strong></td>
+<td>A prova médica isolada não produziu resultado positivo nas
+verificações disponíveis. Recomenda-se determinar avaliação social
+judicial, que pode reclassificar Fatores Ambientais e os domínios
+sociais de Atividades (d6–d9).</td>
+</tr>
+</tbody>
+</table></div>
+<p>A triagem exibe a razão objetiva do resultado e, abaixo, uma
+<strong>trilha de auditoria</strong> (trace) que detalha passo a passo o
+raciocínio: como Funções do Corpo foi resolvido, se houve
+reclassificação de Atividades, qual o resultado de cada teste e por
+quê.</p>
+</section>
+<section id="etapa-4-texto-para-decisão" class="level3">
+<h3>5.4. Etapa 4 — Texto para decisão</h3>
+<p><strong>Objetivo:</strong> gerar texto padronizado, em linguagem
+técnica e com referências normativas, para fundamentar a decisão
+judicial sobre o requisito biopsicossocial.</p>
+<p>O texto gerado automaticamente contém: - Resumo da base
+administrativa (qualificadores e reconhecimentos do INSS). - Achados da
+perícia médica judicial (impedimento, Funções do Corpo, Atividades). -
+Resultado da verificação na Tabela Conclusiva (item do Anexo IV
+referenciado). - Conclusão motivada (dispensabilidade ou necessidade da
+avaliação social judicial).</p>
+<p><strong>Ações disponíveis:</strong></p>
+<div class="table-wrap"><table>
+<colgroup>
+<col style="width: 46%" />
+<col style="width: 53%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Botão</th>
+<th>Função</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Gerar texto</strong></td>
+<td>Gera a minuta no campo de texto da etapa</td>
+</tr>
+<tr class="even">
+<td><strong>Gerar e copiar texto da decisão</strong></td>
+<td>Gera a minuta e copia automaticamente para a área de
+transferência</td>
+</tr>
+<tr class="odd">
+<td><strong>Somente copiar</strong></td>
+<td>Copia o texto já gerado, sem regerar</td>
+</tr>
+<tr class="even">
+<td><strong>Limpar controle judicial</strong></td>
+<td>Reinicia todas as 4 etapas do controle, mediante confirmação</td>
+</tr>
+</tbody>
+</table></div>
+<p>O texto é exibido em um campo de leitura. Revise-o antes de inserir
+na decisão, adaptando-o conforme necessário ao caso concreto.</p>
+<hr />
+</section>
+</section>
+<section id="modo-fluxograma" class="level2">
+<h2>6. Modo Fluxograma</h2>
+<p>O Fluxograma apresenta visualmente a lógica decisória da avaliação
+biopsicossocial em 6 etapas conceituais. Serve como referência rápida
+para entender o encadeamento de verificações que a ferramenta
+automatiza.</p>
+<section id="navegação" class="level3">
+<h3>Navegação</h3>
+<ul>
+<li><strong>Visão geral:</strong> exibe o diagrama completo em formato
+SVG. Há um link para abrir a imagem ampliada em nova aba.</li>
+<li><strong>Etapas 1 a 6:</strong> botões de navegação permitem focar em
+uma etapa específica, com descrição textual e ramificações possíveis
+(Sim/Não, deferido/indeferido).</li>
+</ul>
+<p>No celular, a navegação por etapas é o modo padrão; no desktop, a
+visão geral completa é exibida por padrão.</p>
+<p><strong>As 6 etapas do fluxograma:</strong></p>
+<ol type="1">
+<li><strong>Impedimento de longo prazo (&gt; 2 anos)?</strong> — Se não,
+indeferido imediato.</li>
+<li><strong>Qualificador de Funções do Corpo</strong> — Se N ou L,
+indeferido (Regra 2). Se M ou superior, prosseguir.</li>
+<li><strong>Qualificador de Atividades e Participação</strong> — Se N ou
+L, indeferido (Regra 1). Se M ou superior, prosseguir.</li>
+<li><strong>Cruzamento na Tabela Conclusiva</strong> — Combinações G/C
+deferidas diretamente. Combinação M-M vai para exceção ambiental.</li>
+<li><strong>Exceção Moderada-Moderada (M-M)</strong> — Quando ambos
+estão em M, o desfecho depende dos Fatores Ambientais.</li>
+<li><strong>Fatores Ambientais (e1–e5)</strong> — Se G ou C, deferido.
+Se inferior a G, indeferido.</li>
+</ol>
+<hr />
+</section>
+</section>
+<section id="critérios-normativos-aplicados" class="level2">
+<h2>7. Critérios normativos aplicados</h2>
+<p>Esta seção detalha os critérios normativos que a ferramenta
+automatiza, para que o operador possa verificar a conformidade dos
+cálculos.</p>
+<section id="escala-de-qualificadores-cif" class="level3">
+<h3>7.1. Escala de qualificadores (CIF)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Letra</th>
+<th>Nome</th>
+<th>Faixa percentual</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>N</td>
+<td>Nenhuma</td>
+<td>0–4%</td>
+</tr>
+<tr class="even">
+<td>L</td>
+<td>Leve</td>
+<td>5–24%</td>
+</tr>
+<tr class="odd">
+<td>M</td>
+<td>Moderada</td>
+<td>25–49%</td>
+</tr>
+<tr class="even">
+<td>G</td>
+<td>Grave</td>
+<td>50–95%</td>
+</tr>
+<tr class="odd">
+<td>C</td>
+<td>Completa</td>
+<td>96–100%</td>
+</tr>
+</tbody>
+</table></div>
+<p>A denominação descritiva varia por componente: - Fatores Ambientais:
+Nenhuma Barreira, Barreira Leve, Barreira Moderada, Barreira Grave,
+Barreira Completa. - Atividades e Participação: Nenhuma Dificuldade,
+Dificuldade Leve, Dificuldade Moderada, Dificuldade Grave, Dificuldade
+Completa. - Funções do Corpo: Nenhuma Alteração, Alteração Leve,
+Alteração Moderada, Alteração Grave, Alteração Completa.</p>
+</section>
+<section id="fórmulas-de-cálculo" class="level3">
+<h3>7.2. Fórmulas de cálculo</h3>
+<p><strong>Fatores Ambientais:</strong></p>
+<pre><code>percentual = (soma de e1 a e5) × 5 − 0,1</code></pre>
+<p><strong>Atividades e Participação:</strong></p>
+<pre><code>percentual = (soma de d1 a d9) × 2,777777777777780 − 0,1</code></pre>
+<p><strong>Funções do Corpo:</strong></p>
+<pre><code>qualificador final = maior valor entre b1 e b8</code></pre>
+<p>Com majoração opcional de +1 nível (não cumulativa) por: -
+Prognóstico desfavorável; ou - Alterações em Estruturas do Corpo mais
+limitantes que Funções do Corpo.</p>
+</section>
+<section id="tabela-conclusiva-anexo-iv-portaria-22015" class="level3">
+<h3>7.3. Tabela Conclusiva (Anexo IV, Portaria 2/2015)</h3>
+<p>A Tabela Conclusiva cruza os três componentes para determinar o
+resultado. As regras sintéticas são:</p>
+<ol type="1">
+<li>Se Funções do Corpo ≤ L (Nenhuma ou Leve):
+<strong>indeferido</strong>, independentemente dos demais.</li>
+<li>Se Atividades e Participação ≤ L: <strong>indeferido</strong>,
+independentemente dos demais.</li>
+<li>Se Funções do Corpo ≥ G (Grave ou Completa):
+<strong>deferido</strong>.</li>
+<li>Se Atividades e Participação ≥ G: <strong>deferido</strong>.</li>
+<li>Se Funções do Corpo = M <strong>e</strong> Atividades e Participação
+= M: <strong>deferido somente se Fatores Ambientais ≥ G</strong> (Grave
+ou Completa).</li>
+</ol>
+</section>
+<section id="padrão-médio-social-portaria-342025" class="level3">
+<h3>7.4. Padrão Médio Social (Portaria 34/2025)</h3>
+<p>A Portaria MDS/INSS nº 34/2025 instituiu o padrão médio social, com
+valores fixos para os domínios sociais:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>Domínio</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>e1 — Produtos e Tecnologia</td>
+<td>2 (Moderada)</td>
+</tr>
+<tr class="even">
+<td>e2 — Condições de Habitabilidade</td>
+<td>2 (Moderada)</td>
+</tr>
+<tr class="odd">
+<td>e3 — Apoio e Relacionamentos</td>
+<td>2 (Moderada)</td>
+</tr>
+<tr class="even">
+<td>e4 — Atitudes</td>
+<td>1 (Leve)</td>
+</tr>
+<tr class="odd">
+<td>e5 — Serviços, Sistemas e Políticas</td>
+<td>2 (Moderada)</td>
+</tr>
+<tr class="even">
+<td>d6 — Vida Doméstica</td>
+<td>3 (Grave)</td>
+</tr>
+<tr class="odd">
+<td>d7 — Relações Interpessoais</td>
+<td>2 (Moderada)</td>
+</tr>
+<tr class="even">
+<td>d8 — Áreas Principais da Vida</td>
+<td>3 (Grave)</td>
+</tr>
+<tr class="odd">
+<td>d9 — Vida Comunitária</td>
+<td>3 (Grave)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Conforme art. 13, §§ 6º e 7º, o resultado do padrão médio somente
+pode ser utilizado para concessão ou manutenção do BPC; nos demais
+casos, a avaliação social do INSS é obrigatória.</p>
+</section>
+<section id="regime-etário-crianças-e-adolescentes-menores-de-16-anos"
+class="level3">
+<h3>7.5. Regime etário (crianças e adolescentes menores de 16 anos)</h3>
+<p>Para crianças abaixo do ponto de corte etário de cada domínio de
+Atividades e Participação, a ferramenta fixa automaticamente o
+qualificador em 4 (Completa). Os pontos de corte (em meses) estão
+definidos na Portaria e implementados conforme a tabela da seção 4.6
+deste manual.</p>
+<hr />
+</section>
+</section>
+<section id="fluxo-recomendado-de-uso" class="level2">
+<h2>8. Fluxo recomendado de uso</h2>
+<section id="cenário-1-análise-rápida-de-cenário-simulador"
+class="level3">
+<h3>Cenário 1: Análise rápida de cenário (Simulador)</h3>
+<ol type="1">
+<li>Selecione o modo <strong>Simulador</strong> no cabeçalho.</li>
+<li>Preencha os domínios de cada componente conforme a avaliação que
+deseja verificar.</li>
+<li>Observe o resultado na Tabela Conclusiva e no card de decisão.</li>
+<li>Se necessário, ative o <strong>Padrão Médio</strong> para preencher
+os domínios sociais.</li>
+<li>Para crianças, ative <strong>“Idade inferior a 16 anos”</strong> e
+informe a idade.</li>
+</ol>
+</section>
+<section
+id="cenário-2-controle-judicial-completo-uso-recomendado-em-gabinete"
+class="level3">
+<h3>Cenário 2: Controle judicial completo (uso recomendado em
+gabinete)</h3>
+<ol type="1">
+<li>Selecione o modo <strong>Controle Judicial</strong> (é o modo padrão
+ao abrir a aplicação).</li>
+<li><strong>Etapa 1:</strong> Preencha os qualificadores finais
+administrativos e os reconhecimentos do INSS. Clique em <strong>“Fixar
+base administrativa”</strong>.</li>
+<li><strong>Etapa 2:</strong> Informe se há impedimento de longo prazo.
+Decida sobre Funções do Corpo (manter ou alterar). Se pertinente,
+informe requalificação de Atividades.</li>
+<li><strong>Etapa 3:</strong> Leia o resultado da triagem automática.
+Verifique a trilha de raciocínio para conferir a lógica aplicada.</li>
+<li><strong>Etapa 4:</strong> Clique em <strong>“Gerar e copiar texto da
+decisão”</strong>. Revise o texto e cole na minuta.</li>
+</ol>
+</section>
+<section id="cenário-3-do-simulador-ao-controle-judicial"
+class="level3">
+<h3>Cenário 3: Do Simulador ao Controle Judicial</h3>
+<ol type="1">
+<li>Monte o cenário no <strong>Simulador</strong> com os dados da
+avaliação administrativa.</li>
+<li>Clique em <strong>“Levar cenário para Controle Judicial”</strong>.
+Os qualificadores são importados como rascunho na Etapa 1.</li>
+<li>Complete os reconhecimentos do INSS e fixe a base.</li>
+<li>Prossiga com as Etapas 2 a 4 do Controle Judicial.</li>
+</ol>
+</section>
+<section id="cenário-4-consulta-normativa-rápida" class="level3">
+<h3>Cenário 4: Consulta normativa rápida</h3>
+<ol type="1">
+<li>Clique no link <strong>“Portaria Conjunta MDS/INSS nº
+2/2015”</strong> no cabeçalho para abrir o PDF.</li>
+<li>Ou clique em <strong>“Ler versão texto na aplicação”</strong> no
+rodapé para consultar o texto integral sem sair da página.</li>
+<li>Use os botões de ajuda contextual (<strong>“i”</strong>) ao lado de
+qualquer domínio para ver a definição, indicadores e base legal
+específica.</li>
+</ol>
+<hr />
+</section>
+</section>
+<section id="comparação-inss-reclassificação-judicial" class="level2">
+<h2>9. Comparação INSS × Reclassificação Judicial</h2>
+<p>Quando o Simulador é utilizado após fixar uma base administrativa no
+Controle Judicial, a ferramenta exibe automaticamente uma seção de
+<strong>Comparação</strong> mostrando lado a lado:</p>
+<ul>
+<li>Os qualificadores e o resultado da avaliação administrativa
+(INSS).</li>
+<li>Os qualificadores e o resultado da reclassificação judicial em curso
+no Simulador.</li>
+<li>Um indicador das mudanças entre as duas avaliações.</li>
+</ul>
+<p>O botão <strong>“Limpar comparação”</strong> remove essa
+visualização.</p>
+<hr />
+</section>
+<section id="recursos-adicionais" class="level2">
+<h2>10. Recursos adicionais</h2>
+<section id="modo-escuro" class="level3">
+<h3>Modo escuro</h3>
+<p>Ative a alternância <strong>“Modo escuro”</strong> no cabeçalho para
+melhor leitura em ambientes com pouca luminosidade. A preferência é
+mantida durante a sessão.</p>
+</section>
+<section id="navegação-por-teclado" class="level3">
+<h3>Navegação por teclado</h3>
+<p>A ferramenta suporta navegação completa por teclado. Os botões de
+qualificadores podem ser percorridos com as setas direcionais, e todos
+os campos interativos são acessíveis via Tab. Os leitores de tela são
+suportados com rótulos ARIA descritivos.</p>
+</section>
+<section id="botão-voltar-ao-topo" class="level3">
+<h3>Botão “Voltar ao topo”</h3>
+<p>Ao rolar a página para baixo, um botão flutuante <strong>“Voltar ao
+topo”</strong> aparece no canto inferior, permitindo retornar
+rapidamente ao início.</p>
+<hr />
+</section>
+</section>
+<section id="aviso-importante" class="level2">
+<h2>11. Aviso importante</h2>
+<p>Esta ferramenta é de apoio técnico e organizacional. A decisão
+judicial deve sempre observar:</p>
+<ul>
+<li>O conjunto probatório completo do processo.</li>
+<li>A legislação e a jurisprudência aplicáveis.</li>
+<li>O convencimento motivado do(a) magistrado(a).</li>
+</ul>
+<p>A aplicação automatiza exclusivamente o requisito biopsicossocial da
+pessoa com deficiência, nos termos das Portarias Conjuntas MDS/INSS nº
+2/2015 e nº 34/2025. Não substitui, em nenhuma hipótese, o juízo sobre
+os demais requisitos legais do BPC/LOAS.</p>
+</section>
+    </article>
+  </main>
+
+  <footer class="manual-footer">
+    <p>Material de apoio técnico para uso judicial. Em caso de dúvida, prevalecem os textos oficiais das Portarias Conjuntas MDS/INSS nº 2/2015 e nº 34/2025.</p>
+    <p><a href="../index.html" title="Voltar para a calculadora">Voltar para a calculadora</a></p>
+  </footer>
+</body>
+</html>
