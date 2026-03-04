@@ -5,3 +5,7 @@
 ## $(date +%Y-%m-%d) - Adding :hover states to button types
 **Learning:** Certain button types like `.btn-red` and `.sim-help-close` were missing a distinct `:hover` state, unlike `.btn-primary` and `.btn-outline`. This makes them feel unresponsive to mouse users. Dark mode themes specifically need their own customized hover states for contrast.
 **Action:** When creating or maintaining button variants in a design system (like `.btn-red`), ensure that all interactive states (`:hover`, `:focus-visible`, `:active`, `:disabled`) are defined for both light and dark themes to provide consistent interaction feedback.
+
+## 2026-03-04 - Disabled States for Generic Button Classes
+**Learning:** Global button classes like `.btn` often lack explicit `:disabled` styling in custom design systems, leaving users without visual feedback when actions are blocked or unavailable. Generic disabled state rules (like opacity reduction and `cursor: not-allowed`) can solve this robustly without needing variant-specific disabled colors.
+**Action:** When creating or maintaining generic button classes (like `.btn`), establish a baseline `:disabled` state using visual indicators like `opacity`, `filter: grayscale()` and `cursor: not-allowed` to ensure clear visual communication across all button variants.
