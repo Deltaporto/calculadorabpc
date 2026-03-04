@@ -10,8 +10,12 @@ export function pctToQ(pct) {
   return 4;
 }
 
+// ⚡ Optimization: Native for-loop to avoid Array.prototype.reduce callback allocation overhead
 export function calculateScore(state, domains, multiplier, pctToQFn) {
-  const sum = domains.reduce((acc, d) => acc + state[d.id], 0);
+  let sum = 0;
+  for (let i = 0; i < domains.length; i++) {
+    sum += state[domains[i].id];
+  }
   const pct = Math.max(0, (sum * multiplier) - 0.1);
   return { sum, pct: +pct.toFixed(1), q: pctToQFn(pct) };
 }
@@ -24,9 +28,14 @@ export function calcAtividadesFromState(state, domains, pctToQFn = pctToQ) {
   return calculateScore(state, domains, MULTIPLIER_ATIVIDADES, pctToQFn);
 }
 
+// ⚡ Optimization: Native for-loop to avoid Array.prototype.reduce callback allocation overhead
 export function calcCorpoFromState(state, domains, options = {}) {
   const { progDesfav = false, estrMaior = false } = options;
-  let max = domains.reduce((acc, d) => Math.max(acc, state[d.id]), 0);
+  let max = 0;
+  for (let i = 0; i < domains.length; i++) {
+    const val = state[domains[i].id];
+    if (val > max) max = val;
+  }
   const base = max;
   if ((progDesfav || estrMaior) && max < 4) {
     max += 1;
@@ -60,11 +69,15 @@ export function getDecisionReason(ambQ, ativQ, corpoQ, yes, labels, names, qFull
   return `Funções do Corpo com alteração moderada + Atividades e Participação com dificuldade moderada + Fatores Ambientais com ${fAmb.toLowerCase()} (≥ grave) — combinação deferida`;
 }
 
+// ⚡ Optimization: Single native for-loop with early return to avoid Array.prototype.some and Array.prototype.reduce multiple iterations and allocation overhead
 export function computeAtivFromDomains(domains, ativDomainIds, pctToQFn = pctToQ) {
   if (!domains) return null;
-  const missing = ativDomainIds.some(id => domains[id] == null);
-  if (missing) return null;
-  const sum = ativDomainIds.reduce((acc, id) => acc + domains[id], 0);
+  let sum = 0;
+  for (let i = 0; i < ativDomainIds.length; i++) {
+    const val = domains[ativDomainIds[i]];
+    if (val === null || val === undefined) return null;
+    sum += val;
+  }
   const pctRaw = Math.max(0, (sum * MULTIPLIER_ATIVIDADES) - 0.1);
   return { sum, pct: +pctRaw.toFixed(1), q: pctToQFn(pctRaw) };
 }
