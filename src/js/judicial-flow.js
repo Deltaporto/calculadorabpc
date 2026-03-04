@@ -131,17 +131,29 @@ export function resolveCorpoJudFlow({
   }
 
   if (med.corpoChangeReason === 'dominio_max') {
-    const filledDomains = corpoDomainIds.filter(id => med.corpoAdminDomains[id] != null);
-    if (!filledDomains.length) {
+    // ⚡ Optimization: Single native for-loop to avoid chained filter, reduce, map, and join allocation overhead
+    let q = 0;
+    let domainsText = '';
+    let hasFilled = false;
+    for (let i = 0; i < corpoDomainIds.length; i++) {
+      const id = corpoDomainIds[i];
+      const val = med.corpoAdminDomains[id];
+      if (val != null) {
+        hasFilled = true;
+        if (val > q) q = val;
+        const segment = `${id.toUpperCase()}=${qLabels[val]}`;
+        domainsText = domainsText ? `${domainsText} · ${segment}` : segment;
+      }
+    }
+    if (!hasFilled) {
       return { ready: false, q: null, reason: 'No motivo "Domínio administrativo b1–b8 mais grave", informe ao menos um domínio b1 a b8.', mode: 'pending' };
     }
-    const q = filledDomains.reduce((acc, id) => Math.max(acc, med.corpoAdminDomains[id]), 0);
     return {
       ready: true,
       q,
       mode: 'dominio_max',
       reason: 'Regra aplicada: para Funções do Corpo prevalece o domínio administrativo mais grave entre os domínios informados (b1–b8).',
-      domainsText: filledDomains.map(id => `${id.toUpperCase()}=${qLabels[med.corpoAdminDomains[id]]}`).join(' · '),
+      domainsText,
       decreased: q < base.corpo
     };
   }
