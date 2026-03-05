@@ -2118,6 +2118,18 @@ function initSimHelpPopover() {
   }
 }
 
+// UX auto-select for readonly generated textareas
+function initAutoSelectTextareas() {
+  const textareas = [document.getElementById('textoPadrao'), document.getElementById('textoControleJudicial')];
+  textareas.forEach(ta => {
+    if (ta) {
+      ta.addEventListener('click', function() {
+        this.select();
+      });
+    }
+  });
+}
+
 bindAppEvents({
   onDomainButtonClick: handleDomainButtonClick,
   onToggleProg: handleToggleProg,
@@ -2181,5 +2193,6 @@ initPadraoModal();
 initConfirmModal();
 initSimHelpPopover();
 initBackToTop();
+initAutoSelectTextareas();
 
 update();
