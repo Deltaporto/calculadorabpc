@@ -6,6 +6,19 @@ const host = '127.0.0.1';
 const port = Number(process.env.PORT) || 8000;
 const root = process.cwd();
 
+const SECURITY_HEADERS = {
+  'Cache-Control': 'no-store',
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY',
+  'Referrer-Policy': 'no-referrer',
+  'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none';",
+  'Permissions-Policy': 'geolocation=(), camera=(), microphone=()',
+  'Cross-Origin-Opener-Policy': 'same-origin',
+  'Cross-Origin-Embedder-Policy': 'require-corp',
+  'Cross-Origin-Resource-Policy': 'same-origin',
+  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains'
+};
+
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
@@ -65,19 +78,14 @@ function resolvePath(urlPathname) {
 function send(res, status, body, type = 'text/plain; charset=utf-8') {
   res.writeHead(status, {
     'Content-Type': type,
-    'Cache-Control': 'no-store',
-    'X-Content-Type-Options': 'nosniff',
-    'X-Frame-Options': 'DENY',
-    'Referrer-Policy': 'no-referrer',
-    'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none';",
-    'Permissions-Policy': 'geolocation=(), camera=(), microphone=()'
+    ...SECURITY_HEADERS
   });
   res.end(body);
 }
 
 const server = http.createServer((req, res) => {
   if ((req.url || '').split('?')[0] === '/favicon.ico') {
-    res.writeHead(204, { 'Cache-Control': 'no-store' });
+    res.writeHead(204, SECURITY_HEADERS);
     res.end();
     return;
   }
@@ -105,12 +113,7 @@ const server = http.createServer((req, res) => {
       const type = MIME_TYPES[ext] || 'application/octet-stream';
       res.writeHead(200, {
         'Content-Type': type,
-        'Cache-Control': 'no-store',
-        'X-Content-Type-Options': 'nosniff',
-        'X-Frame-Options': 'DENY',
-        'Referrer-Policy': 'no-referrer',
-        'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none';",
-        'Permissions-Policy': 'geolocation=(), camera=(), microphone=()'
+        ...SECURITY_HEADERS
       });
       res.end(data);
     });
