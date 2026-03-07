@@ -11,3 +11,7 @@ Instead, a significantly safer optimization is removing global queries like `doc
 ## 2025-03-01 - Avoid Array Conversions and Callbacks in Hot Paths
 **Learning:** In highly repeated DOM initialization and dynamic interactions (e.g. keyboard navigation via `keydown`), converting `NodeList` to `Array` via `Array.from` incurs significant allocation overhead. Similarly, utilizing `Array.prototype.reduce` within object initialization sequences (`createEmptyDomains`, `createDomainNameById`) adds callback dispatch overhead compared to native C++ backed standard loops.
 **Action:** Always prefer native `for` loops or directly invoke methods via `Array.prototype.call` on `NodeList` collections to avoid allocation and dispatch taxes in performance-sensitive contexts.
+
+## 2025-05-20 - Avoid Array Methods and Callbacks in Hot Paths
+**Learning:** In highly repeated DOM initialization and dynamic interactions, utilizing `Array.prototype.reduce`, `Array.prototype.some`, and `Array.prototype.every` within hot path computations adds callback dispatch overhead compared to native C++ backed standard loops.
+**Action:** Replaced these array methods with standard native `for` loops and early returns to avoid allocation and dispatch taxes in performance-sensitive calculations. Also, for tiny arrays (like the 3-element `draftValues`), simple inline object checks (`&&` or `||`) are faster than allocating an array to run `every` or `some`.
