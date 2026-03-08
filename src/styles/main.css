@@ -361,6 +361,11 @@ header p {
   border-color: #FCA5A5;
 }
 
+.btn-red:focus-visible {
+  outline: 2px solid transparent;
+  box-shadow: 0 0 0 2px #FECACA;
+}
+
 .idade-input {
   display: inline-flex;
   align-items: center;
@@ -3341,6 +3346,11 @@ header .badge {
 [data-theme="dark"] .btn-red:hover {
   background: linear-gradient(180deg, #4d2637, #401e2e);
   border-color: #6a364b;
+}
+
+[data-theme="dark"] .btn-red:focus-visible {
+  outline: 2px solid transparent;
+  box-shadow: 0 0 0 2px #6a364b;
 }
 
 .calculator {
