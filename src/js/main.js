@@ -394,6 +394,8 @@ function applyChildRules() {
         b.classList.toggle('active', isActive);
         b.setAttribute('aria-pressed', isActive);
         b.classList.add('locked');
+        b.setAttribute('aria-disabled', 'true');
+        b.setAttribute('title', `Não aplicável: idade informada (${idadeMeses} meses) é menor que o ponto de corte deste domínio (${d.cut} meses).`);
       });
     } else {
       if (d.id in childDomainBackup) {
@@ -402,6 +404,13 @@ function applyChildRules() {
       }
       btns.forEach(b => {
         b.classList.remove('locked');
+        b.removeAttribute('aria-disabled');
+        const originalLabel = b.getAttribute('aria-label');
+        if (originalLabel) {
+          b.setAttribute('title', originalLabel);
+        } else {
+          b.removeAttribute('title');
+        }
         const isActive = +b.dataset.value === state[d.id];
         b.classList.toggle('active', isActive);
         b.setAttribute('aria-pressed', isActive);
