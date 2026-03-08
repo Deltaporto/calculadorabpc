@@ -977,7 +977,14 @@ function getMedPendingItems(corpoFlow, ativContext) {
     if (!m.corpoChangeReason) {
       items.push({ label: 'selecione o motivo da alteração de Funções do Corpo', targetId: 'jcCorpoReasonSelect' });
     } else if (m.corpoChangeReason === 'dominio_max') {
-      const hasAnyDomain = JC_CORPO_RECLASS_DOMAINS.some(id => m.corpoAdminDomains[id] != null);
+      // ⚡ Optimization: Native for-loop with early return to avoid Array.prototype.some overhead
+      let hasAnyDomain = false;
+      for (let i = 0; i < JC_CORPO_RECLASS_DOMAINS.length; i++) {
+        if (m.corpoAdminDomains[JC_CORPO_RECLASS_DOMAINS[i]] != null) {
+          hasAnyDomain = true;
+          break;
+        }
+      }
       if (!hasAnyDomain) {
         items.push({
           label: 'informe ao menos um domínio b1-b8 em Funções do Corpo',
@@ -1282,9 +1289,9 @@ function updateAdminAutofillShortcut() {
 
   const draft = judicialControl.adminDraft;
   const calc = { amb: calcAmbiente().q, ativ: calcAtividades().q, corpo: calcCorpo().q };
-  const draftValues = [draft.amb, draft.ativ, draft.corpo];
-  const draftComplete = draftValues.every(v => v != null);
-  const draftHasAny = draftValues.some(v => v != null);
+  // ⚡ Optimization: Avoid array creation and methods (every/some) for simple 3-prop checks
+  const draftComplete = draft.amb != null && draft.ativ != null && draft.corpo != null;
+  const draftHasAny = draft.amb != null || draft.ativ != null || draft.corpo != null;
   const calcHasNonNeutral = calc.amb !== 0 || calc.ativ !== 0 || calc.corpo !== 0;
   const differs = draft.amb !== calc.amb || draft.ativ !== calc.ativ || draft.corpo !== calc.corpo;
   const shouldShow = differs && (calcHasNonNeutral || draftHasAny);

@@ -135,7 +135,12 @@ export function resolveCorpoJudFlow({
     if (!filledDomains.length) {
       return { ready: false, q: null, reason: 'No motivo "Domínio administrativo b1–b8 mais grave", informe ao menos um domínio b1 a b8.', mode: 'pending' };
     }
-    const q = filledDomains.reduce((acc, id) => Math.max(acc, med.corpoAdminDomains[id]), 0);
+    // ⚡ Optimization: Native for-loop to avoid Array.prototype.reduce callback allocation overhead
+    let q = 0;
+    for (let i = 0; i < filledDomains.length; i++) {
+      const val = med.corpoAdminDomains[filledDomains[i]];
+      if (val > q) q = val;
+    }
     return {
       ready: true,
       q,
