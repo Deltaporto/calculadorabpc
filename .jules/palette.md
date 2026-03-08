@@ -13,3 +13,7 @@
 ## 2025-03-05 - Auto-select readonly generated textareas
 **Learning:** For sections presenting large blocks of generated text meant for copying (like `#textoPadrao` and `#textoControleJudicial`), providing a dedicated "Copy" button is great, but many users default to keyboard shortcuts (Ctrl+C / Cmd+C). When the text is in a `readonly` textarea, clicking to focus usually places the caret, requiring the user to manually drag-select or press Ctrl+A. Automatically calling `.select()` when the user clicks inside significantly reduces friction and provides a clear visual selection state.
 **Action:** Whenever implementing a read-only textarea explicitly designed for content extraction, bind a `click` event listener to trigger `this.select()` to support fast keyboard-driven copying.
+
+## 2023-10-27 - Disabled Element Accessibility
+**Learning:** `pointer-events: none` on disabled buttons hides both the `not-allowed` cursor and any native `title` tooltips, breaking accessibility and user context for why an element is inactive.
+**Action:** Instead of disabling pointer events, use CSS `:not(.locked)` to scope out `:hover` and `:active` visual states. Use `cursor: not-allowed`, add `aria-disabled="true"`, and set a descriptive `title` to explain the locked state.
