@@ -713,7 +713,7 @@ header p {
 }
 
 @media (hover:hover) {
-  .note-btn:hover {
+  .note-btn:not(.locked):hover {
     border-color: color-mix(in srgb, var(--hover-color) 48%, var(--border) 52%);
     background: linear-gradient(145deg, color-mix(in srgb, var(--hover-color) 14%, var(--surface)), color-mix(in srgb, var(--hover-color) 6%, var(--surface)));
     color: color-mix(in srgb, var(--hover-color) 54%, var(--text2) 46%);
@@ -724,12 +724,12 @@ header p {
       0 4px 8px color-mix(in srgb, var(--hover-color) 18%, transparent)
   }
 
-  .note-btn:hover::after {
+  .note-btn:not(.locked):hover::after {
     transform: translateX(110%);
     opacity: .45
   }
 
-  .note-btn.active:hover {
+  .note-btn.active:not(.locked):hover {
     background: var(--hover-color);
     color: var(--hover-fg);
     border-color: var(--hover-color);
@@ -739,7 +739,7 @@ header p {
       inset 0 1px 0 rgba(255, 255, 255, .22)
   }
 
-  .note-btn:active {
+  .note-btn:not(.locked):active {
     transform: translateY(0) scale(1)
   }
 }
@@ -777,7 +777,6 @@ header p {
 .note-btn.locked {
   opacity: .7;
   cursor: not-allowed;
-  pointer-events: none
 }
 
 .note-btn.locked.active {
