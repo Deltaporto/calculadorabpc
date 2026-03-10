@@ -21,7 +21,7 @@ export function initStaticRatingA11yLabels(labels) {
 export function initKeyboardNav() {
   // ⚡ Optimization: Direct querySelectorAll (NodeList) instead of Array.from to avoid array allocation on every interaction
   const getGroupButtons = (group) => group.querySelectorAll('button:not([disabled])');
-  const groupSelector = '.note-buttons, .jc-q-buttons, .jc-segmented, .amb-tabs, .jc-segmented-wide';
+  const groupSelector = '.note-buttons, .jc-q-buttons, .jc-segmented, .amb-tabs, .jc-segmented-wide, .app-mode-switch';
 
   // Initialize static groups
   document.querySelectorAll(groupSelector).forEach(group => {

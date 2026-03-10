@@ -105,6 +105,9 @@ function createButton(value, activeValue) {
     },
     getAttribute(name) {
       return attributes[name];
+    },
+    removeAttribute(name) {
+      delete attributes[name];
     }
   };
 }

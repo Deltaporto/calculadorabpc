@@ -131,9 +131,9 @@
           href="docs/manual.html" target="_blank" rel="noopener noreferrer"
           title="Abrir o Manual de Uso em nova aba">Manual de Uso</a></p>
       <div class="app-mode-switch" id="modeSwitcher" role="group" aria-label="Modo da aplicação">
-        <button class="mode-btn" data-mode="controle">Controle Judicial</button>
-        <button class="mode-btn" data-mode="simulador">Simulador</button>
-        <button class="mode-btn" data-mode="fluxograma">Fluxograma</button>
+        <button class="mode-btn" data-mode="controle" aria-controls="judicialControlSection">Controle Judicial</button>
+        <button class="mode-btn" data-mode="simulador" aria-controls="simuladorDetails">Simulador</button>
+        <button class="mode-btn" data-mode="fluxograma" aria-controls="flowchartSection">Fluxograma</button>
       </div>
       <div class="header-row">
         <label><input type="checkbox" id="toggleDark"><svg class="ui-icon sm" aria-hidden="true">
@@ -291,9 +291,9 @@
           <div class="tabela-section">
             <h3>Tabela Conclusiva — Anexo IV, Portaria 2/2015</h3>
             <div class="amb-tabs" role="group" aria-label="Fatores Ambientais"><span class="amb-tab-label">Fatores Ambientais:</span><button class="amb-tab active"
-                data-a="0">N</button><button class="amb-tab" data-a="1">L</button><button class="amb-tab"
-                data-a="2">M</button><button class="amb-tab" data-a="3">G</button><button class="amb-tab"
-                data-a="4">C</button></div>
+                data-a="0" aria-controls="tGrid">N</button><button class="amb-tab" data-a="1" aria-controls="tGrid">L</button><button class="amb-tab"
+                data-a="2" aria-controls="tGrid">M</button><button class="amb-tab" data-a="3" aria-controls="tGrid">G</button><button class="amb-tab"
+                data-a="4" aria-controls="tGrid">C</button></div>
             <div class="tabela-matrix">
               <div class="tabela-axis-top"><span class="axis-kicker">Eixo horizontal</span><span
                   class="axis-title">Atividades e Participação (d1-d9)</span><span class="axis-arrow"
