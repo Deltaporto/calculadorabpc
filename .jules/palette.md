@@ -17,3 +17,7 @@
 ## 2023-10-27 - Disabled Element Accessibility
 **Learning:** `pointer-events: none` on disabled buttons hides both the `not-allowed` cursor and any native `title` tooltips, breaking accessibility and user context for why an element is inactive.
 **Action:** Instead of disabling pointer events, use CSS `:not(.locked)` to scope out `:hover` and `:active` visual states. Use `cursor: not-allowed`, add `aria-disabled="true"`, and set a descriptive `title` to explain the locked state.
+
+## 2025-03-05 - Roving Tabindex on Custom Button Groups
+**Learning:** Components grouped semantically with `role="group"` (like the application mode switcher `.app-mode-switch`) can cause unnecessary tab stops for keyboard users if they are not explicitly hooked into the application's roving tabindex logic. While standard form widgets might handle their own focus, custom grouping patterns require manual application.
+**Action:** When creating a new button group or `role="group"` structure, ensure its parent container class is added to the application's global `groupSelector` (e.g., in `a11y.js`) to inherit keyboard navigation patterns (arrow keys) and reduce tab clutter.
