@@ -23,3 +23,7 @@ Instead, a significantly safer optimization is removing global queries like `doc
 ## 2023-10-24 - Avoid Throttling RequestAnimationFrame Callbacks
 **Learning:** Adding a generic JavaScript `throttle` (e.g., 50ms) wrapper to `scroll` or `resize` events that already delegate their layout updates optimally to `requestAnimationFrame` introduces redundant visual lag and degrades performance rather than improving it.
 **Action:** Before applying debouncing or throttling to events, verify if the underlying handler function already utilizes native browser optimizations like `requestAnimationFrame`. If it does, do not add arbitrary JS throttling on top.
+
+## 2025-10-26 - Inline Boolean Checks in Global Event Listeners
+**Learning:** High-frequency global event listeners (such as `keydown` handlers for application-wide keyboard navigation) run on every keystroke. Allocating arrays inside these listeners just to perform a membership check (e.g., `['key1', 'key2'].includes(e.key)`) creates unnecessary memory pressure and triggers garbage collection.
+**Action:** Replace array allocations and method dispatches in high-frequency event listeners with explicit inline boolean checks (e.g., `e.key === 'key1' || e.key === 'key2'`) to significantly reduce processing overhead and allocations on every keystroke.

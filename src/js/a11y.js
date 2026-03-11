@@ -43,8 +43,8 @@ export function initKeyboardNav() {
 
   // Handle Arrow Keys (Roving Tabindex)
   document.addEventListener('keydown', (e) => {
-    const keys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
-    if (!keys.includes(e.key)) return;
+    // ⚡ Optimization: Fast inline boolean check avoids array allocation and .includes() dispatch on every single keydown
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
 
     const btn = e.target.closest('button');
     if (!btn) return;

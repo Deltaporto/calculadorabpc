@@ -1152,6 +1152,9 @@ function getJudicialProgressPct(activeStep) {
   return Math.max(25, Math.min(100, activeStep * 25));
 }
 
+// ⚡ Optimization: Cache NodeList of static buttons to avoid repeated DOM querying
+const jcGroupButtonsCache = new Map();
+
 function renderJudicialProgress() {
   const labels = ['Base administrativa', 'Perícia médica', 'Triagem probatória', 'Texto da decisão'];
   const stepIds = ['stepAdmin', 'stepMed', 'stepTriagem', 'stepTexto'];
@@ -1175,7 +1178,12 @@ function renderJudicialProgress() {
 }
 
 function syncQButtonGroup(groupId, value) {
-  document.querySelectorAll(`#${groupId} .jc-q-btn`).forEach(btn => {
+  let btns = jcGroupButtonsCache.get(groupId);
+  if (!btns) {
+    btns = document.querySelectorAll(`#${groupId} .jc-q-btn`);
+    jcGroupButtonsCache.set(groupId, btns);
+  }
+  btns.forEach(btn => {
     const isActive = value != null && +btn.dataset.value === value;
     btn.classList.toggle('active', isActive);
     btn.setAttribute('aria-pressed', isActive);
@@ -1183,7 +1191,12 @@ function syncQButtonGroup(groupId, value) {
 }
 
 function syncSegmentedGroup(groupId, value) {
-  document.querySelectorAll(`#${groupId} .jc-seg-btn`).forEach(btn => {
+  let btns = jcGroupButtonsCache.get(groupId);
+  if (!btns) {
+    btns = document.querySelectorAll(`#${groupId} .jc-seg-btn`);
+    jcGroupButtonsCache.set(groupId, btns);
+  }
+  btns.forEach(btn => {
     const isActive = value != null && btn.dataset.value === value;
     btn.classList.toggle('active', isActive);
     btn.setAttribute('aria-pressed', isActive);
