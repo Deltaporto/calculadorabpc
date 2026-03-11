@@ -207,6 +207,7 @@ export function runMainUpdate({
   setTextIfChanged(refs.fCorpoFinal, corpo.majorado ? String(corpo.final) : '');
   setTextIfChanged(refs.fCorpoSuffix, corpo.majorado ? ' (majoração +1)' : '');
   setStyleIfChanged(refs.fCorpoFinal, 'display', corpo.majorado ? '' : 'none');
+  setStyleIfChanged(refs.fCorpoSpacer, 'display', corpo.majorado ? '' : 'none');
 
   setQBadgeElement(refs.qCorpo, corpo.q, qLabels);
   setTextIfChanged(refs.nameCorpo, qFull.corpo[corpo.q]);
