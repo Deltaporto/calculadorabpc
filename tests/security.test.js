@@ -67,6 +67,9 @@ test('escapeHtml - basic security', () => {
   assert.strictEqual(escapeHtml('&'), '&amp;', '& escaped');
   assert.strictEqual(escapeHtml('"'), '&quot;', '" escaped');
   assert.strictEqual(escapeHtml("'"), '&#39;', "' escaped");
+  assert.strictEqual(escapeHtml('`'), '&#x60;', '` escaped');
+  assert.strictEqual(escapeHtml('='), '&#x3D;', '= escaped');
+  assert.strictEqual(escapeHtml('/'), '&#x2F;', '/ escaped');
 
   // Combinations
   assert.strictEqual(escapeHtml('<script>'), '&lt;script&gt;', 'Basic script tag');
@@ -77,14 +80,15 @@ test('escapeHtml - basic security', () => {
 
 test('escapeHtml - XSS vectors', () => {
   // Common XSS payloads
-  assert.strictEqual(escapeHtml('<img src=x onerror=alert(1)>'), '&lt;img src=x onerror=alert(1)&gt;', 'Event handler');
+  assert.strictEqual(escapeHtml('<img src=x onerror=alert(1)>'), '&lt;img src&#x3D;x onerror&#x3D;alert(1)&gt;', 'Event handler');
   assert.strictEqual(escapeHtml('javascript:alert(1)'), 'javascript:alert(1)', 'Protocol not escaped (only HTML chars are)');
-  assert.strictEqual(escapeHtml('<svg/onload=alert(1)>'), '&lt;svg/onload=alert(1)&gt;', 'SVG onload');
-  assert.strictEqual(escapeHtml('"><script>alert(1)</script>'), '&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;', 'Break out of attribute');
+  assert.strictEqual(escapeHtml('<svg/onload=alert(1)>'), '&lt;svg&#x2F;onload&#x3D;alert(1)&gt;', 'SVG onload');
+  assert.strictEqual(escapeHtml('"><script>alert(1)</script>'), '&quot;&gt;&lt;script&gt;alert(1)&lt;&#x2F;script&gt;', 'Break out of attribute');
+  assert.strictEqual(escapeHtml('`<script>alert(1)</script>`'), '&#x60;&lt;script&gt;alert(1)&lt;&#x2F;script&gt;&#x60;', 'Backtick execution context');
 });
 
 test('escapeHtml - mixed content', () => {
   const input = `<div>"Hello" & 'World'</div>`;
-  const expected = `&lt;div&gt;&quot;Hello&quot; &amp; &#39;World&#39;&lt;/div&gt;`;
+  const expected = `&lt;div&gt;&quot;Hello&quot; &amp; &#39;World&#39;&lt;&#x2F;div&gt;`;
   assert.strictEqual(escapeHtml(input), expected);
 });
