@@ -2155,6 +2155,9 @@ function initAutoSelectTextareas() {
       ta.addEventListener('click', function() {
         this.select();
       });
+      ta.addEventListener('focus', function() {
+        this.select();
+      });
     }
   });
 }

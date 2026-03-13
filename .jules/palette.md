@@ -21,3 +21,7 @@
 ## 2025-03-05 - Roving Tabindex on Custom Button Groups
 **Learning:** Components grouped semantically with `role="group"` (like the application mode switcher `.app-mode-switch`) can cause unnecessary tab stops for keyboard users if they are not explicitly hooked into the application's roving tabindex logic. While standard form widgets might handle their own focus, custom grouping patterns require manual application.
 **Action:** When creating a new button group or `role="group"` structure, ensure its parent container class is added to the application's global `groupSelector` (e.g., in `a11y.js`) to inherit keyboard navigation patterns (arrow keys) and reduce tab clutter.
+
+## 2025-03-05 - Keyboard-driven Auto-select for Readonly Textareas
+**Learning:** While binding a `click` event listener to auto-select generated text in `readonly` textareas (like `#textoPadrao` and `#textoControleJudicial`) is helpful for mouse users, it leaves keyboard-driven users behind. When a user tabs into the textarea, the text is not automatically selected, requiring manual selection. Adding a `focus` event listener alongside `click` ensures that keyboard users experience the same frictionless auto-selection when navigating the interface.
+**Action:** When implementing auto-select functionality on `readonly` textareas intended for copying, always bind both `click` and `focus` event listeners to support both mouse and keyboard navigation equally.
