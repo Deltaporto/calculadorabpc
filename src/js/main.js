@@ -2152,9 +2152,11 @@ function initAutoSelectTextareas() {
   const textareas = [document.getElementById('textoPadrao'), document.getElementById('textoControleJudicial')];
   textareas.forEach(ta => {
     if (ta) {
-      ta.addEventListener('click', function() {
+      const handleSelect = function() {
         this.select();
-      });
+      };
+      ta.addEventListener('click', handleSelect);
+      ta.addEventListener('focus', handleSelect);
     }
   });
 }
