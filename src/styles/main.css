@@ -230,6 +230,11 @@ header p {
   transition: background .18s, color .18s
 }
 
+.mode-btn:not(.active):hover {
+  background: rgba(255, 255, 255, .12);
+  color: #fff
+}
+
 .mode-btn+.mode-btn {
   border-left: 1px solid rgba(255, 255, 255, .18)
 }
@@ -1052,6 +1057,12 @@ input:checked+.toggle-switch::after {
   color: var(--text3);
   cursor: pointer;
   transition: all .15s
+}
+
+.amb-tab:not(.active):hover {
+  border-color: var(--text3);
+  color: var(--text2);
+  background: color-mix(in srgb, var(--border) 20%, var(--surface))
 }
 
 .amb-tab.active {
@@ -2370,6 +2381,11 @@ input:checked+.toggle-switch::after {
   cursor: pointer;
   font-size: .78rem;
   outline: none
+}
+
+.jc-seg-btn:not(:disabled):not(.active):hover {
+  background: color-mix(in srgb, var(--border) 40%, var(--surface));
+  color: var(--text)
 }
 
 .jc-seg-btn:last-child {
