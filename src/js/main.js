@@ -735,6 +735,7 @@ function handleApplyPadrao() {
 
   if (!context.manuallyFilledEligible.length) {
     applyPadraoEntries(context.entriesOverwrite);
+    showToast('Padrão médio social aplicado com sucesso.', 'success');
     return;
   }
 
@@ -766,6 +767,7 @@ async function handleLimpar() {
   document.querySelectorAll('.note-btn').forEach(b => { b.classList.remove('active', 'locked'); const isZero = +b.dataset.value === 0; if (isZero) b.classList.add('active'); b.setAttribute('aria-pressed', isZero); });
   applyChildRules();
   update();
+  showToast('Calculadora limpa com sucesso.', 'success');
 }
 
 // Save/Comparison + Judicial Control
@@ -1790,6 +1792,7 @@ async function handleClearComp() {
   document.getElementById('btnClearComp').classList.add('hidden');
   resetJudicialControl();
   renderJudicialControl();
+  showToast('Comparação limpa com sucesso.', 'success');
 }
 
 function getAutoQualifiedChildDomains() {
@@ -1977,7 +1980,10 @@ function initPadraoModal() {
     const entries = mode === 'overwrite'
       ? pendingPadraoDialogContext.entriesOverwrite
       : pendingPadraoDialogContext.entriesPreserve;
-    if (entries.length) applyPadraoEntries(entries);
+    if (entries.length) {
+      applyPadraoEntries(entries);
+      showToast('Padrão médio social aplicado com sucesso.', 'success');
+    }
     closeModal();
   };
 
