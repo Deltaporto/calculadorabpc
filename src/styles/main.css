@@ -925,10 +925,6 @@ header p {
   flex-shrink: 0
 }
 
-.toggle-label input[type=checkbox]:focus-visible+.toggle-switch {
-  outline: 2px solid var(--blue);
-  outline-offset: 2px
-}
 
 .toggle-switch::after {
   content: '';
@@ -4325,7 +4321,9 @@ footer {
 .jc-mini-textarea:focus-visible,
 .jc-select:focus-visible,
 .standard-text textarea:focus-visible,
-.toast-close:focus-visible {
+.toast-close:focus-visible,
+.toggle-label:has(input[type=checkbox]:focus-visible),
+.jc-reduction-alert label:has(input[type=checkbox]:focus-visible) {
   outline: 2px solid transparent;
   box-shadow: 0 0 0 2px var(--blue);
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--blue) 72%, #fff 28%);
