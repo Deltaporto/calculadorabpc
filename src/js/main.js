@@ -284,24 +284,20 @@ function update() {
 }
 
 // ============ EVENT HANDLERS ============
-const domainButtonsCache = new Map();
 
 function getDomainButtons(domain) {
-  let btns = domainButtonsCache.get(domain);
-  if (!btns || btns.length === 0) {
-    btns = document.querySelectorAll(`[data-domain="${domain}"] .note-btn`);
-    if (btns.length > 0) domainButtonsCache.set(domain, btns);
-  }
-  return btns;
+  const group = document.querySelector(`[data-domain="${domain}"]`);
+  return group ? group.getElementsByClassName('note-btn') : [];
 }
 
 function handleDomainButtonClick({ button, group, domain, value }) {
   if (!button || button.classList.contains('locked')) return;
   const btns = getDomainButtons(domain);
-  btns.forEach(noteButton => {
+  for (let i = 0; i < btns.length; i++) {
+    const noteButton = btns[i];
     noteButton.classList.remove('active');
     noteButton.setAttribute('aria-pressed', 'false');
-  });
+  }
   button.classList.add('active');
   button.setAttribute('aria-pressed', 'true');
   state[domain] = value;
@@ -389,20 +385,22 @@ function applyChildRules() {
     if (crianca && idadeMeses < d.cut) {
       if (!(d.id in childDomainBackup)) childDomainBackup[d.id] = state[d.id];
       state[d.id] = 4;
-      btns.forEach(b => {
+      for (let i = 0; i < btns.length; i++) {
+        const b = btns[i];
         const isActive = +b.dataset.value === 4;
         b.classList.toggle('active', isActive);
         b.setAttribute('aria-pressed', isActive);
         b.classList.add('locked');
         b.setAttribute('aria-disabled', 'true');
         b.setAttribute('title', `Não aplicável: idade informada (${idadeMeses} meses) é menor que o ponto de corte deste domínio (${d.cut} meses).`);
-      });
+      }
     } else {
       if (d.id in childDomainBackup) {
         state[d.id] = childDomainBackup[d.id];
         delete childDomainBackup[d.id];
       }
-      btns.forEach(b => {
+      for (let i = 0; i < btns.length; i++) {
+        const b = btns[i];
         b.classList.remove('locked');
         b.removeAttribute('aria-disabled');
         const originalLabel = b.getAttribute('aria-label');
@@ -414,7 +412,7 @@ function applyChildRules() {
         const isActive = +b.dataset.value === state[d.id];
         b.classList.toggle('active', isActive);
         b.setAttribute('aria-pressed', isActive);
-      });
+      }
     }
   });
   updateChildAutoSummary();
@@ -596,7 +594,11 @@ function applyPadraoEntries(entriesToApply) {
   entriesToApply.forEach(([id, v]) => {
     state[id] = v;
     const btns = getDomainButtons(id);
-    btns.forEach(b => { b.classList.remove('active'); if (+b.dataset.value === v) b.classList.add('active'); });
+    for (let i = 0; i < btns.length; i++) {
+      const b = btns[i];
+      b.classList.remove('active');
+      if (+b.dataset.value === v) b.classList.add('active');
+    }
   });
   update();
 }
@@ -1152,9 +1154,6 @@ function getJudicialProgressPct(activeStep) {
   return Math.max(25, Math.min(100, activeStep * 25));
 }
 
-// ⚡ Optimization: Cache NodeList of static buttons to avoid repeated DOM querying
-const jcGroupButtonsCache = new Map();
-
 function renderJudicialProgress() {
   const labels = ['Base administrativa', 'Perícia médica', 'Triagem probatória', 'Texto da decisão'];
   const stepIds = ['stepAdmin', 'stepMed', 'stepTriagem', 'stepTexto'];
@@ -1178,29 +1177,27 @@ function renderJudicialProgress() {
 }
 
 function syncQButtonGroup(groupId, value) {
-  let btns = jcGroupButtonsCache.get(groupId);
-  if (!btns) {
-    btns = document.querySelectorAll(`#${groupId} .jc-q-btn`);
-    jcGroupButtonsCache.set(groupId, btns);
-  }
-  btns.forEach(btn => {
+  const group = document.getElementById(groupId);
+  if (!group) return;
+  const btns = group.getElementsByClassName('jc-q-btn');
+  for (let i = 0; i < btns.length; i++) {
+    const btn = btns[i];
     const isActive = value != null && +btn.dataset.value === value;
     btn.classList.toggle('active', isActive);
     btn.setAttribute('aria-pressed', isActive);
-  });
+  }
 }
 
 function syncSegmentedGroup(groupId, value) {
-  let btns = jcGroupButtonsCache.get(groupId);
-  if (!btns) {
-    btns = document.querySelectorAll(`#${groupId} .jc-seg-btn`);
-    jcGroupButtonsCache.set(groupId, btns);
-  }
-  btns.forEach(btn => {
+  const group = document.getElementById(groupId);
+  if (!group) return;
+  const btns = group.getElementsByClassName('jc-seg-btn');
+  for (let i = 0; i < btns.length; i++) {
+    const btn = btns[i];
     const isActive = value != null && btn.dataset.value === value;
     btn.classList.toggle('active', isActive);
     btn.setAttribute('aria-pressed', isActive);
-  });
+  }
 }
 
 function clearJudicialTextArea() {

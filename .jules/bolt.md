@@ -27,3 +27,7 @@ Instead, a significantly safer optimization is removing global queries like `doc
 ## 2025-10-26 - Inline Boolean Checks in Global Event Listeners
 **Learning:** High-frequency global event listeners (such as `keydown` handlers for application-wide keyboard navigation) run on every keystroke. Allocating arrays inside these listeners just to perform a membership check (e.g., `['key1', 'key2'].includes(e.key)`) creates unnecessary memory pressure and triggers garbage collection.
 **Action:** Replace array allocations and method dispatches in high-frequency event listeners with explicit inline boolean checks (e.g., `e.key === 'key1' || e.key === 'key2'`) to significantly reduce processing overhead and allocations on every keystroke.
+
+## 2026-03-02 - Replace NodeList Caching with Live HTMLCollections
+**Learning:** While attempting to fix DOM query performance, developers often cache the results of `querySelectorAll` into a global `Map` or array. This is an anti-pattern that creates strong references to static `NodeList`s, causing severe memory leaks if elements detach, and failing to reflect DOM updates.
+**Action:** Do not cache `querySelectorAll`. Instead, for repeated queries of the same class within a specific component, use `parentElement.getElementsByClassName('class-name')` locally. It returns a live `HTMLCollection` which is extremely fast, avoids memory allocation overhead entirely, and prevents memory leaks.
