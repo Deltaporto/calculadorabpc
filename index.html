@@ -323,10 +323,10 @@
     </details>
 
     <div class="footer-actions">
-      <button class="btn btn-primary" id="btnLevarParaControle"><svg class="ui-icon sm" aria-hidden="true">
+      <button class="btn btn-primary" id="btnLevarParaControle" title="Transfere o cenário atual para a aba de Controle Judicial"><svg class="ui-icon sm" aria-hidden="true">
           <use href="#i-balance"></use>
         </svg>Levar cenário para Controle Judicial</button>
-      <button class="btn btn-red hidden" id="btnClearComp"><svg class="ui-icon sm" aria-hidden="true">
+      <button class="btn btn-red hidden" id="btnClearComp" title="Limpa o cenário de comparação"><svg class="ui-icon sm" aria-hidden="true">
           <use href="#i-close"></use>
         </svg>Limpar comparação</button>
     </div>
@@ -337,7 +337,7 @@
       <textarea id="textoPadrao" readonly placeholder="O texto da decisão será gerado aqui automaticamente..." aria-label="Texto da Minuta Padronizada para Decisão"></textarea>
       <div class="standard-text-actions">
         <span class="copy-feedback" id="copyFeedback" role="status" aria-live="polite"></span>
-        <button class="btn btn-outline" id="btnCopiarTexto"><svg class="ui-icon sm" aria-hidden="true">
+        <button class="btn btn-outline" id="btnCopiarTexto" title="Copia a minuta padrão para a área de transferência"><svg class="ui-icon sm" aria-hidden="true">
             <use href="#i-clipboard"></use>
           </svg>Copiar texto</button>
       </div>
@@ -483,14 +483,14 @@
             <summary>Atalho opcional: preencher rascunho com a Calculadora</summary>
             <div class="jc-autofill-body">
               <p class="jc-autofill-hint" id="jcAutoFillHint"></p>
-              <button class="btn jc-autofill-btn" id="btnUseCurrentAsBase"><svg class="ui-icon sm" aria-hidden="true">
+              <button class="btn jc-autofill-btn" id="btnUseCurrentAsBase" title="Copia as notas da Calculadora para o rascunho da perícia"><svg class="ui-icon sm" aria-hidden="true">
                   <use href="#i-swap"></use>
                 </svg>Preencher automaticamente com a Calculadora</button>
             </div>
           </details>
           <div class="jc-inline-note" id="jcAdminFixedSummary">Base administrativa ainda não fixada.</div>
           <div class="jc-actions-main">
-            <button class="btn btn-primary jc-primary-btn" id="btnFixarBaseAdmin"><svg class="ui-icon sm"
+            <button class="btn btn-primary jc-primary-btn" id="btnFixarBaseAdmin" title="Salva as notas atuais como a decisão da perícia administrativa"><svg class="ui-icon sm"
                 aria-hidden="true">
                 <use href="#i-save"></use>
               </svg>Fixar base administrativa</button>
@@ -812,16 +812,16 @@
           </div>
           <div class="standard-text-actions">
             <span class="copy-feedback" id="copyFeedbackControle" role="status" aria-live="polite"></span>
-            <button class="btn btn-outline" id="btnGerarControleTexto"><svg class="ui-icon sm" aria-hidden="true">
+            <button class="btn btn-outline" id="btnGerarControleTexto" title="Gera a minuta de decisão com base no controle judicial"><svg class="ui-icon sm" aria-hidden="true">
                 <use href="#i-document"></use>
               </svg>Gerar texto</button>
-            <button class="btn btn-primary" id="btnGerarCopiarControleTexto"><svg class="ui-icon sm" aria-hidden="true">
+            <button class="btn btn-primary" id="btnGerarCopiarControleTexto" title="Gera e copia a minuta de decisão com base no controle judicial"><svg class="ui-icon sm" aria-hidden="true">
                 <use href="#i-clipboard"></use>
               </svg>Gerar e copiar texto da decisão</button>
-            <button class="btn btn-outline" id="btnCopiarControleTexto"><svg class="ui-icon sm" aria-hidden="true">
+            <button class="btn btn-outline" id="btnCopiarControleTexto" title="Copia a minuta de decisão gerada"><svg class="ui-icon sm" aria-hidden="true">
                 <use href="#i-clipboard"></use>
               </svg>Somente copiar</button>
-            <button class="btn btn-red" id="btnLimparControleJudicial"><svg class="ui-icon sm" aria-hidden="true">
+            <button class="btn btn-red" id="btnLimparControleJudicial" title="Limpa os dados do controle judicial"><svg class="ui-icon sm" aria-hidden="true">
                 <use href="#i-close"></use>
               </svg>Limpar controle judicial</button>
           </div>
