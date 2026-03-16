@@ -31,3 +31,7 @@ Instead, a significantly safer optimization is removing global queries like `doc
 ## 2026-03-02 - Replace NodeList Caching with Live HTMLCollections
 **Learning:** While attempting to fix DOM query performance, developers often cache the results of `querySelectorAll` into a global `Map` or array. This is an anti-pattern that creates strong references to static `NodeList`s, causing severe memory leaks if elements detach, and failing to reflect DOM updates.
 **Action:** Do not cache `querySelectorAll`. Instead, for repeated queries of the same class within a specific component, use `parentElement.getElementsByClassName('class-name')` locally. It returns a live `HTMLCollection` which is extremely fast, avoids memory allocation overhead entirely, and prevents memory leaks.
+
+## 2025-05-21 - Avoid Redundant DOM Mutations in Render Loops
+**Learning:** During frequent UI rendering cycles (e.g., `renderJudicialControl()`), iterating over large collections of DOM elements (like button groups) and unconditionally calling `.classList.toggle()` and `.setAttribute()` causes substantial performance overhead. Even if the resulting state equals the current state, these browser APIs trigger synchronous style recalculations and layout thrashing.
+**Action:** Always wrap DOM mutations inside rendering loops with a strict inline boolean check of the current state (e.g., `if (el.classList.contains('active') !== isActive) { ... }`). This guarantees writes only occur when the state actually changes, bypassing redundant C++ engine overhead.

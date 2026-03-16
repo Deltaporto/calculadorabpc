@@ -1183,8 +1183,10 @@ function syncQButtonGroup(groupId, value) {
   for (let i = 0; i < btns.length; i++) {
     const btn = btns[i];
     const isActive = value != null && +btn.dataset.value === value;
-    btn.classList.toggle('active', isActive);
-    btn.setAttribute('aria-pressed', isActive);
+    if (btn.classList.contains('active') !== isActive) {
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-pressed', isActive);
+    }
   }
 }
 
@@ -1195,8 +1197,10 @@ function syncSegmentedGroup(groupId, value) {
   for (let i = 0; i < btns.length; i++) {
     const btn = btns[i];
     const isActive = value != null && btn.dataset.value === value;
-    btn.classList.toggle('active', isActive);
-    btn.setAttribute('aria-pressed', isActive);
+    if (btn.classList.contains('active') !== isActive) {
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-pressed', isActive);
+    }
   }
 }
 
