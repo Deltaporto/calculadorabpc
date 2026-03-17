@@ -852,8 +852,14 @@ function notifyJudicialInteraction(sourceId) {
   pendingJudicialInteraction = { sourceId, at: Date.now() };
 }
 
+// ⚡ Optimization: Single loop to Set prevents intermediate array allocations
 function uniquePendingTargetIds(items = []) {
-  return [...new Set(items.map(item => item.invalidId || item.targetId).filter(Boolean))];
+  const uniqueIds = new Set();
+  for (let i = 0; i < items.length; i++) {
+    const id = items[i].invalidId || items[i].targetId;
+    if (id) uniqueIds.add(id);
+  }
+  return [...uniqueIds];
 }
 
 // ⚡ Optimization: Track invalid elements in a Set to avoid full DOM traversal on every render
