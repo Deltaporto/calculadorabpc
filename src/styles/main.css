@@ -1640,6 +1640,12 @@ input:checked+.toggle-switch::after {
   text-decoration: underline
 }
 
+.flowchart-overview-link:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--blue) 58%, white);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 .flowchart-mobile-list {
   display: flex;
   flex-direction: column;
@@ -4331,6 +4337,8 @@ footer {
 .mode-btn:focus-visible,
 .btn:focus-visible,
 .simulador-summary:focus-visible,
+.jc-help-details summary:focus-visible,
+.jc-autofill-details summary:focus-visible,
 .idade-input input:focus-visible,
 .idade-input select:focus-visible,
 .jc-textarea:focus-visible,
