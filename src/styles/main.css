@@ -340,7 +340,7 @@ header p {
   box-shadow: 0 2px 8px rgba(40, 85, 182, .28)
 }
 
-.btn-primary:hover {
+.btn-primary:not(:disabled):hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(40, 85, 182, .38)
 }
@@ -351,7 +351,7 @@ header p {
   border: 1.5px solid var(--border)
 }
 
-.btn-outline:hover {
+.btn-outline:not(:disabled):hover {
   border-color: var(--text3)
 }
 
@@ -361,7 +361,7 @@ header p {
   border: 1.5px solid #FECACA
 }
 
-.btn-red:hover {
+.btn-red:not(:disabled):hover {
   background: #FECACA;
   border-color: #FCA5A5;
 }
@@ -3329,7 +3329,7 @@ header .badge {
   box-shadow: 0 8px 18px rgba(40, 85, 182, .28);
 }
 
-.btn-primary:hover {
+.btn-primary:not(:disabled):hover {
   background: linear-gradient(180deg, #3E72CE, #2F60BF);
   box-shadow: 0 11px 22px rgba(40, 85, 182, .38);
 }
@@ -3351,7 +3351,7 @@ header .badge {
   background: linear-gradient(180deg, #fff8f8, #ffecec);
 }
 
-.btn-red:hover {
+.btn-red:not(:disabled):hover {
   background: linear-gradient(180deg, #ffecec, #ffdfdf);
   border-color: #d16b6b;
 }
@@ -3360,7 +3360,7 @@ header .badge {
   background: linear-gradient(180deg, #3b1d2a, #321825);
 }
 
-[data-theme="dark"] .btn-red:hover {
+[data-theme="dark"] .btn-red:not(:disabled):hover {
   background: linear-gradient(180deg, #4d2637, #401e2e);
   border-color: #6a364b;
 }

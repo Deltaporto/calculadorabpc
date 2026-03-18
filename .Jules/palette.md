@@ -29,3 +29,6 @@
 ## 2025-05-24 - Focus Visibility on Dynamically Injected Interactive Elements
 **Learning:** Dynamically injected transient UI components, such as toast notification close buttons (`.toast-close`), are often missed during static DOM a11y audits and may lack `:focus-visible` styles, rendering them invisible to keyboard navigation.
 **Action:** When adding transient or dynamic interactive components, ensure they explicitly receive `:focus-visible` outline rules in the global accessibility stylesheet section.
+## 2026-03-01 - Hover Effects on Disabled Elements
+**Learning:** Generic button components (`.btn-primary`, `.btn-outline`, `.btn-red`) retained their visual hover effects (shadows, transforms, gradient shifts) even when disabled, which conveys false interactivity and confuses users relying on visual cues.
+**Action:** Always strictly scope interactive CSS states like `:hover` and `:active` with `:not(:disabled)` (e.g., `.btn-primary:not(:disabled):hover`) when defining button classes, ensuring consistency across themes.
