@@ -1544,6 +1544,21 @@ function renderJudicialControl() {
       text: 'Etapa 1 concluída. Base administrativa fixada.'
     });
 
+  const disableTextoBtns = () => {
+    const textoBtns = [
+      { id: 'btnGerarControleTexto' },
+      { id: 'btnGerarCopiarControleTexto' },
+      { id: 'btnCopiarControleTexto' }
+    ];
+    textoBtns.forEach(b => {
+      const el = document.getElementById(b.id);
+      if (el) {
+        el.disabled = true;
+        el.setAttribute('title', 'A triagem probatória precisa ser concluída antes de gerar a minuta.');
+      }
+    });
+  };
+
   if (!adminDone) {
     const blockReason = 'Etapa 2 bloqueada: primeiro fixe a base administrativa na etapa 1.';
     const nextTargetId = adminPendingItems[0]?.targetId || '';
@@ -1566,6 +1581,7 @@ function renderJudicialControl() {
     setStatusBadge('pending', 'alert', 'Preencha as etapas 1 e 2 para liberar a conclusão probatória.');
     document.getElementById('jcTrace').replaceChildren(createTraceLine('Etapa 1: fixe a base administrativa do INSS para iniciar o controle judicial.'));
     setWhyBlocked(blockReason);
+    disableTextoBtns();
     renderJudicialProgress();
     markJudicialInvalidTargets(uniquePendingTargetIds(adminPendingItems));
     maybeAdvanceToNextPending(nextTargetId);
@@ -1603,6 +1619,7 @@ function renderJudicialControl() {
     setStatusBadge('pending', 'alert', triage.reason);
     document.getElementById('jcTrace').replaceChildren(createTraceLine(triage.reason));
     setWhyBlocked(triage.reason);
+    disableTextoBtns();
     renderJudicialProgress();
     const activeStep = getActiveJudicialStep();
     if (activeStep === 1) {
@@ -1685,6 +1702,20 @@ function renderJudicialControl() {
       tone: 'pending',
       text: 'Triagem concluída. Gere a minuta padronizada para finalizar a etapa 4.'
     });
+
+  const textoBtns = [
+    { id: 'btnGerarControleTexto', title: 'Gera a minuta de decisão com base no controle judicial' },
+    { id: 'btnGerarCopiarControleTexto', title: 'Gera e copia a minuta de decisão com base no controle judicial' },
+    { id: 'btnCopiarControleTexto', title: 'Copia a minuta de decisão gerada' }
+  ];
+  textoBtns.forEach(b => {
+    const el = document.getElementById(b.id);
+    if (el) {
+      el.disabled = !triage.ready;
+      el.setAttribute('title', triage.ready ? b.title : 'A triagem probatória precisa ser concluída antes de gerar a minuta.');
+    }
+  });
+
   setWhyBlocked('');
   renderJudicialProgress();
   const activeStep = getActiveJudicialStep();

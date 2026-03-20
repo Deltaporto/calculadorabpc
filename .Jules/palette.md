@@ -32,3 +32,11 @@
 ## 2026-03-01 - Hover Effects on Disabled Elements
 **Learning:** Generic button components (`.btn-primary`, `.btn-outline`, `.btn-red`) retained their visual hover effects (shadows, transforms, gradient shifts) even when disabled, which conveys false interactivity and confuses users relying on visual cues.
 **Action:** Always strictly scope interactive CSS states like `:hover` and `:active` with `:not(:disabled)` (e.g., `.btn-primary:not(:disabled):hover`) when defining button classes, ensuring consistency across themes.
+
+## 2026-03-01 - Semantic role for Visual Toggle Switches
+**Learning:** Visual toggle switches implemented with `<input type="checkbox">` and CSS are announced to screen readers merely as checkboxes, which breaks the expected mental model of the visual UI paradigm.
+**Action:** When a checkbox is styled to look like a toggle switch (e.g., using a `.toggle-switch` visual indicator), always add `role="switch"` so screen readers correctly announce it as a switch control.
+
+## 2026-03-01 - Explaining Disabled States
+**Learning:** Disabling action buttons without explanation leaves users confused about what preconditions are missing, especially in complex forms or multi-step processes.
+**Action:** When disabling a button dynamically based on application state, apply a descriptive `title` attribute explaining exactly why it is disabled (e.g., "A triagem probatória precisa ser concluída antes de gerar a minuta.") and restore the original tooltip when enabled.
