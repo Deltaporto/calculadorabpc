@@ -3871,8 +3871,16 @@ footer {
   cursor: pointer;
 }
 
-.sim-help-link:hover {
+.sim-help-link:not(:disabled):not([aria-disabled="true"]):hover {
   color: color-mix(in srgb, var(--blue) 90%, var(--text));
+}
+
+.sim-help-link:disabled,
+.sim-help-link[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.6;
+  filter: grayscale(0.5);
+  text-decoration: none;
 }
 
 .sim-help-link:focus-visible {
