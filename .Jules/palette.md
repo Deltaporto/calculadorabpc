@@ -40,3 +40,7 @@
 ## 2026-03-01 - Explaining Disabled States
 **Learning:** Disabling action buttons without explanation leaves users confused about what preconditions are missing, especially in complex forms or multi-step processes.
 **Action:** When disabling a button dynamically based on application state, apply a descriptive `title` attribute explaining exactly why it is disabled (e.g., "A triagem probatória precisa ser concluída antes de gerar a minuta.") and restore the original tooltip when enabled.
+
+## 2026-03-02 - Focus Management for Custom Non-Modal Dialogs
+**Learning:** Custom DOM-appended non-modal dialogs (like `simHelpPopover`) fail to support keyboard navigation intuitively unless focus is actively shifted into them when opened and returned to the trigger element when closed.
+**Action:** Always manually move focus to the dialog container (ensure it has `tabindex="-1"`) when it is opened, and return focus to the trigger button if the focus was inside the popover upon closing.
