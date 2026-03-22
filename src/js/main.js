@@ -456,7 +456,13 @@ function closeSimHelpPopover() {
     cancelAnimationFrame(simHelpPositionFrame);
     simHelpPositionFrame = null;
   }
-  if (activeSimHelpTrigger) activeSimHelpTrigger.setAttribute('aria-expanded', 'false');
+  let triggerToFocus = null;
+  if (activeSimHelpTrigger) {
+    activeSimHelpTrigger.setAttribute('aria-expanded', 'false');
+    if (popover && popover.contains(document.activeElement)) {
+      triggerToFocus = activeSimHelpTrigger;
+    }
+  }
   activeSimHelpKey = null;
   activeSimHelpTrigger = null;
   if (excerptEl) excerptEl.classList.add('hidden');
@@ -469,6 +475,9 @@ function closeSimHelpPopover() {
   popover.classList.remove('mobile', 'floating');
   popover.setAttribute('aria-hidden', 'true');
   clearSimHelpPopoverPosition(popover);
+  if (triggerToFocus) {
+    try { triggerToFocus.focus({ preventScroll: true }); } catch { triggerToFocus.focus(); }
+  }
 }
 
 function positionSimHelpPopover() {
@@ -560,6 +569,11 @@ function openSimHelpPopover(helpKey, trigger) {
   popover.setAttribute('aria-hidden', 'false');
   positionSimHelpPopover();
   scheduleSimHelpPopoverPosition();
+
+  // UX/A11y: Move focus into the popover so keyboard users can access its content
+  requestAnimationFrame(() => {
+    popover.focus();
+  });
 }
 
 function toggleSimHelpPopover(trigger) {
