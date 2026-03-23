@@ -162,7 +162,7 @@ test('age helpers keep unit bounds and conversion consistent', () => {
 });
 
 test('getAutoQualifiedChildDomains respects child mode and cut boundaries', () => {
-  const baseCtx = { DOM_ATIV_M, DOM_ATIV_S };
+  const baseCtx = { DOM_ATIV_M, DOM_ATIV_S, ATIV_DOMAINS: ALL_ATIV };
 
   const notChild = runGetAutoQualifiedChildDomains({ ...baseCtx, crianca: false, idadeMeses: 5 });
   assert.deepStrictEqual(notChild, []);
@@ -190,6 +190,7 @@ test('applyChildRules forces q4 with lock and restores backed-up values on unloc
   const ctx = {
     DOM_ATIV_M,
     DOM_ATIV_S,
+    ATIV_DOMAINS: ALL_ATIV,
     document,
     crianca: true,
     idadeMeses: 5,
