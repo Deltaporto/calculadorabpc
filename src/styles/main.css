@@ -329,6 +329,11 @@ header p {
   filter: grayscale(0.5);
 }
 
+.btn:not(:disabled):active {
+  transform: scale(0.96);
+  transition-duration: 0.05s;
+}
+
 .btn .ui-icon {
   width: .95em;
   height: .95em
@@ -345,6 +350,11 @@ header p {
   box-shadow: 0 4px 12px rgba(40, 85, 182, .38)
 }
 
+.btn-primary:not(:disabled):active {
+  transform: translateY(1px) scale(0.96);
+  box-shadow: 0 1px 4px rgba(40, 85, 182, .28);
+}
+
 .btn-outline {
   background: var(--surface);
   color: var(--text);
@@ -353,6 +363,10 @@ header p {
 
 .btn-outline:not(:disabled):hover {
   border-color: var(--text3)
+}
+
+.btn-outline:not(:disabled):active {
+  background: color-mix(in srgb, var(--surface) 95%, var(--text3) 5%);
 }
 
 .btn-red {
@@ -364,6 +378,10 @@ header p {
 .btn-red:not(:disabled):hover {
   background: #FECACA;
   border-color: #FCA5A5;
+}
+
+.btn-red:not(:disabled):active {
+  background: #FCA5A5;
 }
 
 .btn-red:focus-visible {
@@ -3334,6 +3352,10 @@ header .badge {
   box-shadow: 0 11px 22px rgba(40, 85, 182, .38);
 }
 
+.btn-primary:not(:disabled):active {
+  box-shadow: 0 4px 8px rgba(40, 85, 182, .28);
+}
+
 .btn-outline {
   background: linear-gradient(180deg, #ffffff, #f4f8ff);
   border-color: #c3d1e7;
@@ -3346,6 +3368,10 @@ header .badge {
   color: #d6e4ff;
 }
 
+[data-theme="dark"] .btn-outline:not(:disabled):active {
+  background: linear-gradient(180deg, #13223b, #0f1c2e);
+}
+
 .btn-red {
   border-color: #e57878;
   background: linear-gradient(180deg, #fff8f8, #ffecec);
@@ -3356,6 +3382,11 @@ header .badge {
   border-color: #d16b6b;
 }
 
+.btn-red:not(:disabled):active {
+  background: linear-gradient(180deg, #ffd3d3, #f5c4c4);
+  border-color: #c05c5c;
+}
+
 [data-theme="dark"] .btn-red {
   background: linear-gradient(180deg, #3b1d2a, #321825);
 }
@@ -3363,6 +3394,11 @@ header .badge {
 [data-theme="dark"] .btn-red:not(:disabled):hover {
   background: linear-gradient(180deg, #4d2637, #401e2e);
   border-color: #6a364b;
+}
+
+[data-theme="dark"] .btn-red:not(:disabled):active {
+  background: linear-gradient(180deg, #5b2d41, #4c2437);
+  border-color: #7d3f58;
 }
 
 [data-theme="dark"] .btn-red:focus-visible {
