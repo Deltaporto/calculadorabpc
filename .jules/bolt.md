@@ -35,3 +35,6 @@ Instead, a significantly safer optimization is removing global queries like `doc
 ## 2025-05-21 - Avoid Redundant DOM Mutations in Render Loops
 **Learning:** During frequent UI rendering cycles (e.g., `renderJudicialControl()`), iterating over large collections of DOM elements (like button groups) and unconditionally calling `.classList.toggle()` and `.setAttribute()` causes substantial performance overhead. Even if the resulting state equals the current state, these browser APIs trigger synchronous style recalculations and layout thrashing.
 **Action:** Always wrap DOM mutations inside rendering loops with a strict inline boolean check of the current state (e.g., `if (el.classList.contains('active') !== isActive) { ... }`). This guarantees writes only occur when the state actually changes, bypassing redundant C++ engine overhead.
+## 2026-03-23 - Array Spread in Hot Paths
+**Learning:** In Vanilla JS state machines, applying array spreading `[...arr1, ...arr2]` directly inside loops or functional array methods (like `.filter` or `.find`) allocates a new array on every iteration. This creates measurable GC pressure on hot paths.
+**Action:** Always pre-calculate and cache combined arrays (like `ATIV_DOMAINS`) at the module level and use the reference inside iterative functions.

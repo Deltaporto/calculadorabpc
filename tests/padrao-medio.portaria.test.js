@@ -182,6 +182,7 @@ test('getPadraoApplyContext excludes child non-eligible domains by age cut', () 
   const ctx = {
     DOM_ATIV_M,
     DOM_ATIV_S,
+    ATIV_DOMAINS: [...DOM_ATIV_M, ...DOM_ATIV_S],
     crianca: true,
     idadeMeses: 5,
     userFilledDomains: new Set(['e1', 'd6', 'd8'])
@@ -199,6 +200,7 @@ test('getPadraoApplyContext keeps all mapped domains in adult mode', () => {
   const ctx = {
     DOM_ATIV_M,
     DOM_ATIV_S,
+    ATIV_DOMAINS: [...DOM_ATIV_M, ...DOM_ATIV_S],
     crianca: false,
     idadeMeses: 192,
     userFilledDomains: new Set(['e1', 'd6', 'd8'])

@@ -380,7 +380,7 @@ function handleChangeIdadeUnidade(nextUnit) {
 }
 
 function applyChildRules() {
-  [...DOM_ATIV_M, ...DOM_ATIV_S].forEach(d => {
+  ATIV_DOMAINS.forEach(d => {
     const btns = getDomainButtons(d.id);
     if (crianca && idadeMeses < d.cut) {
       if (!(d.id in childDomainBackup)) childDomainBackup[d.id] = state[d.id];
@@ -593,7 +593,7 @@ function getPadraoApplyContext() {
   let skippedByAgeCut = 0;
   const eligibleEntries = padraoEntries.filter(([id]) => {
     if (crianca) {
-      const d = [...DOM_ATIV_M, ...DOM_ATIV_S].find(x => x.id === id);
+      const d = ATIV_DOMAINS.find(x => x.id === id);
       if (d && idadeMeses < d.cut) { skippedByAgeCut++; return false; }
     }
     return true;
@@ -1852,7 +1852,7 @@ async function handleClearComp() {
 
 function getAutoQualifiedChildDomains() {
   if (!crianca) return [];
-  return [...DOM_ATIV_M, ...DOM_ATIV_S].filter(d => idadeMeses < d.cut);
+  return ATIV_DOMAINS.filter(d => idadeMeses < d.cut);
 }
 
 function updateChildAutoSummary() {
