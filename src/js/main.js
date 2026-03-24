@@ -118,6 +118,21 @@ const SIM_HELP_MOBILE_QUERY = '(max-width: 940px)';
 const SIM_HELP_MARGIN_PX = 12;
 const SIM_HELP_OFFSET_PX = 10;
 
+// ⚡ Optimization: Avoid recreation of arrays and redundant layout checks for text output buttons
+const TEXTO_BTNS_CONFIG = [
+  { id: 'btnGerarControleTexto', title: 'Gera a minuta de decisão com base no controle judicial' },
+  { id: 'btnGerarCopiarControleTexto', title: 'Gera e copia a minuta de decisão com base no controle judicial' },
+  { id: 'btnCopiarControleTexto', title: 'Copia a minuta de decisão gerada' }
+];
+
+// ⚡ Optimization: Helper to avoid redundant layout thrashing
+function toggleHiddenIfChanged(elId, isHidden) {
+  const el = document.getElementById(elId);
+  if (el && el.classList.contains('hidden') !== isHidden) {
+    el.classList.toggle('hidden', isHidden);
+  }
+}
+
 // ============ CALCULATION ============
 function calcAmbiente() {
   return calcAmbienteFromState(state, DOM_AMB, pctToQ);
@@ -834,13 +849,17 @@ function updateComparison(amb, ativ, corpo) {
 
 function setStepState(id, state, text) {
   const el = document.getElementById(id);
-  el.className = `jc-step-state ${state}`;
-  el.textContent = text;
+  if (!el) return;
+  const expectedClass = `jc-step-state ${state}`;
+  if (el.className !== expectedClass) el.className = expectedClass;
+  if (el.textContent !== text) el.textContent = text;
 }
 
 function setStatusBadge(kind, iconName, textHtml) {
   const badge = document.getElementById('jcStatusBadge');
-  badge.className = `jc-status-badge ${kind}`;
+  if (!badge) return;
+  const expectedClass = `jc-status-badge ${kind}`;
+  if (badge.className !== expectedClass) badge.className = expectedClass;
   badge.replaceChildren();
 
   if (iconName) {
@@ -852,14 +871,15 @@ function setStatusBadge(kind, iconName, textHtml) {
 
 function setWhyBlocked(message = '') {
   const box = document.getElementById('jcWhyBlocked');
+  if (!box) return;
   const text = box.querySelector('span');
   if (!message) {
-    box.classList.add('hidden');
-    text.textContent = '';
+    if (!box.classList.contains('hidden')) box.classList.add('hidden');
+    if (text.textContent !== '') text.textContent = '';
     return;
   }
-  box.classList.remove('hidden');
-  text.textContent = message;
+  if (box.classList.contains('hidden')) box.classList.remove('hidden');
+  if (text.textContent !== message) text.textContent = message;
 }
 
 function notifyJudicialInteraction(sourceId) {
@@ -888,14 +908,15 @@ function clearJudicialInvalidHighlights() {
 }
 
 function markJudicialInvalidTargets(targetIds = []) {
-  targetIds.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
+  // ⚡ Optimization: Native for-loop to prevent array callbacks, with strict boolean checks before mutating DOM
+  for (let i = 0; i < targetIds.length; i++) {
+    const el = document.getElementById(targetIds[i]);
+    if (el && !currentInvalidElements.has(el)) {
       el.classList.add('jc-invalid');
       el.setAttribute('aria-invalid', 'true');
       currentInvalidElements.add(el);
     }
-  });
+  }
 }
 
 function getGuidanceFocusElement(target) {
@@ -961,8 +982,9 @@ function setStepGuidance(stepKey, {
   const textEl = document.getElementById(cfg.text);
   if (!box || !textEl) return;
 
-  box.className = `jc-step-guidance ${tone}`;
-  textEl.textContent = text;
+  const expectedClass = `jc-step-guidance ${tone}`;
+  if (box.className !== expectedClass) box.className = expectedClass;
+  if (textEl.textContent !== text) textEl.textContent = text;
 }
 
 function buildPendingGuidanceText(items, doneText) {
@@ -1185,17 +1207,30 @@ function renderJudicialProgress() {
   judicialControl.ui.progressPct = progressPct;
 
   const bar = document.getElementById('jcProgressBar');
-  bar.style.width = `${progressPct}%`;
-  bar.setAttribute('aria-valuenow', String(progressPct));
-  document.getElementById('jcProgressPct').textContent = `${progressPct}%`;
-  document.getElementById('jcProgressLabel').textContent = `Etapa ${activeStep} de 4 · ${labels[activeStep - 1]}`;
-  stepIds.forEach((id, idx) => {
-    const el = document.getElementById(id);
-    const isActive = idx + 1 === activeStep;
-    el.classList.toggle('active-step', isActive);
-    if (isActive) el.setAttribute('aria-current', 'step');
-    else el.removeAttribute('aria-current');
-  });
+  const expectedWidth = `${progressPct}%`;
+  if (bar.style.width !== expectedWidth) bar.style.width = expectedWidth;
+  const expectedAriaVal = String(progressPct);
+  if (bar.getAttribute('aria-valuenow') !== expectedAriaVal) bar.setAttribute('aria-valuenow', expectedAriaVal);
+
+  const pctText = `${progressPct}%`;
+  const pctEl = document.getElementById('jcProgressPct');
+  if (pctEl.textContent !== pctText) pctEl.textContent = pctText;
+
+  const labelText = `Etapa ${activeStep} de 4 · ${labels[activeStep - 1]}`;
+  const labelEl = document.getElementById('jcProgressLabel');
+  if (labelEl.textContent !== labelText) labelEl.textContent = labelText;
+
+  // ⚡ Optimization: Native for-loop with inline checks instead of Array.forEach with unconditional DOM updates
+  for (let i = 0; i < stepIds.length; i++) {
+    const el = document.getElementById(stepIds[i]);
+    if (!el) continue;
+    const isActive = i + 1 === activeStep;
+    if (el.classList.contains('active-step') !== isActive) {
+      el.classList.toggle('active-step', isActive);
+      if (isActive) el.setAttribute('aria-current', 'step');
+      else el.removeAttribute('aria-current');
+    }
+  }
 }
 
 function syncQButtonGroup(groupId, value) {
@@ -1453,10 +1488,13 @@ function renderJudicialControl() {
   judicialControl.med.corpoJud = corpoFlow.q;
   const reasonSelect = document.getElementById('jcCorpoReasonSelect');
   const reasonHint = document.getElementById('jcCorpoReasonHint');
-  [...reasonSelect.options].forEach(opt => {
-    if (!opt.value) return;
-    opt.disabled = isCorpoReasonBlocked(opt.value);
-  });
+  // ⚡ Optimization: Native for-loop to prevent array spread, and boolean checks before setting properties
+  for (let i = 0; i < reasonSelect.options.length; i++) {
+    const opt = reasonSelect.options[i];
+    if (!opt.value) continue;
+    const shouldBeDisabled = isCorpoReasonBlocked(opt.value);
+    if (opt.disabled !== shouldBeDisabled) opt.disabled = shouldBeDisabled;
+  }
   if (judicialControl.med.corpoChangeReason && isCorpoReasonBlocked(judicialControl.med.corpoChangeReason)) {
     resetCorpoChangeDetails();
     corpoFlow = resolveCorpoJudFlow();
@@ -1477,14 +1515,15 @@ function renderJudicialControl() {
   const showCorpoChange = judicialControl.med.corpoKeepAdmin === false;
   const showCorpoDomains = showCorpoChange && judicialControl.med.corpoChangeReason === 'dominio_max';
   const showCorpoManual = showCorpoChange && judicialControl.med.corpoChangeReason === 'rebaixamento';
-  document.getElementById('jcCorpoChangeWrap').classList.toggle('hidden', !showCorpoChange);
-  document.getElementById('jcCorpoDomainWrap').classList.toggle('hidden', !showCorpoDomains);
-  document.getElementById('jcCorpoManualWrap').classList.toggle('hidden', !showCorpoManual);
+  toggleHiddenIfChanged('jcCorpoChangeWrap', !showCorpoChange);
+  toggleHiddenIfChanged('jcCorpoDomainWrap', !showCorpoDomains);
+  toggleHiddenIfChanged('jcCorpoManualWrap', !showCorpoManual);
   const reductionAlert = document.getElementById('jcCorpoReductionAlert');
   const reductionConfirm = document.getElementById('jcCorpoReductionConfirm');
   const hasReduction = showCorpoChange && corpoFlow.q != null && judicialControl.adminBase && corpoFlow.q < judicialControl.adminBase.corpo;
-  reductionAlert.classList.toggle('hidden', !hasReduction);
-  reductionConfirm.checked = !!judicialControl.med.corpoAlertReductionConfirmed;
+  toggleHiddenIfChanged('jcCorpoReductionAlert', !hasReduction);
+  const expectedReductionConfirm = !!judicialControl.med.corpoAlertReductionConfirmed;
+  if (reductionConfirm.checked !== expectedReductionConfirm) reductionConfirm.checked = expectedReductionConfirm;
   const corpoSummary = document.getElementById('jcCorpoResultSummary');
   if (!judicialControl.adminBase) {
     corpoSummary.textContent = 'Resultado de Funções do Corpo aguardando base administrativa.';
@@ -1506,24 +1545,26 @@ function renderJudicialControl() {
     judicialControl.med.hasAtivMed = null;
     resetAtivMedReclassFields();
   }
-  hasAtivField.classList.toggle('hidden', !ativContext.showQuestion);
+  toggleHiddenIfChanged('jcHasAtivMedField', !ativContext.showQuestion);
   if (ativContext.showQuestion) {
-    hasAtivHint.textContent = `${ativContext.reason} Se “Sim”, escolha o modo de requalificação abaixo.`;
-    ativNotApplicableNote.classList.add('hidden');
-    ativNotApplicableNote.textContent = '';
+    const hintText = `${ativContext.reason} Se “Sim”, escolha o modo de requalificação abaixo.`;
+    if (hasAtivHint.textContent !== hintText) hasAtivHint.textContent = hintText;
+    if (!ativNotApplicableNote.classList.contains('hidden')) ativNotApplicableNote.classList.add('hidden');
+    if (ativNotApplicableNote.textContent !== '') ativNotApplicableNote.textContent = '';
   } else {
-    hasAtivHint.textContent = 'Se “Sim”, escolha o modo de requalificação abaixo.';
+    if (hasAtivHint.textContent !== 'Se “Sim”, escolha o modo de requalificação abaixo.') hasAtivHint.textContent = 'Se “Sim”, escolha o modo de requalificação abaixo.';
     const showAtivContextNote = ['sem_impedimento_lp', 'corpo_nl', 'verificacao_adm_positiva'].includes(ativContext.code);
-    ativNotApplicableNote.textContent = showAtivContextNote ? ativContext.reason : '';
-    ativNotApplicableNote.classList.toggle('hidden', !showAtivContextNote);
+    const noteText = showAtivContextNote ? ativContext.reason : '';
+    if (ativNotApplicableNote.textContent !== noteText) ativNotApplicableNote.textContent = noteText;
+    if (ativNotApplicableNote.classList.contains('hidden') === showAtivContextNote) ativNotApplicableNote.classList.toggle('hidden', !showAtivContextNote);
   }
   syncSegmentedGroup('jcHasAtivMedButtons', judicialControl.med.hasAtivMed == null ? null : (judicialControl.med.hasAtivMed ? 'sim' : 'nao'));
   const showAtivMed = ativContext.showQuestion && judicialControl.med.hasAtivMed === true;
   const isSimple = showAtivMed && judicialControl.med.ativMode === 'simples';
   const isComplete = showAtivMed && judicialControl.med.ativMode === 'completa';
-  document.getElementById('jcAtivMedWrap').classList.toggle('hidden', !showAtivMed);
-  document.getElementById('jcAtivModeSimpleWrap').classList.toggle('hidden', !isSimple);
-  document.getElementById('jcAtivModeCompleteWrap').classList.toggle('hidden', !isComplete);
+  toggleHiddenIfChanged('jcAtivMedWrap', !showAtivMed);
+  toggleHiddenIfChanged('jcAtivModeSimpleWrap', !isSimple);
+  toggleHiddenIfChanged('jcAtivModeCompleteWrap', !isComplete);
   const justField = document.getElementById('jcAtivMedJustification');
   if (justField.value !== judicialControl.med.ativMedJustification) {
     justField.value = judicialControl.med.ativMedJustification;
@@ -1559,18 +1600,14 @@ function renderJudicialControl() {
     });
 
   const disableTextoBtns = () => {
-    const textoBtns = [
-      { id: 'btnGerarControleTexto' },
-      { id: 'btnGerarCopiarControleTexto' },
-      { id: 'btnCopiarControleTexto' }
-    ];
-    textoBtns.forEach(b => {
-      const el = document.getElementById(b.id);
+    for (let i = 0; i < TEXTO_BTNS_CONFIG.length; i++) {
+      const el = document.getElementById(TEXTO_BTNS_CONFIG[i].id);
       if (el) {
-        el.disabled = true;
-        el.setAttribute('title', 'A triagem probatória precisa ser concluída antes de gerar a minuta.');
+        if (!el.disabled) el.disabled = true;
+        const expectedTitle = 'A triagem probatória precisa ser concluída antes de gerar a minuta.';
+        if (el.getAttribute('title') !== expectedTitle) el.setAttribute('title', expectedTitle);
       }
-    });
+    }
   };
 
   if (!adminDone) {
@@ -1717,18 +1754,16 @@ function renderJudicialControl() {
       text: 'Triagem concluída. Gere a minuta padronizada para finalizar a etapa 4.'
     });
 
-  const textoBtns = [
-    { id: 'btnGerarControleTexto', title: 'Gera a minuta de decisão com base no controle judicial' },
-    { id: 'btnGerarCopiarControleTexto', title: 'Gera e copia a minuta de decisão com base no controle judicial' },
-    { id: 'btnCopiarControleTexto', title: 'Copia a minuta de decisão gerada' }
-  ];
-  textoBtns.forEach(b => {
+  for (let i = 0; i < TEXTO_BTNS_CONFIG.length; i++) {
+    const b = TEXTO_BTNS_CONFIG[i];
     const el = document.getElementById(b.id);
     if (el) {
-      el.disabled = !triage.ready;
-      el.setAttribute('title', triage.ready ? b.title : 'A triagem probatória precisa ser concluída antes de gerar a minuta.');
+      const isTextoDisabled = !triage.ready;
+      if (el.disabled !== isTextoDisabled) el.disabled = isTextoDisabled;
+      const expectedTitle = triage.ready ? b.title : 'A triagem probatória precisa ser concluída antes de gerar a minuta.';
+      if (el.getAttribute('title') !== expectedTitle) el.setAttribute('title', expectedTitle);
     }
-  });
+  }
 
   setWhyBlocked('');
   renderJudicialProgress();

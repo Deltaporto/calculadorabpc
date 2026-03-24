@@ -38,3 +38,7 @@ Instead, a significantly safer optimization is removing global queries like `doc
 ## 2026-03-23 - Array Spread in Hot Paths
 **Learning:** In Vanilla JS state machines, applying array spreading `[...arr1, ...arr2]` directly inside loops or functional array methods (like `.filter` or `.find`) allocates a new array on every iteration. This creates measurable GC pressure on hot paths.
 **Action:** Always pre-calculate and cache combined arrays (like `ATIV_DOMAINS`) at the module level and use the reference inside iterative functions.
+
+## 2025-05-22 - Avoid Unconditional DOM Updates and Array Allocations in Render Loops
+**Learning:** High-frequency rendering functions (like `renderJudicialControl` and `buildTabelaGrid`) suffer significant layout thrashing when unconditionally mutating the DOM (`className`, `textContent`, `disabled`, `classList.toggle`). Furthermore, recreating arrays (e.g. `[...HTMLCollection]` or `[{id: 'btn1'}, ...]`) per render cycle creates severe GC pressure.
+**Action:** Extract static arrays to module-level constants. Replace array methods (`forEach`) with native `for` loops. Crucially, always wrap property assignments and `classList` mutations in explicit inline boolean checks comparing against the current DOM state, skipping the C++ engine overhead when values haven't changed.
