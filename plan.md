@@ -1,12 +1,10 @@
-1. Add `title` tooltips explaining the action to these buttons:
-   - `#btnLevarParaControle` ("Transferir cenário atual para a aba de Controle Judicial")
-   - `#btnUseCurrentAsBase` ("Copiar notas da Calculadora como Rascunho da Perícia")
-   - `#btnFixarBaseAdmin` ("Salvar notas atuais como a decisão da perícia administrativa")
-   - `#btnGerarControleTexto` ("Gerar minuta de decisão com base no controle judicial")
-   - `#btnGerarCopiarControleTexto` ("Gerar e copiar minuta de decisão com base no controle judicial")
-   - `#btnCopiarControleTexto` ("Copiar minuta de decisão gerada")
-   - `#btnLimparControleJudicial` ("Limpar dados do controle judicial")
-   - `#btnCopiarTexto` ("Copiar minuta padrão")
-2. Run tests to verify they pass and lint the code.
-3. Call `pre_commit_instructions` and follow steps.
-4. Call `submit` to commit the change.
+1. **Optimize unconditional DOM mutations and array allocations in `main.js` and `dom-builders.js` hot paths**:
+    * Create a helper `toggleHiddenIfChanged` in `main.js`.
+    * Apply strict boolean checks to `setStepState`, `setWhyBlocked`, `setStepGuidance`, `renderJudicialProgress`, `disableTextoBtns`.
+    * Replace `[...reasonSelect.options].forEach(...)` with a `for` loop that avoids array spreading and uses boolean checks for the `disabled` attribute.
+    * Replace inline array allocation of `textoBtns` with a module-level constant and apply boolean checks to its DOM updates.
+    * Optimize `markJudicialInvalidTargets` to use a native `for` loop and check the `currentInvalidElements` Set before mutating.
+    * Fix unconditional `classList.toggle` calls in `buildTabelaGrid` (in `dom-builders.js`).
+    * Add a journal entry to `.jules/bolt.md` documenting the optimization.
+    * Run format/lint checks and `pnpm test`.
+2. **Submit PR**: Title `⚡ Bolt: Optimize unconditional DOM mutations and array allocations in render loops`.

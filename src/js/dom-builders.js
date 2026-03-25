@@ -100,15 +100,15 @@ export function buildTabelaGrid(container, labels, names, ambTab, tabelaConclusi
       }
 
       // Update classes efficiently
-      cell.classList.toggle('yes', yes);
-      cell.classList.toggle('no', !yes);
+      if (cell.classList.contains('yes') !== yes) cell.classList.toggle('yes', yes);
+      if (cell.classList.contains('no') === yes) cell.classList.toggle('no', !yes);
 
       // Handle sensitivity point (c=2, a=2)
       if (c === 2 && a === 2) {
         // Ensure base class exists (should be there from initial render, but safe to add)
-        cell.classList.add('tc-sensitivity');
-        cell.classList.toggle('tc-sensitivity-yes', yes);
-        cell.classList.toggle('tc-sensitivity-no', !yes);
+        if (!cell.classList.contains('tc-sensitivity')) cell.classList.add('tc-sensitivity');
+        if (cell.classList.contains('tc-sensitivity-yes') !== yes) cell.classList.toggle('tc-sensitivity-yes', yes);
+        if (cell.classList.contains('tc-sensitivity-no') === yes) cell.classList.toggle('tc-sensitivity-no', !yes);
       }
     });
     return;
