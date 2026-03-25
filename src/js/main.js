@@ -886,16 +886,6 @@ function notifyJudicialInteraction(sourceId) {
   pendingJudicialInteraction = { sourceId, at: Date.now() };
 }
 
-// ⚡ Optimization: Single loop to Set prevents intermediate array allocations
-function uniquePendingTargetIds(items = []) {
-  const uniqueIds = new Set();
-  for (let i = 0; i < items.length; i++) {
-    const id = items[i].invalidId || items[i].targetId;
-    if (id) uniqueIds.add(id);
-  }
-  return [...uniqueIds];
-}
-
 // ⚡ Optimization: Track invalid elements in a Set to avoid full DOM traversal on every render
 const currentInvalidElements = new Set();
 
@@ -907,10 +897,12 @@ function clearJudicialInvalidHighlights() {
   currentInvalidElements.clear();
 }
 
-function markJudicialInvalidTargets(targetIds = []) {
-  // ⚡ Optimization: Native for-loop to prevent array callbacks, with strict boolean checks before mutating DOM
-  for (let i = 0; i < targetIds.length; i++) {
-    const el = document.getElementById(targetIds[i]);
+function markJudicialInvalidTargets(items = []) {
+  // ⚡ Optimization: Native for-loop to prevent array callbacks and directly extract IDs to avoid intermediate Set/Array allocations
+  for (let i = 0; i < items.length; i++) {
+    const id = items[i].invalidId || items[i].targetId;
+    if (!id) continue;
+    const el = document.getElementById(id);
     if (el && !currentInvalidElements.has(el)) {
       el.classList.add('jc-invalid');
       el.setAttribute('aria-invalid', 'true');
@@ -1474,14 +1466,18 @@ function renderJudicialControl() {
   syncSegmentedGroup('jcAdminProgRecButtons', judicialControl.adminDraft.corpoReconhecimentoInss.prognosticoReconhecido == null ? null : (judicialControl.adminDraft.corpoReconhecimentoInss.prognosticoReconhecido ? 'sim' : 'nao'));
   syncSegmentedGroup('jcCorpoKeepButtons', judicialControl.med.corpoKeepAdmin == null ? null : (judicialControl.med.corpoKeepAdmin ? 'sim' : 'nao'));
   syncQButtonGroup('jcCorpoManualButtons', judicialControl.med.corpoJudManual);
-  JC_CORPO_RECLASS_DOMAINS.forEach(id => {
+  // ⚡ Optimization: Native for-loop to avoid Array.prototype.forEach callback allocation overhead
+  for (let i = 0; i < JC_CORPO_RECLASS_DOMAINS.length; i++) {
+    const id = JC_CORPO_RECLASS_DOMAINS[i];
     syncQButtonGroup(`jcCorpo${id.toUpperCase()}Buttons`, judicialControl.med.corpoAdminDomains[id]);
-  });
+  }
   syncQButtonGroup('jcAtivMedSimpleButtons', judicialControl.med.ativMedSimple);
   updateAdminAutofillShortcut();
-  JC_ATIV_RECLASS_DOMAINS.forEach(id => {
+  // ⚡ Optimization: Native for-loop to avoid Array.prototype.forEach callback allocation overhead
+  for (let i = 0; i < JC_ATIV_RECLASS_DOMAINS.length; i++) {
+    const id = JC_ATIV_RECLASS_DOMAINS[i];
     syncQButtonGroup(`jcAtiv${id.toUpperCase()}Buttons`, judicialControl.med.ativMedDomains[id]);
-  });
+  }
   syncSegmentedGroup('jcImpedimentoButtons', judicialControl.med.impedimentoLP == null ? null : (judicialControl.med.impedimentoLP ? 'sim' : 'nao'));
   syncSegmentedGroup('jcAtivModeButtons', judicialControl.med.ativMode);
   let corpoFlow = resolveCorpoJudFlow();
@@ -1634,7 +1630,7 @@ function renderJudicialControl() {
     setWhyBlocked(blockReason);
     disableTextoBtns();
     renderJudicialProgress();
-    markJudicialInvalidTargets(uniquePendingTargetIds(adminPendingItems));
+    markJudicialInvalidTargets(adminPendingItems);
     maybeAdvanceToNextPending(nextTargetId);
     return;
   }
@@ -1674,9 +1670,9 @@ function renderJudicialControl() {
     renderJudicialProgress();
     const activeStep = getActiveJudicialStep();
     if (activeStep === 1) {
-      markJudicialInvalidTargets(uniquePendingTargetIds(adminPendingItems));
+      markJudicialInvalidTargets(adminPendingItems);
     } else if (activeStep === 2) {
-      markJudicialInvalidTargets(uniquePendingTargetIds(medPendingItems));
+      markJudicialInvalidTargets(medPendingItems);
     }
     maybeAdvanceToNextPending(nextTargetId);
     return;
@@ -1769,9 +1765,9 @@ function renderJudicialControl() {
   renderJudicialProgress();
   const activeStep = getActiveJudicialStep();
   if (activeStep === 1) {
-    markJudicialInvalidTargets(uniquePendingTargetIds(adminPendingItems));
+    markJudicialInvalidTargets(adminPendingItems);
   } else if (activeStep === 2) {
-    markJudicialInvalidTargets(uniquePendingTargetIds(medPendingItems));
+    markJudicialInvalidTargets(medPendingItems);
   }
   const nextTargetId = activeStep === 4 && !hasDecisionText
     ? 'btnGerarControleTexto'
