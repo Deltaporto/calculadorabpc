@@ -48,3 +48,7 @@
 ## 2026-03-03 - Active (Pressed) States for Interactive Feedback
 **Learning:** Generic button components often only implement `:hover` and `:focus-visible` styles, omitting `:active` states. This results in a stiff interface lacking tactile micro-UX feedback during the "press down" action.
 **Action:** Always provide a subtle `:active` state for buttons (e.g., `transform: scale(0.96)`) scoped with `:not(:disabled)` to ensure an immediate, satisfying tactile-feeling response upon clicking.
+
+## 2023-10-25 - Semantic Required State for Conditionally Mandatory Fields
+**Learning:** Textareas or inputs that become mandatory based on application state (e.g., "modo simples") often rely solely on visual text hints (like "(obrigatória)") in their labels, leaving screen reader users unaware of the strict requirement.
+**Action:** When a form field is visually indicated as mandatory, always ensure it explicitly implements `aria-required="true"` so assistive technologies can correctly announce its required status.
