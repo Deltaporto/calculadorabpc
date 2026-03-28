@@ -483,6 +483,7 @@ function closeSimHelpPopover() {
   if (excerptEl) excerptEl.classList.add('hidden');
   if (excerptBtn) {
     excerptBtn.textContent = 'Ver base legal (trecho)';
+    excerptBtn.setAttribute('aria-expanded', 'false');
     excerptBtn.removeAttribute('title');
   }
   if (!popover) return;
@@ -566,6 +567,7 @@ function openSimHelpPopover(helpKey, trigger) {
   excerptEl.textContent = entry.legalExcerpt || '';
   excerptEl.classList.add('hidden');
   excerptBtn.textContent = 'Ver base legal (trecho)';
+  excerptBtn.setAttribute('aria-expanded', 'false');
   excerptBtn.disabled = !entry.legalExcerpt;
   excerptBtn.setAttribute('aria-disabled', String(!entry.legalExcerpt));
   if (!entry.legalExcerpt) {
@@ -2194,6 +2196,7 @@ function initSimHelpPopover() {
   excerptBtn.addEventListener('click', () => {
     const hidden = excerptEl.classList.toggle('hidden');
     excerptBtn.textContent = hidden ? 'Ver base legal (trecho)' : 'Ocultar base legal';
+    excerptBtn.setAttribute('aria-expanded', String(!hidden));
     if (activeSimHelpKey) scheduleSimHelpPopoverPosition();
   });
   portariaBtn.addEventListener('click', () => {
