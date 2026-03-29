@@ -1572,7 +1572,11 @@ function renderJudicialControl() {
   if (!isComplete) {
     summary.textContent = 'Preencha d1–d9 para calcular o qualificador final de Atividades e Participação.';
   } else if (!computed) {
-    const filled = JC_ATIV_RECLASS_DOMAINS.filter(id => judicialControl.med.ativMedDomains[id] != null).length;
+    // ⚡ Optimization: Native for-loop to count filled domains, avoiding Array.prototype.filter callback allocation and intermediate array overhead
+    let filled = 0;
+    for (let i = 0; i < JC_ATIV_RECLASS_DOMAINS.length; i++) {
+      if (judicialControl.med.ativMedDomains[JC_ATIV_RECLASS_DOMAINS[i]] != null) filled++;
+    }
     summary.textContent = `Preenchimento parcial: ${filled}/9 domínios. O qualificador final só será calculado após completar d1–d9.`;
   } else {
     summary.textContent = `Cálculo automático: (Σ × 2,777...) − 0,1 = ${computed.pct}% · Σ=${computed.sum} · qualificador final de Atividades e Participação = ${Q_LABELS[computed.q]} (${Q_NAMES[computed.q]}).`;
