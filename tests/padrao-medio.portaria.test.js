@@ -66,8 +66,7 @@ function extractExportedArray(name) {
 }
 
 function extractConfiguredPadrao() {
-  const extracted = extractFunction(mainContent, ['function getPadraoApplyContext'], 'getPadraoApplyContext');
-  const match = extracted.body.match(/const padrao = (\{[\s\S]*?\});/);
+  const match = mainContent.match(/const PADRAO_MEDIO_ENTRIES = Object\.entries\((\{[\s\S]*?\})\);/);
   if (!match) {
     throw new Error('Configured padrao object not found');
   }
@@ -173,6 +172,9 @@ const configuredPadrao = extractConfiguredPadrao();
 const runGetPadraoApplyContext = buildMainFunction('getPadraoApplyContext');
 const runApplyPadraoEntries = buildMainFunction('applyPadraoEntries');
 
+// Expose PADRAO_MEDIO_ENTRIES to the context
+const PADRAO_MEDIO_ENTRIES = Object.entries(configuredPadrao);
+
 test('configured padrao values match Portaria 34/2025 Anexo II', () => {
   const normativePadrao = parsePadraoFromAnexoII(portaria34Content);
   assert.deepStrictEqual(configuredPadrao, normativePadrao);
@@ -185,7 +187,8 @@ test('getPadraoApplyContext excludes child non-eligible domains by age cut', () 
     ATIV_DOMAINS: [...DOM_ATIV_M, ...DOM_ATIV_S],
     crianca: true,
     idadeMeses: 5,
-    userFilledDomains: new Set(['e1', 'd6', 'd8'])
+    userFilledDomains: new Set(['e1', 'd6', 'd8']),
+    PADRAO_MEDIO_ENTRIES
   };
 
   const context = runGetPadraoApplyContext(ctx);
@@ -203,7 +206,8 @@ test('getPadraoApplyContext keeps all mapped domains in adult mode', () => {
     ATIV_DOMAINS: [...DOM_ATIV_M, ...DOM_ATIV_S],
     crianca: false,
     idadeMeses: 192,
-    userFilledDomains: new Set(['e1', 'd6', 'd8'])
+    userFilledDomains: new Set(['e1', 'd6', 'd8']),
+    PADRAO_MEDIO_ENTRIES
   };
 
   const context = runGetPadraoApplyContext(ctx);

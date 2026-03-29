@@ -125,6 +125,12 @@ const TEXTO_BTNS_CONFIG = [
   { id: 'btnCopiarControleTexto', title: 'Copia a minuta de decisão gerada' }
 ];
 
+// ⚡ Optimization: Extract static arrays to module-level to avoid garbage collection pressure in high-frequency rendering cycles
+const JC_PROGRESS_LABELS = ['Base administrativa', 'Perícia médica', 'Triagem probatória', 'Texto da decisão'];
+const JC_PROGRESS_STEP_IDS = ['stepAdmin', 'stepMed', 'stepTriagem', 'stepTexto'];
+const PADRAO_MEDIO_ENTRIES = Object.entries({ e1: 2, e2: 2, e3: 2, e4: 1, e5: 2, d6: 3, d7: 2, d8: 3, d9: 3 });
+const Q_WORDS = ['nenhum', 'leve', 'moderado', 'grave', 'completo'];
+
 // ⚡ Optimization: Helper to avoid redundant layout thrashing
 function toggleHiddenIfChanged(elId, isHidden) {
   const el = document.getElementById(elId);
@@ -605,10 +611,8 @@ function toggleSimHelpPopover(trigger) {
 
 // Padrão Médio Social
 function getPadraoApplyContext() {
-  const padrao = { e1: 2, e2: 2, e3: 2, e4: 1, e5: 2, d6: 3, d7: 2, d8: 3, d9: 3 };
-  const padraoEntries = Object.entries(padrao);
   let skippedByAgeCut = 0;
-  const eligibleEntries = padraoEntries.filter(([id]) => {
+  const eligibleEntries = PADRAO_MEDIO_ENTRIES.filter(([id]) => {
     if (crianca) {
       const d = ATIV_DOMAINS.find(x => x.id === id);
       if (d && idadeMeses < d.cut) { skippedByAgeCut++; return false; }
@@ -1193,8 +1197,6 @@ function getJudicialProgressPct(activeStep) {
 }
 
 function renderJudicialProgress() {
-  const labels = ['Base administrativa', 'Perícia médica', 'Triagem probatória', 'Texto da decisão'];
-  const stepIds = ['stepAdmin', 'stepMed', 'stepTriagem', 'stepTexto'];
   const activeStep = getActiveJudicialStep();
   const progressPct = getJudicialProgressPct(activeStep);
   judicialControl.ui.activeStep = activeStep;
@@ -1210,13 +1212,13 @@ function renderJudicialProgress() {
   const pctEl = document.getElementById('jcProgressPct');
   if (pctEl.textContent !== pctText) pctEl.textContent = pctText;
 
-  const labelText = `Etapa ${activeStep} de 4 · ${labels[activeStep - 1]}`;
+  const labelText = `Etapa ${activeStep} de 4 · ${JC_PROGRESS_LABELS[activeStep - 1]}`;
   const labelEl = document.getElementById('jcProgressLabel');
   if (labelEl.textContent !== labelText) labelEl.textContent = labelText;
 
   // ⚡ Optimization: Native for-loop with inline checks instead of Array.forEach with unconditional DOM updates
-  for (let i = 0; i < stepIds.length; i++) {
-    const el = document.getElementById(stepIds[i]);
+  for (let i = 0; i < JC_PROGRESS_STEP_IDS.length; i++) {
+    const el = document.getElementById(JC_PROGRESS_STEP_IDS[i]);
     if (!el) continue;
     const isActive = i + 1 === activeStep;
     if (el.classList.contains('active-step') !== isActive) {
@@ -1919,7 +1921,7 @@ function renderStandardText(amb = calcAmbiente(), ativ = calcAtividades(), corpo
   const idadeTexto = crianca
     ? `Foi assinalada idade inferior a 16 anos, com idade informada de ${idadeValor} ${idadeUnidade} (${idadeMeses} meses).`
     : '';
-  const qWord = q => ['nenhum', 'leve', 'moderado', 'grave', 'completo'][q];
+  const qWord = q => Q_WORDS[q];
   const contextoEtario = `${idadeTexto}${forcedText ? ` ${forcedText}` : ''}`;
 
   // Textos-base incorporados do arquivo modelos_textos_decisao_bpc.md (sem dependência externa)
