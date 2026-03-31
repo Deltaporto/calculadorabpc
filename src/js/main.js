@@ -1502,6 +1502,15 @@ function renderJudicialControl() {
     if (!opt.value) continue;
     const shouldBeDisabled = isCorpoReasonBlocked(opt.value);
     if (opt.disabled !== shouldBeDisabled) opt.disabled = shouldBeDisabled;
+
+    const expectedTitle = shouldBeDisabled ? getCorpoReasonBlockedMessage(opt.value) : '';
+    if (opt.getAttribute('title') !== expectedTitle) {
+      if (expectedTitle) {
+        opt.setAttribute('title', expectedTitle);
+      } else {
+        opt.removeAttribute('title');
+      }
+    }
   }
   if (judicialControl.med.corpoChangeReason && isCorpoReasonBlocked(judicialControl.med.corpoChangeReason)) {
     resetCorpoChangeDetails();
