@@ -56,3 +56,7 @@
 ## 2026-03-03 - Disclosure Widgets Require ARIA State
 **Learning:** Disclosure widgets, such as buttons that toggle the visibility of an element (like the 'Ver base legal (trecho)' button), do not naturally announce their open/closed state to screen readers.
 **Action:** Always ensure disclosure buttons implement `aria-controls="[target-id]"` and dynamically toggle `aria-expanded="true|false"` based on the visibility of the controlled content.
+
+## 2026-03-05 - Naming Button Groups for Screen Readers
+**Learning:** Groups of buttons (like rating scales 0-4) implemented with `role="group"` are announced merely as "group" by screen readers if they lack an accessible name, leaving users without context on what the group represents (e.g., the specific evaluation domain).
+**Action:** When creating a component with `role="group"`, always use `aria-labelledby` or `aria-label` to give the group a descriptive accessible name, connecting it to its visible label or context.
