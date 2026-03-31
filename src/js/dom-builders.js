@@ -23,6 +23,7 @@ export function buildDomainRows(container, domains, labels, names, domainHelpKey
     // Domain Label Section
     const labelDiv = document.createElement('div');
     labelDiv.className = 'domain-label';
+    labelDiv.id = `label-${d.id}`;
 
     const codeSpan = document.createElement('span');
     codeSpan.className = 'domain-code';
@@ -60,6 +61,7 @@ export function buildDomainRows(container, domains, labels, names, domainHelpKey
     buttonsDiv.className = 'note-buttons';
     buttonsDiv.dataset.domain = d.id;
     buttonsDiv.setAttribute('role', 'group');
+    buttonsDiv.setAttribute('aria-labelledby', `label-${d.id}`);
 
     [0, 1, 2, 3, 4].forEach(v => {
       const btn = document.createElement('button');
