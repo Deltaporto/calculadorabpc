@@ -799,7 +799,15 @@ async function handleLimpar() {
   document.getElementById('inputIdade').value = idadeValor;
   document.getElementById('inputIdadeUnidade').value = idadeUnidade;
   syncChildModeByControls();
-  document.querySelectorAll('.note-btn').forEach(b => { b.classList.remove('active', 'locked'); const isZero = +b.dataset.value === 0; if (isZero) b.classList.add('active'); b.setAttribute('aria-pressed', isZero); });
+  // ⚡ Optimization: Live HTMLCollection avoids memory allocation and GC pressure compared to NodeList caching
+  const noteBtns = document.getElementsByClassName('note-btn');
+  for (let i = 0; i < noteBtns.length; i++) {
+    const b = noteBtns[i];
+    b.classList.remove('active', 'locked');
+    const isZero = +b.dataset.value === 0;
+    if (isZero) b.classList.add('active');
+    b.setAttribute('aria-pressed', isZero);
+  }
   applyChildRules();
   update();
   showToast('Calculadora limpa com sucesso.', 'success');
