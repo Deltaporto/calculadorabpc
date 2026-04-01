@@ -155,7 +155,7 @@
       </div>
     </header>
 
-    <details id="simuladorDetails" class="simulador-details" open>
+    <details id="simuladorDetails" class="simulador-details" open tabindex="-1">
       <summary class="simulador-summary">Calculadora (consulta rápida)</summary>
       <div class="simulador-body">
         <div class="toolbar">
@@ -373,7 +373,7 @@
           <div class="jc-progress-bar" id="jcProgressBar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" aria-labelledby="jcProgressLabel"></div>
         </div>
       </div>
-      <div class="jc-why-blocked hidden" id="jcWhyBlocked"><svg class="ui-icon sm" aria-hidden="true">
+      <div class="jc-why-blocked hidden" id="jcWhyBlocked" role="alert"><svg class="ui-icon sm" aria-hidden="true">
           <use href="#i-alert"></use>
         </svg><span></span></div>
       <div class="jc-workflow">
@@ -532,7 +532,7 @@
                 correspondente para definir o qualificador judicial.</p>
               <div class="jc-ativ-mode-block hidden" id="jcCorpoChangeWrap">
                 <label class="jc-field-title" for="jcCorpoReasonSelect">Motivo da alteração (seleção única)</label>
-                <select id="jcCorpoReasonSelect" class="jc-select">
+                <select id="jcCorpoReasonSelect" class="jc-select" aria-required="true">
                   <option value="">Selecione o motivo</option>
                   <option value="estruturas">Estruturas do corpo mais graves (não reconhecidas pelo INSS)</option>
                   <option value="prognostico">Prognóstico desfavorável (não reconhecido pelo INSS)</option>
@@ -637,7 +637,7 @@
                     <button class="jc-q-btn" data-value="4" aria-label="Completa">C</button>
                   </div>
                 </div>
-                <div class="jc-reduction-alert hidden" id="jcCorpoReductionAlert">
+                <div class="jc-reduction-alert hidden" id="jcCorpoReductionAlert" role="alert">
                   <strong>Atenção:</strong> o qualificador judicial ficou inferior ao administrativo. Confirme para
                   prosseguir.
                   <label><input type="checkbox" id="jcCorpoReductionConfirm"> Confirmo a redução com base na prova
