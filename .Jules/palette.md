@@ -60,3 +60,7 @@
 ## 2026-03-05 - Naming Button Groups for Screen Readers
 **Learning:** Groups of buttons (like rating scales 0-4) implemented with `role="group"` are announced merely as "group" by screen readers if they lack an accessible name, leaving users without context on what the group represents (e.g., the specific evaluation domain).
 **Action:** When creating a component with `role="group"`, always use `aria-labelledby` or `aria-label` to give the group a descriptive accessible name, connecting it to its visible label or context.
+
+## 2026-03-06 - Tooltips on Disabled Select Options
+**Learning:** When `<option>` elements in a `<select>` dropdown are disabled without context, users are left confused about why certain choices are unavailable.
+**Action:** Provide an explanatory `title` attribute for disabled `<option>` elements, enabling a tooltip that communicates the specific business rule or state preventing selection.
