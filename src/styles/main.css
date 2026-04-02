@@ -2494,7 +2494,7 @@ input:checked+.toggle-switch::after {
   transition: all .15s
 }
 
-.jc-q-btn:hover {
+.jc-q-btn:not(:disabled):not(.active):hover {
   border-color: var(--text3)
 }
 
