@@ -86,6 +86,7 @@ function ensureRefs() {
     fAmb: getById('fAmb'),
     fAmbSum: fAmbNodes[1],
     fAmbPct: fAmbNodes[3],
+    barAmbContainer: getById('barAmbContainer'),
     barAmb: getById('barAmb'),
     qAmb: getById('qAmb'),
     nameAmb: getById('nameAmb'),
@@ -99,6 +100,7 @@ function ensureRefs() {
     fAtiv: getById('fAtiv'),
     fAtivSum: fAtivNodes[1],
     fAtivPct: fAtivNodes[3],
+    barAtivContainer: getById('barAtivContainer'),
     barAtiv: getById('barAtiv'),
     qAtiv: getById('qAtiv'),
     nameAtiv: getById('nameAtiv'),
@@ -197,7 +199,13 @@ export function runMainUpdate({
   setTextIfChanged(refs.fAmbSum, String(amb.sum));
   setTextIfChanged(refs.fAmbPct, `${amb.pct}%`);
 
-  setStyleIfChanged(refs.barAmb, 'width', `${Math.min(100, amb.pct)}%`);
+  const ambPctClamped = Math.min(100, amb.pct);
+  if (refs.barAmbContainer) {
+    if (refs.barAmbContainer.getAttribute('aria-valuenow') !== String(ambPctClamped)) {
+      refs.barAmbContainer.setAttribute('aria-valuenow', String(ambPctClamped));
+    }
+  }
+  setStyleIfChanged(refs.barAmb, 'width', `${ambPctClamped}%`);
   setStyleIfChanged(refs.barAmb, 'background', `var(--q${qLabels[amb.q]})`);
   setQBadgeElement(refs.qAmb, amb.q, qLabels);
   setTextIfChanged(refs.nameAmb, qFull.amb[amb.q]);
@@ -213,7 +221,14 @@ export function runMainUpdate({
 
   setTextIfChanged(refs.fAtivSum, String(ativ.sum));
   setTextIfChanged(refs.fAtivPct, `${ativ.pct}%`);
-  setStyleIfChanged(refs.barAtiv, 'width', `${Math.min(100, ativ.pct)}%`);
+
+  const ativPctClamped = Math.min(100, ativ.pct);
+  if (refs.barAtivContainer) {
+    if (refs.barAtivContainer.getAttribute('aria-valuenow') !== String(ativPctClamped)) {
+      refs.barAtivContainer.setAttribute('aria-valuenow', String(ativPctClamped));
+    }
+  }
+  setStyleIfChanged(refs.barAtiv, 'width', `${ativPctClamped}%`);
   setStyleIfChanged(refs.barAtiv, 'background', `var(--q${qLabels[ativ.q]})`);
   setQBadgeElement(refs.qAtiv, ativ.q, qLabels);
   setTextIfChanged(refs.nameAtiv, qFull.ativ[ativ.q]);
