@@ -86,6 +86,7 @@ function ensureRefs() {
     fAmb: getById('fAmb'),
     fAmbSum: fAmbNodes[1],
     fAmbPct: fAmbNodes[3],
+    barAmbContainer: getById('barAmbContainer'),
     barAmb: getById('barAmb'),
     qAmb: getById('qAmb'),
     nameAmb: getById('nameAmb'),
@@ -99,6 +100,7 @@ function ensureRefs() {
     fAtiv: getById('fAtiv'),
     fAtivSum: fAtivNodes[1],
     fAtivPct: fAtivNodes[3],
+    barAtivContainer: getById('barAtivContainer'),
     barAtiv: getById('barAtiv'),
     qAtiv: getById('qAtiv'),
     nameAtiv: getById('nameAtiv'),
@@ -199,6 +201,9 @@ export function runMainUpdate({
 
   setStyleIfChanged(refs.barAmb, 'width', `${Math.min(100, amb.pct)}%`);
   setStyleIfChanged(refs.barAmb, 'background', `var(--q${qLabels[amb.q]})`);
+  if (refs.barAmbContainer && refs.barAmbContainer.getAttribute('aria-valuenow') !== String(Math.min(100, amb.pct))) {
+    refs.barAmbContainer.setAttribute('aria-valuenow', Math.min(100, amb.pct));
+  }
   setQBadgeElement(refs.qAmb, amb.q, qLabels);
   setTextIfChanged(refs.nameAmb, qFull.amb[amb.q]);
 
@@ -215,6 +220,9 @@ export function runMainUpdate({
   setTextIfChanged(refs.fAtivPct, `${ativ.pct}%`);
   setStyleIfChanged(refs.barAtiv, 'width', `${Math.min(100, ativ.pct)}%`);
   setStyleIfChanged(refs.barAtiv, 'background', `var(--q${qLabels[ativ.q]})`);
+  if (refs.barAtivContainer && refs.barAtivContainer.getAttribute('aria-valuenow') !== String(Math.min(100, ativ.pct))) {
+    refs.barAtivContainer.setAttribute('aria-valuenow', Math.min(100, ativ.pct));
+  }
   setQBadgeElement(refs.qAtiv, ativ.q, qLabels);
   setTextIfChanged(refs.nameAtiv, qFull.ativ[ativ.q]);
 
