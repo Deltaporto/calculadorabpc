@@ -35,6 +35,10 @@ Instead, a significantly safer optimization is removing global queries like `doc
 ## 2025-05-21 - Avoid Redundant DOM Mutations in Render Loops
 **Learning:** During frequent UI rendering cycles (e.g., `renderJudicialControl()`), iterating over large collections of DOM elements (like button groups) and unconditionally calling `.classList.toggle()` and `.setAttribute()` causes substantial performance overhead. Even if the resulting state equals the current state, these browser APIs trigger synchronous style recalculations and layout thrashing.
 **Action:** Always wrap DOM mutations inside rendering loops with a strict inline boolean check of the current state (e.g., `if (el.classList.contains('active') !== isActive) { ... }`). This guarantees writes only occur when the state actually changes, bypassing redundant C++ engine overhead.
+## 2026-04-01 - Avoid Array Spread and Callbacks in Small Helper Functions
+**Learning:** `Array.prototype.slice.call(nodes || [])` converts a `NodeList` to an Array in vanilla JS. This operation iterates the NodeList, allocates a new Array, and copies elements. For very small helper functions used infrequently, the overhead might seem small, but removing Array allocation and callback overhead improves execution speed globally.
+**Action:** Replaced `Array.prototype.slice.call` with explicit, manual iteration loops and local checks instead of array conversions in helper methods when extracting values, ensuring performance efficiency with native structures.
+
 ## 2026-03-23 - Array Spread in Hot Paths
 **Learning:** In Vanilla JS state machines, applying array spreading `[...arr1, ...arr2]` directly inside loops or functional array methods (like `.filter` or `.find`) allocates a new array on every iteration. This creates measurable GC pressure on hot paths.
 **Action:** Always pre-calculate and cache combined arrays (like `ATIV_DOMAINS`) at the module level and use the reference inside iterative functions.

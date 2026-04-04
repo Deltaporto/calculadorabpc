@@ -82,10 +82,11 @@ export function buildDomainRows(container, domains, labels, names, domainHelpKey
 }
 
 export function buildTabelaGrid(container, labels, names, ambTab, tabelaConclusivaFn) {
-  // ⚡ Optimization: Reuse existing DOM nodes if grid is already built
-  const existingCells = container.querySelectorAll('.tc[data-c]');
+  // ⚡ Optimization: Use live HTMLCollection via getElementsByClassName and native for-loop to avoid querySelectorAll allocations and callback overhead
+  const existingCells = container.getElementsByClassName('tc-cell');
   if (existingCells.length > 0) {
-    existingCells.forEach((cell, i) => {
+    for (let i = 0; i < existingCells.length; i++) {
+      const cell = existingCells[i];
       const c = Math.floor(i / 5);
       const a = i % 5;
       const yes = tabelaConclusivaFn(ambTab, a, c);
@@ -112,7 +113,7 @@ export function buildTabelaGrid(container, labels, names, ambTab, tabelaConclusi
         if (cell.classList.contains('tc-sensitivity-yes') !== yes) cell.classList.toggle('tc-sensitivity-yes', yes);
         if (cell.classList.contains('tc-sensitivity-no') === yes) cell.classList.toggle('tc-sensitivity-no', !yes);
       }
-    });
+    }
     return;
   }
 
@@ -144,7 +145,7 @@ export function buildTabelaGrid(container, labels, names, ambTab, tabelaConclusi
 
       const cell = document.createElement('div');
       cell.id = `tc-${c}-${a}`;
-      cell.className = `tc ${yes ? 'yes' : 'no'}${sensitivityClass}`;
+      cell.className = `tc tc-cell ${yes ? 'yes' : 'no'}${sensitivityClass}`;
       cell.dataset.c = c;
       cell.dataset.a = a;
       cell.textContent = yes ? 'Sim' : 'Não';
