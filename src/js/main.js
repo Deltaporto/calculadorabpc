@@ -118,6 +118,12 @@ const SIM_HELP_MOBILE_QUERY = '(max-width: 940px)';
 const SIM_HELP_MARGIN_PX = 12;
 const SIM_HELP_OFFSET_PX = 10;
 
+// ⚡ Optimization: Cache frequently accessed DOM nodes to avoid layout thrashing and DOM traversal overhead during high-frequency copy/render events
+let textoControleJudicial = null;
+let copyFeedbackControle = null;
+let textoPadrao = null;
+let copyFeedback = null;
+
 // ⚡ Optimization: Avoid recreation of arrays and redundant layout checks for text output buttons
 const TEXTO_BTNS_CONFIG = [
   { id: 'btnGerarControleTexto', title: 'Gera a minuta de decisão com base no controle judicial' },
@@ -1266,8 +1272,8 @@ function syncSegmentedGroup(groupId, value) {
 }
 
 function clearJudicialTextArea() {
-  document.getElementById('textoControleJudicial').value = '';
-  document.getElementById('copyFeedbackControle').textContent = '';
+  if (textoControleJudicial) textoControleJudicial.value = '';
+  if (copyFeedbackControle) copyFeedbackControle.textContent = '';
 }
 
 function resetAtivMedReclassFields() {
@@ -1465,9 +1471,11 @@ async function clearJudicialMedicalAndTriage() {
   judicialControl.triage = { ready: false, status: 'pending', testeA: null, testeB: null, reason: '', route: null };
   clearJudicialTextArea();
   renderJudicialControl();
-  document.getElementById('copyFeedbackControle').textContent = judicialControl.adminBase
-    ? 'Etapa médica e triagem reiniciadas. A base administrativa foi mantida.'
-    : 'Controle judicial limpo.';
+  if (copyFeedbackControle) {
+    copyFeedbackControle.textContent = judicialControl.adminBase
+      ? 'Etapa médica e triagem reiniciadas. A base administrativa foi mantida.'
+      : 'Controle judicial limpo.';
+  }
 }
 
 function renderJudicialControl() {
@@ -1764,7 +1772,7 @@ function renderJudicialControl() {
       ? 'Triagem concluída: avaliação social judicial dispensável.'
       : 'Triagem concluída: avaliação social judicial necessária.'
   });
-  const hasDecisionText = !!document.getElementById('textoControleJudicial').value.trim();
+  const hasDecisionText = !!(textoControleJudicial && textoControleJudicial.value.trim());
   setStepGuidance('texto', hasDecisionText
     ? {
       tone: 'done',
@@ -1801,15 +1809,16 @@ function renderJudicialControl() {
 }
 
 function renderJudicialControlText() {
-  const output = document.getElementById('textoControleJudicial');
-  output.value = buildJudicialControlText({
-    adminBase: judicialControl.adminBase,
-    triage: judicialControl.triage,
-    med: judicialControl.med,
-    corpoFlow: resolveCorpoJudFlow(),
-    ativMedResolved: resolveAtivMed(),
-    getItemNumber
-  });
+  if (textoControleJudicial) {
+    textoControleJudicial.value = buildJudicialControlText({
+      adminBase: judicialControl.adminBase,
+      triage: judicialControl.triage,
+      med: judicialControl.med,
+      corpoFlow: resolveCorpoJudFlow(),
+      ativMedResolved: resolveAtivMed(),
+      getItemNumber
+    });
+  }
   renderJudicialControl();
 }
 
@@ -1861,10 +1870,8 @@ async function copyToClipboard(area, feedback, triggerButton = null) {
 }
 
 async function copyJudicialControlText(event) {
-  const feedback = document.getElementById('copyFeedbackControle');
-  const area = document.getElementById('textoControleJudicial');
   const button = event?.target?.closest('button');
-  await copyToClipboard(area, feedback, button);
+  await copyToClipboard(textoControleJudicial, copyFeedbackControle, button);
 }
 
 function generateAndCopyJudicialText(event) {
@@ -1966,14 +1973,14 @@ function renderStandardText(amb = calcAmbiente(), ativ = calcAtividades(), corpo
     paragrafo2 = 'Diante disso, não se configura o enquadramento da parte autora como pessoa com deficiência para fins de BPC/LOAS.';
   }
 
-  document.getElementById('textoPadrao').value = [paragrafo1, paragrafo2].filter(Boolean).join('\n\n');
+  if (textoPadrao) {
+    textoPadrao.value = [paragrafo1, paragrafo2].filter(Boolean).join('\n\n');
+  }
 }
 
 async function copyStandardText(event) {
-  const feedback = document.getElementById('copyFeedback');
-  const area = document.getElementById('textoPadrao');
   const button = event?.target?.closest('button');
-  await copyToClipboard(area, feedback, button);
+  await copyToClipboard(textoPadrao, copyFeedback, button);
 }
 
 function handleModeSwitcherClick(mode) {
@@ -2262,9 +2269,16 @@ function initSimHelpPopover() {
   }
 }
 
+function initCachedElements() {
+  textoControleJudicial = document.getElementById('textoControleJudicial');
+  copyFeedbackControle = document.getElementById('copyFeedbackControle');
+  textoPadrao = document.getElementById('textoPadrao');
+  copyFeedback = document.getElementById('copyFeedback');
+}
+
 // UX auto-select for readonly generated textareas
 function initAutoSelectTextareas() {
-  const textareas = [document.getElementById('textoPadrao'), document.getElementById('textoControleJudicial')];
+  const textareas = [textoPadrao, textoControleJudicial];
   textareas.forEach(ta => {
     if (ta) {
       const handleSelect = function() {
@@ -2339,6 +2353,7 @@ initPadraoModal();
 initConfirmModal();
 initSimHelpPopover();
 initBackToTop();
+initCachedElements();
 initAutoSelectTextareas();
 
 update();
