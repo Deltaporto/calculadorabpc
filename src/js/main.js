@@ -2043,14 +2043,17 @@ function initPortariaModal() {
     }
     setPortariaStatus(statusEl, 'Carregando texto da Portaria...');
     contentEl.textContent = '';
+    contentEl.setAttribute('aria-busy', 'true');
     try {
       const text = await loadPortariaText(sourceKey);
       contentEl.textContent = text;
       contentEl.scrollTop = 0;
       setPortariaStatus(statusEl, 'Texto da Portaria carregado.');
+      contentEl.removeAttribute('aria-busy');
     } catch {
       contentEl.textContent = '';
       setPortariaStatus(statusEl, 'Não foi possível carregar o texto. Use o botão "Abrir PDF oficial".', true);
+      contentEl.removeAttribute('aria-busy');
     }
   };
 
