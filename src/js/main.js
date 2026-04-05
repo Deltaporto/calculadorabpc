@@ -161,9 +161,6 @@ function calcCorpo() {
 function getDecisionReason(ambQ, ativQ, corpoQ, yes) {
   return getDecisionReasonFromScale(ambQ, ativQ, corpoQ, yes, Q_LABELS, Q_NAMES, Q_FULL);
 }
-function iconMarkup(name, cls = 'ui-icon') {
-  return `<svg class="${cls}" aria-hidden="true"><use href="#i-${name}"></use></svg>`;
-}
 function createIcon(name, cls = 'ui-icon') {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('class', cls);
