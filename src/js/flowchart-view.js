@@ -26,18 +26,15 @@ function updateHash(step) {
   history.replaceState(null, '', `#etapa-${step}`);
 }
 
-function getCards(nodes) {
-  return Array.prototype.slice.call(nodes || []);
-}
-
 export function initFlowchartView() {
   const section = document.getElementById('flowchartSection');
   const nav = document.getElementById('flowchartStepNav');
   if (!section || !nav) return;
 
-  const buttons = getCards(nav.querySelectorAll('button[data-flow-step-target]'));
-  const cards = getCards(section.querySelectorAll('.flow-step-card[data-flow-step]'));
-  if (!buttons.length || !cards.length) return;
+  // ⚡ Optimization: Keep as live NodeLists and use native loop iterations instead of array allocation overhead (Array.prototype.slice.call)
+  const buttons = nav.querySelectorAll('button[data-flow-step-target]');
+  const cards = section.querySelectorAll('.flow-step-card[data-flow-step]');
+  if (buttons.length === 0 || cards.length === 0) return;
 
   const reduceMotionQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
   let prefersReducedMotion = reduceMotionQuery ? reduceMotionQuery.matches : false;
@@ -50,24 +47,27 @@ export function initFlowchartView() {
     section.classList.toggle('flowchart-has-focus', focusMode);
     section.dataset.activeFlowStep = nextStep;
 
-    buttons.forEach(button => {
+    for (let i = 0; i < buttons.length; i++) {
+      const button = buttons[i];
       const buttonStep = button.dataset.flowStepTarget;
       const active = buttonStep === nextStep;
-      button.classList.toggle('is-active', active);
-      button.setAttribute('aria-pressed', active ? 'true' : 'false');
-    });
+      if (button.classList.contains('is-active') !== active) button.classList.toggle('is-active', active);
+      if (button.getAttribute('aria-pressed') !== String(active)) button.setAttribute('aria-pressed', active ? 'true' : 'false');
+    }
 
-    cards.forEach(card => {
+    let target = null;
+    for (let i = 0; i < cards.length; i++) {
+      const card = cards[i];
       const cardStep = card.dataset.flowStep;
       const active = cardStep === nextStep;
-      card.classList.toggle('is-active', active);
-      card.toggleAttribute('data-active-step', active);
-    });
+      if (card.classList.contains('is-active') !== active) card.classList.toggle('is-active', active);
+      if (card.hasAttribute('data-active-step') !== active) card.toggleAttribute('data-active-step', active);
+      if (active) target = card;
+    }
 
     if (syncHash) updateHash(nextStep);
 
     if (focusCard && focusMode) {
-      const target = cards.find(card => card.dataset.flowStep === nextStep);
       if (target) {
         target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'nearest' });
         try {
@@ -84,11 +84,12 @@ export function initFlowchartView() {
     setActiveStep(stepFromHash || getDefaultStep(), { syncHash: false, focusCard: false });
   };
 
-  buttons.forEach(button => {
+  for (let i = 0; i < buttons.length; i++) {
+    const button = buttons[i];
     button.addEventListener('click', () => {
       setActiveStep(button.dataset.flowStepTarget, { syncHash: true, focusCard: true });
     });
-  });
+  }
 
   window.addEventListener('hashchange', syncFromHash);
   if (reduceMotionQuery && typeof reduceMotionQuery.addEventListener === 'function') {
