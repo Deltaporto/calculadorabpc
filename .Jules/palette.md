@@ -64,3 +64,10 @@
 ## 2026-03-06 - Tooltips on Disabled Select Options
 **Learning:** When `<option>` elements in a `<select>` dropdown are disabled without context, users are left confused about why certain choices are unavailable.
 **Action:** Provide an explanatory `title` attribute for disabled `<option>` elements, enabling a tooltip that communicates the specific business rule or state preventing selection.
+## 2026-03-07 - Descriptive Tooltips for Complex Actions
+**Learning:** When toggling the disabled state of action buttons with complex effects (like merging or preserving data), merely clearing the tooltip when enabled leaves users without guidance on what the action actually does.
+**Action:** Ensure that both the disabled state (explaining why it is disabled) and the enabled state (clarifying the exact action) have descriptive `title` attributes to make the UI intuitive.
+
+## 2026-03-07 - Playwright Visibility Assertions on Native Dialogs
+**Learning:** When using Playwright to verify elements inside a native `<dialog>` opened via `.showModal()`, standard visibility assertions like `expect(locator).to_be_visible()` may occasionally fail because Playwright treats the dialog as hidden under certain contexts.
+**Action:** In these cases, evaluate the DOM element directly using `page.evaluate()`, or execute clicks directly using `page.evaluate` to bypass standard visibility checks if necessary.
