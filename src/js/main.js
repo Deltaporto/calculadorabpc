@@ -404,7 +404,9 @@ function handleChangeIdadeUnidade(nextUnit) {
 }
 
 function applyChildRules() {
-  ATIV_DOMAINS.forEach(d => {
+  // ⚡ Optimization: Native for-loop to avoid Array.forEach callback dispatch overhead
+  for (let j = 0; j < ATIV_DOMAINS.length; j++) {
+    const d = ATIV_DOMAINS[j];
     const btns = getDomainButtons(d.id);
     if (crianca && idadeMeses < d.cut) {
       if (!(d.id in childDomainBackup)) childDomainBackup[d.id] = state[d.id];
@@ -412,11 +414,23 @@ function applyChildRules() {
       for (let i = 0; i < btns.length; i++) {
         const b = btns[i];
         const isActive = +b.dataset.value === 4;
-        b.classList.toggle('active', isActive);
-        b.setAttribute('aria-pressed', isActive);
-        b.classList.add('locked');
-        b.setAttribute('aria-disabled', 'true');
-        b.setAttribute('title', `Não aplicável: idade informada (${idadeMeses} meses) é menor que o ponto de corte deste domínio (${d.cut} meses).`);
+
+        // ⚡ Optimization: Wrap DOM mutations in strict boolean checks to prevent layout thrashing
+        if (b.classList.contains('active') !== isActive) {
+          b.classList.toggle('active', isActive);
+          b.setAttribute('aria-pressed', isActive);
+        }
+        if (!b.classList.contains('locked')) {
+          b.classList.add('locked');
+          b.setAttribute('aria-disabled', 'true');
+        }
+
+        // Dynamic properties (like age variables) should be placed outside state-checking conditionals if they change,
+        // but here the title is static for the given state and cut off, so we check it too.
+        const expectedTitle = `Não aplicável: idade informada (${idadeMeses} meses) é menor que o ponto de corte deste domínio (${d.cut} meses).`;
+        if (b.getAttribute('title') !== expectedTitle) {
+          b.setAttribute('title', expectedTitle);
+        }
       }
     } else {
       if (d.id in childDomainBackup) {
@@ -425,20 +439,31 @@ function applyChildRules() {
       }
       for (let i = 0; i < btns.length; i++) {
         const b = btns[i];
-        b.classList.remove('locked');
-        b.removeAttribute('aria-disabled');
+
+        // ⚡ Optimization: Wrap DOM mutations in strict boolean checks to prevent layout thrashing
+        if (b.classList.contains('locked')) {
+          b.classList.remove('locked');
+          b.removeAttribute('aria-disabled');
+        }
+
         const originalLabel = b.getAttribute('aria-label');
-        if (originalLabel) {
-          b.setAttribute('title', originalLabel);
-        } else {
+        const expectedTitle = originalLabel || null;
+        const currentTitle = b.getAttribute('title');
+
+        if (expectedTitle) {
+          if (currentTitle !== expectedTitle) b.setAttribute('title', expectedTitle);
+        } else if (currentTitle !== null) {
           b.removeAttribute('title');
         }
+
         const isActive = +b.dataset.value === state[d.id];
-        b.classList.toggle('active', isActive);
-        b.setAttribute('aria-pressed', isActive);
+        if (b.classList.contains('active') !== isActive) {
+          b.classList.toggle('active', isActive);
+          b.setAttribute('aria-pressed', isActive);
+        }
       }
     }
-  });
+  }
   updateChildAutoSummary();
 }
 
