@@ -749,7 +749,7 @@ function openPadraoDecisionDialog(context) {
 
   preserveBtn.disabled = hasOnlyManual;
   preserveBtn.setAttribute('aria-disabled', String(hasOnlyManual));
-  preserveBtn.title = hasOnlyManual ? 'Não há domínios vazios elegíveis para atualização sem sobrescrita.' : '';
+  preserveBtn.title = hasOnlyManual ? 'Não há domínios vazios elegíveis para atualização sem sobrescrita.' : 'Preserva os preenchimentos manuais e aplica o padrão apenas aos domínios vazios.';
 
   if (typeof modal.showModal === 'function') {
     if (!modal.open) modal.showModal();
