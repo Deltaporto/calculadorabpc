@@ -404,7 +404,9 @@ function handleChangeIdadeUnidade(nextUnit) {
 }
 
 function applyChildRules() {
-  ATIV_DOMAINS.forEach(d => {
+  // ⚡ Optimization: Native for-loop to prevent callback overhead, and boolean checks before DOM mutations to avoid layout thrashing
+  for (let dIdx = 0; dIdx < ATIV_DOMAINS.length; dIdx++) {
+    const d = ATIV_DOMAINS[dIdx];
     const btns = getDomainButtons(d.id);
     if (crianca && idadeMeses < d.cut) {
       if (!(d.id in childDomainBackup)) childDomainBackup[d.id] = state[d.id];
@@ -412,10 +414,14 @@ function applyChildRules() {
       for (let i = 0; i < btns.length; i++) {
         const b = btns[i];
         const isActive = +b.dataset.value === 4;
-        b.classList.toggle('active', isActive);
-        b.setAttribute('aria-pressed', isActive);
-        b.classList.add('locked');
-        b.setAttribute('aria-disabled', 'true');
+        if (b.classList.contains('active') !== isActive) {
+          b.classList.toggle('active', isActive);
+          b.setAttribute('aria-pressed', String(isActive));
+        }
+        if (!b.classList.contains('locked')) {
+          b.classList.add('locked');
+          b.setAttribute('aria-disabled', 'true');
+        }
         b.setAttribute('title', `Não aplicável: idade informada (${idadeMeses} meses) é menor que o ponto de corte deste domínio (${d.cut} meses).`);
       }
     } else {
@@ -425,20 +431,24 @@ function applyChildRules() {
       }
       for (let i = 0; i < btns.length; i++) {
         const b = btns[i];
-        b.classList.remove('locked');
-        b.removeAttribute('aria-disabled');
-        const originalLabel = b.getAttribute('aria-label');
-        if (originalLabel) {
-          b.setAttribute('title', originalLabel);
-        } else {
-          b.removeAttribute('title');
+        if (b.classList.contains('locked')) {
+          b.classList.remove('locked');
+          b.removeAttribute('aria-disabled');
+          const originalLabel = b.getAttribute('aria-label');
+          if (originalLabel) {
+            b.setAttribute('title', originalLabel);
+          } else {
+            b.removeAttribute('title');
+          }
         }
         const isActive = +b.dataset.value === state[d.id];
-        b.classList.toggle('active', isActive);
-        b.setAttribute('aria-pressed', isActive);
+        if (b.classList.contains('active') !== isActive) {
+          b.classList.toggle('active', isActive);
+          b.setAttribute('aria-pressed', String(isActive));
+        }
       }
     }
-  });
+  }
   updateChildAutoSummary();
 }
 
