@@ -2376,10 +2376,16 @@ input:checked+.toggle-switch::after {
   font-size: .75rem
 }
 
-.jc-autofill-btn:hover {
+.jc-autofill-btn:not(:disabled):hover {
   border-color: color-mix(in srgb, var(--blue) 35%, var(--border));
   color: var(--blue);
   background: color-mix(in srgb, var(--blue) 6%, var(--surface))
+}
+
+.jc-autofill-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  filter: grayscale(0.5);
 }
 
 .jc-segmented {
