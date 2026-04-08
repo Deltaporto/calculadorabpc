@@ -3857,6 +3857,11 @@ footer {
   outline-offset: 2px;
 }
 
+.sim-help-close:not(:disabled):active {
+  transform: scale(0.96);
+  transition-duration: 0.05s;
+}
+
 .sim-help-summary {
   margin: 8px 0 0;
   font-size: .78rem;
