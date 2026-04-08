@@ -84,6 +84,11 @@ function send(res, status, body, type = 'text/plain; charset=utf-8') {
 }
 
 const server = http.createServer((req, res) => {
+  if (req.method !== 'GET' && req.method !== 'HEAD') {
+    send(res, 405, 'Method Not Allowed');
+    return;
+  }
+
   if ((req.url || '').split('?')[0] === '/favicon.ico') {
     res.writeHead(204, SECURITY_HEADERS);
     res.end();

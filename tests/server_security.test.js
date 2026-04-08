@@ -28,13 +28,13 @@ function startServer() {
   });
 }
 
-function makeRequest(path) {
+function makeRequest(path, method = 'GET') {
     return new Promise((resolve, reject) => {
         const req = http.request({
             hostname: '127.0.0.1',
             port: PORT,
             path: path,
-            method: 'GET',
+            method: method,
         }, (res) => {
             // Consume data to free up memory
             res.resume();
@@ -81,6 +81,24 @@ test('Server Security', async (t) => {
             } else {
                 throw e;
             }
+        }
+    });
+
+    await t.test('Server rejects non-GET/HEAD methods (POST)', async () => {
+        try {
+            const res = await makeRequest('/index.html', 'POST');
+            assert.strictEqual(res.statusCode, 405, 'Should return 405 Method Not Allowed for POST');
+        } catch (e) {
+             assert.fail('Request failed: ' + e.message);
+        }
+    });
+
+    await t.test('Server rejects non-GET/HEAD methods (TRACE)', async () => {
+        try {
+            const res = await makeRequest('/index.html', 'TRACE');
+            assert.strictEqual(res.statusCode, 405, 'Should return 405 Method Not Allowed for TRACE');
+        } catch (e) {
+             assert.fail('Request failed: ' + e.message);
         }
     });
 
