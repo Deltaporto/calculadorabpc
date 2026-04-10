@@ -71,3 +71,7 @@
 ## 2026-03-07 - Playwright Visibility Assertions on Native Dialogs
 **Learning:** When using Playwright to verify elements inside a native `<dialog>` opened via `.showModal()`, standard visibility assertions like `expect(locator).to_be_visible()` may occasionally fail because Playwright treats the dialog as hidden under certain contexts.
 **Action:** In these cases, evaluate the DOM element directly using `page.evaluate()`, or execute clicks directly using `page.evaluate` to bypass standard visibility checks if necessary.
+
+## 2024-05-18 - Prevent hover state on disabled elements
+**Learning:** Native form elements (like `button`) support the `:disabled` pseudo-class natively, while standard elements like `a` or `label` do not. Applying `:not(:disabled)` to links will not work; instead, we must use `:not(.disabled):not([aria-disabled="true"])`.
+**Action:** Always verify if an element is a native form element before using `:disabled` in CSS pseudo-class selection to restrict interactive states.

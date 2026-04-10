@@ -193,7 +193,7 @@ header p {
   font-weight: 600;
 }
 
-.header-portaria-link:hover {
+.header-portaria-link:not(.disabled):not([aria-disabled="true"]):hover {
   color: #fff;
 }
 
@@ -230,7 +230,7 @@ header p {
   transition: background .18s, color .18s
 }
 
-.mode-btn:not(.active):hover {
+.mode-btn:not(:disabled):not([aria-disabled="true"]):not(.active):hover {
   background: rgba(255, 255, 255, .12);
   color: #fff
 }
@@ -616,7 +616,7 @@ header p {
   transition: border-color .15s ease, color .15s ease, background .15s ease, transform .15s ease;
 }
 
-.sim-help-btn:hover {
+.sim-help-btn:not(:disabled):hover {
   border-color: color-mix(in srgb, var(--blue) 55%, var(--border));
   color: color-mix(in srgb, var(--blue) 88%, var(--text2));
   background: color-mix(in srgb, var(--bg-soft) 40%, var(--surface));
@@ -1073,7 +1073,7 @@ input:checked+.toggle-switch::after {
   transition: all .15s
 }
 
-.amb-tab:not(.active):hover {
+.amb-tab:not(:disabled):not([aria-disabled="true"]):not(.active):hover {
   border-color: var(--text3);
   color: var(--text2);
   background: color-mix(in srgb, var(--border) 20%, var(--surface))
@@ -1587,7 +1587,7 @@ input:checked+.toggle-switch::after {
   transition: background-color .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease
 }
 
-.flowchart-step-nav button:hover {
+.flowchart-step-nav button:not(:disabled):not(.is-active):hover {
   border-color: color-mix(in srgb, var(--blue) 24%, var(--border))
 }
 
@@ -1654,7 +1654,7 @@ input:checked+.toggle-switch::after {
   text-decoration: none
 }
 
-.flowchart-overview-link:hover {
+.flowchart-overview-link:not(.disabled):not([aria-disabled="true"]):hover {
   text-decoration: underline
 }
 
@@ -3297,7 +3297,7 @@ header .badge {
   padding: 6px 12px;
 }
 
-.header-row label:hover {
+.header-row label:not(.disabled):not([aria-disabled="true"]):hover {
   background: rgba(255, 255, 255, .14);
 }
 
@@ -3773,7 +3773,7 @@ footer {
   text-underline-offset: 2px;
 }
 
-.footer-norm-link:hover {
+.footer-norm-link:not(.disabled):not([aria-disabled="true"]):hover {
   color: color-mix(in srgb, var(--blue) 78%, var(--navy));
 }
 
@@ -3799,7 +3799,7 @@ footer {
   cursor: pointer;
 }
 
-.footer-text-link:hover {
+.footer-text-link:not(.disabled):not([aria-disabled="true"]):hover {
   color: var(--text2);
 }
 
@@ -3847,7 +3847,7 @@ footer {
   cursor: pointer;
 }
 
-.sim-help-close:hover {
+.sim-help-close:not(:disabled):hover {
   background: var(--bg);
   color: var(--text);
 }
@@ -4483,7 +4483,7 @@ footer {
   margin-left: 4px;
 }
 
-.toast-close:hover {
+.toast-close:not(:disabled):hover {
   color: var(--text);
 }
 
@@ -4556,7 +4556,7 @@ footer {
   pointer-events: auto;
 }
 
-.back-to-top:hover {
+.back-to-top:not(:disabled):hover {
   background: color-mix(in srgb, var(--accent) 85%, black);
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, .2);
