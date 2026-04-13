@@ -8,15 +8,17 @@ export function buildDomainRows(container, domains, labels, names, domainHelpKey
 
   const noteScale = document.createElement('div');
   noteScale.className = 'note-scale';
-  labels.forEach(l => {
+  for (let i = 0; i < labels.length; i++) {
     const span = document.createElement('span');
-    span.textContent = l;
+    span.textContent = labels[i];
     noteScale.appendChild(span);
-  });
+  }
   scale.appendChild(noteScale);
   container.appendChild(scale);
 
-  domains.forEach(d => {
+  // ⚡ Optimization: Native for-loop to avoid Array.prototype.forEach callback allocation overhead
+  for (let i = 0; i < domains.length; i++) {
+    const d = domains[i];
     const row = document.createElement('div');
     row.className = 'domain-row';
 
@@ -63,7 +65,7 @@ export function buildDomainRows(container, domains, labels, names, domainHelpKey
     buttonsDiv.setAttribute('role', 'group');
     buttonsDiv.setAttribute('aria-labelledby', `label-${d.id}`);
 
-    [0, 1, 2, 3, 4].forEach(v => {
+    for (let v = 0; v <= 4; v++) {
       const btn = document.createElement('button');
       btn.className = `note-btn${v === 0 ? ' active' : ''}`;
       btn.dataset.value = String(v);
@@ -74,11 +76,11 @@ export function buildDomainRows(container, domains, labels, names, domainHelpKey
       btn.tabIndex = v === 0 ? 0 : -1;
       btn.textContent = String(v);
       buttonsDiv.appendChild(btn);
-    });
+    }
 
     row.appendChild(buttonsDiv);
     container.appendChild(row);
-  });
+  }
 }
 
 export function buildTabelaGrid(container, labels, names, ambTab, tabelaConclusivaFn) {
@@ -124,12 +126,12 @@ export function buildTabelaGrid(container, labels, names, ambTab, tabelaConclusi
   corner.className = 'tc corner';
   fragment.appendChild(corner);
 
-  labels.forEach(l => {
+  for (let i = 0; i < labels.length; i++) {
     const div = document.createElement('div');
     div.className = 'tc header';
-    div.textContent = l;
+    div.textContent = labels[i];
     fragment.appendChild(div);
-  });
+  }
 
   for (let c = 0; c < 5; c++) {
     const rowHeader = document.createElement('div');
