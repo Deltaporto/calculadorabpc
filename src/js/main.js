@@ -444,10 +444,14 @@ function applyChildRules() {
 
 function handleAmbTabClick({ tab, value }) {
   currentAmbTab = value;
-  document.querySelectorAll('.amb-tab').forEach(ambTab => {
-    ambTab.classList.remove('active');
-    ambTab.setAttribute('aria-pressed', 'false');
-  });
+  const ambTabs = document.getElementsByClassName('amb-tab');
+  for (let i = 0; i < ambTabs.length; i++) {
+    const ambTab = ambTabs[i];
+    if (ambTab.classList.contains('active')) {
+      ambTab.classList.remove('active');
+      ambTab.setAttribute('aria-pressed', 'false');
+    }
+  }
   tab.classList.add('active');
   tab.setAttribute('aria-pressed', 'true');
   buildTabelaGrid();
@@ -1125,11 +1129,17 @@ function getTraceSecondaryReferenceSentence(causeCode) {
 }
 
 function syncModeSwitcher() {
-  document.querySelectorAll('#modeSwitcher .mode-btn').forEach(btn => {
+  const modeSwitcher = document.getElementById('modeSwitcher');
+  if (!modeSwitcher) return;
+  const btns = modeSwitcher.getElementsByClassName('mode-btn');
+  for (let i = 0; i < btns.length; i++) {
+    const btn = btns[i];
     const isActive = btn.dataset.mode === uiMode;
-    btn.classList.toggle('active', isActive);
-    btn.setAttribute('aria-pressed', isActive);
-  });
+    if (btn.classList.contains('active') !== isActive) {
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-pressed', isActive);
+    }
+  }
 }
 
 function scrollToJudicialControlSection() {
