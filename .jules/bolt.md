@@ -50,3 +50,10 @@ Instead, a significantly safer optimization is removing global queries like `doc
 ## 2025-10-27 - Eliminate Intermediate Allocations in Render Loop Tracking
 **Learning:** During UI rendering, tracking invalid elements using an intermediate `Set` and spreading it to an array (`[...uniqueIds]`) solely to ensure uniqueness before applying DOM classes creates completely unnecessary memory allocations and garbage collection pressure on every change. Since DOM mutation APIs or local `Set`s (like `currentInvalidElements`) already prevent redundant operations, the intermediate deduplication step is a net-negative micro-optimization.
 **Action:** Removed intermediate `Set` and array spread allocations in high-frequency validation tracking. Pass the raw items array directly to the DOM-updating function and rely on the existing state-tracking `Set` to prevent redundant operations.
+## 2026-04-20 - Avoid Array.forEach in High Frequency Paths
+**Learning:** In highly repeated DOM UI updates (e.g., `applyChildRules` which runs on input events and render cycles), using `Array.prototype.forEach` creates an unnecessary closure scope and callback allocation per element.
+**Action:** Replace `Array.prototype.forEach` with a native `for` loop in high frequency paths.
+
+## 2026-04-20 - Guard DOM mutations in applyChildRules
+**Learning:** During UI rendering functions that iterate over buttons, unconditionally writing attributes (e.g. `setAttribute`, `removeAttribute`, `classList.add`) triggers DOM mutation events and potential layout thrashing even if the value hasn't changed.
+**Action:** Always wrap DOM mutation methods in conditional guards (e.g., check `classList.contains('active') !== isActive` before toggling, or verify `getAttribute` matches the target string) to minimize browser engine overhead. Note: use `getAttribute` checks instead of `hasAttribute` due to limitations in the mock test DOM suite.

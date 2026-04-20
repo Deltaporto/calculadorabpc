@@ -1,0 +1,687 @@
+
+> calculadora-bpc@1.0.0 test /app
+> node --test tests/*.test.js
+
+TAP version 13
+# Subtest: tabelaConclusiva - regras principais
+ok 1 - tabelaConclusiva - regras principais
+  ---
+  duration_ms: 3.170402
+  type: 'test'
+  ...
+# Subtest: calcAmbienteFromState e calcAtividadesFromState - cálculos básicos
+ok 2 - calcAmbienteFromState e calcAtividadesFromState - cálculos básicos
+  ---
+  duration_ms: 3.053696
+  type: 'test'
+  ...
+# Subtest: calcCorpoFromState - majoração
+ok 3 - calcCorpoFromState - majoração
+  ---
+  duration_ms: 0.839464
+  type: 'test'
+  ...
+# Subtest: computeAtivFromDomains - completo e incompleto
+ok 4 - computeAtivFromDomains - completo e incompleto
+  ---
+  duration_ms: 0.897977
+  type: 'test'
+  ...
+# Subtest: computeAtivFromDomains - casos de borda e precisão
+ok 5 - computeAtivFromDomains - casos de borda e precisão
+  ---
+  duration_ms: 0.991279
+  type: 'test'
+  ...
+# Subtest: getDecisionReason - cenários de indeferimento e deferimento
+ok 6 - getDecisionReason - cenários de indeferimento e deferimento
+  ---
+  duration_ms: 1.125841
+  type: 'test'
+  ...
+# Subtest: activity domain age cuts remain aligned with Portaria thresholds
+ok 7 - activity domain age cuts remain aligned with Portaria thresholds
+  ---
+  duration_ms: 3.739223
+  type: 'test'
+  ...
+# Subtest: age helpers keep unit bounds and conversion consistent
+ok 8 - age helpers keep unit bounds and conversion consistent
+  ---
+  duration_ms: 0.709526
+  type: 'test'
+  ...
+# Subtest: getAutoQualifiedChildDomains respects child mode and cut boundaries
+ok 9 - getAutoQualifiedChildDomains respects child mode and cut boundaries
+  ---
+  duration_ms: 0.743447
+  type: 'test'
+  ...
+# Subtest: applyChildRules forces q4 with lock and restores backed-up values on unlock
+ok 10 - applyChildRules forces q4 with lock and restores backed-up values on unlock
+  ---
+  duration_ms: 6.822293
+  type: 'test'
+  ...
+# Subtest: pctToQ follows Portaria bands (0-4, 5-24, 25-49, 50-95, 96-100)
+ok 11 - pctToQ follows Portaria bands (0-4, 5-24, 25-49, 50-95, 96-100)
+  ---
+  duration_ms: 2.860014
+  type: 'test'
+  ...
+# Subtest: calcAmbienteFromState follows formula [(e1+...+e5) * 5] - 0.1
+ok 12 - calcAmbienteFromState follows formula [(e1+...+e5) * 5] - 0.1
+  ---
+  duration_ms: 4.018402
+  type: 'test'
+  ...
+# Subtest: calcAtividadesFromState follows formula [(d1+...+d9) * 2.777...] - 0.1
+ok 13 - calcAtividadesFromState follows formula [(d1+...+d9) * 2.777...] - 0.1
+  ---
+  duration_ms: 0.919686
+  type: 'test'
+  ...
+# Subtest: computeAtivFromDomains keeps formula and category boundaries
+ok 14 - computeAtivFromDomains keeps formula and category boundaries
+  ---
+  duration_ms: 1.095023
+  type: 'test'
+  ...
+# Subtest: calcCorpoFromState keeps max rule and non-cumulative +1 majoration
+ok 15 - calcCorpoFromState keeps max rule and non-cumulative +1 majoration
+  ---
+  duration_ms: 0.590583
+  type: 'test'
+  ...
+# Subtest: resolveAtivMed - hasAtivMed false returns null
+ok 16 - resolveAtivMed - hasAtivMed false returns null
+  ---
+  duration_ms: 3.326871
+  type: 'test'
+  ...
+# Subtest: resolveAtivMed - hasAtivMed null returns null
+ok 17 - resolveAtivMed - hasAtivMed null returns null
+  ---
+  duration_ms: 0.46522
+  type: 'test'
+  ...
+# Subtest: resolveAtivMed - simples mode returns ativMedSimple
+ok 18 - resolveAtivMed - simples mode returns ativMedSimple
+  ---
+  duration_ms: 0.27978
+  type: 'test'
+  ...
+# Subtest: resolveAtivMed - completa with existing ativMedComputed returns its q
+ok 19 - resolveAtivMed - completa with existing ativMedComputed returns its q
+  ---
+  duration_ms: 0.348036
+  type: 'test'
+  ...
+# Subtest: resolveAtivMed - completa without computed calls computeAtivFromDomains
+ok 20 - resolveAtivMed - completa without computed calls computeAtivFromDomains
+  ---
+  duration_ms: 0.513289
+  type: 'test'
+  ...
+# Subtest: resolveAtivMed - unknown mode returns null
+ok 21 - resolveAtivMed - unknown mode returns null
+  ---
+  duration_ms: 0.315968
+  type: 'test'
+  ...
+# Subtest: getAtivReclassContext - no base returns sem_base
+ok 22 - getAtivReclassContext - no base returns sem_base
+  ---
+  duration_ms: 0.53767
+  type: 'test'
+  ...
+# Subtest: getAtivReclassContext - impedimentoLP null returns aguardando_impedimento
+ok 23 - getAtivReclassContext - impedimentoLP null returns aguardando_impedimento
+  ---
+  duration_ms: 0.345681
+  type: 'test'
+  ...
+# Subtest: getAtivReclassContext - corpoFlow not ready returns aguardando_funcoes
+ok 24 - getAtivReclassContext - corpoFlow not ready returns aguardando_funcoes
+  ---
+  duration_ms: 0.633506
+  type: 'test'
+  ...
+# Subtest: getAtivReclassContext - impedimentoLP false returns sem_impedimento_lp
+ok 25 - getAtivReclassContext - impedimentoLP false returns sem_impedimento_lp
+  ---
+  duration_ms: 0.6613
+  type: 'test'
+  ...
+# Subtest: getAtivReclassContext - corpoFlow.q <= 1 returns corpo_nl
+ok 26 - getAtivReclassContext - corpoFlow.q <= 1 returns corpo_nl
+  ---
+  duration_ms: 0.479934
+  type: 'test'
+  ...
+# Subtest: getAtivReclassContext - tabelaConclusiva positive returns verificacao_adm_positiva
+ok 27 - getAtivReclassContext - tabelaConclusiva positive returns verificacao_adm_positiva
+  ---
+  duration_ms: 0.228803
+  type: 'test'
+  ...
+# Subtest: getAtivReclassContext - all conditions pass returns relevante
+ok 28 - getAtivReclassContext - all conditions pass returns relevante
+  ---
+  duration_ms: 0.285842
+  type: 'test'
+  ...
+# Subtest: getAtivReclassContext - corpoFlow.q == null returns aguardando_funcoes
+ok 29 - getAtivReclassContext - corpoFlow.q == null returns aguardando_funcoes
+  ---
+  duration_ms: 0.177874
+  type: 'test'
+  ...
+# Subtest: getAtivReclassContext - corpoFlow.q = 0 (N) returns corpo_nl
+ok 30 - getAtivReclassContext - corpoFlow.q = 0 (N) returns corpo_nl
+  ---
+  duration_ms: 0.164438
+  type: 'test'
+  ...
+# Subtest: isCorpoReasonBlocked - base null returns false
+ok 31 - isCorpoReasonBlocked - base null returns false
+  ---
+  duration_ms: 0.195019
+  type: 'test'
+  ...
+# Subtest: isCorpoReasonBlocked - reason null returns false
+ok 32 - isCorpoReasonBlocked - reason null returns false
+  ---
+  duration_ms: 0.278392
+  type: 'test'
+  ...
+# Subtest: isCorpoReasonBlocked - estruturas recognized returns true
+ok 33 - isCorpoReasonBlocked - estruturas recognized returns true
+  ---
+  duration_ms: 0.175361
+  type: 'test'
+  ...
+# Subtest: isCorpoReasonBlocked - estruturas not recognized returns false
+ok 34 - isCorpoReasonBlocked - estruturas not recognized returns false
+  ---
+  duration_ms: 0.11844
+  type: 'test'
+  ...
+# Subtest: isCorpoReasonBlocked - prognostico recognized returns true
+ok 35 - isCorpoReasonBlocked - prognostico recognized returns true
+  ---
+  duration_ms: 0.138435
+  type: 'test'
+  ...
+# Subtest: isCorpoReasonBlocked - prognostico not recognized returns false
+ok 36 - isCorpoReasonBlocked - prognostico not recognized returns false
+  ---
+  duration_ms: 0.247381
+  type: 'test'
+  ...
+# Subtest: isCorpoReasonBlocked - unknown reason returns false
+ok 37 - isCorpoReasonBlocked - unknown reason returns false
+  ---
+  duration_ms: 0.191718
+  type: 'test'
+  ...
+# Subtest: getCorpoReasonBlockedMessage - estruturas returns specific message
+ok 38 - getCorpoReasonBlockedMessage - estruturas returns specific message
+  ---
+  duration_ms: 0.251744
+  type: 'test'
+  ...
+# Subtest: getCorpoReasonBlockedMessage - prognostico returns specific message
+ok 39 - getCorpoReasonBlockedMessage - prognostico returns specific message
+  ---
+  duration_ms: 0.108615
+  type: 'test'
+  ...
+# Subtest: getCorpoReasonBlockedMessage - fallback returns generic message
+ok 40 - getCorpoReasonBlockedMessage - fallback returns generic message
+  ---
+  duration_ms: 0.133056
+  type: 'test'
+  ...
+# Subtest: resolveCorpoJudFlow - no base returns pending
+ok 41 - resolveCorpoJudFlow - no base returns pending
+  ---
+  duration_ms: 0.554813
+  type: 'test'
+  ...
+# Subtest: resolveCorpoJudFlow - corpoKeepAdmin null returns pending
+ok 42 - resolveCorpoJudFlow - corpoKeepAdmin null returns pending
+  ---
+  duration_ms: 0.143165
+  type: 'test'
+  ...
+# Subtest: resolveCorpoJudFlow - corpoKeepAdmin true (mantido) returns ready with base.corpo
+ok 43 - resolveCorpoJudFlow - corpoKeepAdmin true (mantido) returns ready with base.corpo
+  ---
+  duration_ms: 0.155343
+  type: 'test'
+  ...
+# Subtest: resolveCorpoJudFlow - no corpoChangeReason returns pending
+ok 44 - resolveCorpoJudFlow - no corpoChangeReason returns pending
+  ---
+  duration_ms: 0.210262
+  type: 'test'
+  ...
+# Subtest: resolveCorpoJudFlow - blocked reason returns blocked mode
+ok 45 - resolveCorpoJudFlow - blocked reason returns blocked mode
+  ---
+  duration_ms: 0.261234
+  type: 'test'
+  ...
+# Subtest: resolveCorpoJudFlow - estruturas with corpo 2 returns q=3
+ok 46 - resolveCorpoJudFlow - estruturas with corpo 2 returns q=3
+  ---
+  duration_ms: 0.223176
+  type: 'test'
+  ...
+# Subtest: resolveCorpoJudFlow - estruturas with corpo 4 capped at 4
+ok 47 - resolveCorpoJudFlow - estruturas with corpo 4 capped at 4
+  ---
+  duration_ms: 0.259231
+  type: 'test'
+  ...
+# Subtest: resolveCorpoJudFlow - prognostico with corpo 3 returns q=4
+ok 48 - resolveCorpoJudFlow - prognostico with corpo 3 returns q=4
+  ---
+  duration_ms: 0.28298
+  type: 'test'
+  ...
+# Subtest: resolveCorpoJudFlow - dominio_max no domains returns pending
+ok 49 - resolveCorpoJudFlow - dominio_max no domains returns pending
+  ---
+  duration_ms: 0.296321
+  type: 'test'
+  ...
+# Subtest: resolveCorpoJudFlow - dominio_max with domains uses max
+ok 50 - resolveCorpoJudFlow - dominio_max with domains uses max
+  ---
+  duration_ms: 0.475585
+  type: 'test'
+  ...
+# Subtest: resolveCorpoJudFlow - rebaixamento no manual returns pending
+ok 51 - resolveCorpoJudFlow - rebaixamento no manual returns pending
+  ---
+  duration_ms: 0.257405
+  type: 'test'
+  ...
+# Subtest: resolveCorpoJudFlow - rebaixamento with decrease no confirm returns needsReductionConfirm
+ok 52 - resolveCorpoJudFlow - rebaixamento with decrease no confirm returns needsReductionConfirm
+  ---
+  duration_ms: 0.217117
+  type: 'test'
+  ...
+# Subtest: resolveCorpoJudFlow - rebaixamento with decrease confirmed returns ready
+ok 53 - resolveCorpoJudFlow - rebaixamento with decrease confirmed returns ready
+  ---
+  duration_ms: 0.247303
+  type: 'test'
+  ...
+# Subtest: resolveCorpoJudFlow - rebaixamento no decrease returns ready
+ok 54 - resolveCorpoJudFlow - rebaixamento no decrease returns ready
+  ---
+  duration_ms: 0.183104
+  type: 'test'
+  ...
+# Subtest: getMedBlockingReason - no adminBase returns blocking message
+ok 55 - getMedBlockingReason - no adminBase returns blocking message
+  ---
+  duration_ms: 0.342511
+  type: 'test'
+  ...
+# Subtest: getMedBlockingReason - impedimentoLP null returns blocking message
+ok 56 - getMedBlockingReason - impedimentoLP null returns blocking message
+  ---
+  duration_ms: 0.171738
+  type: 'test'
+  ...
+# Subtest: getMedBlockingReason - corpoFlow not ready returns corpoFlow reason
+ok 57 - getMedBlockingReason - corpoFlow not ready returns corpoFlow reason
+  ---
+  duration_ms: 0.268848
+  type: 'test'
+  ...
+# Subtest: getMedBlockingReason - ativContext hidden returns empty string
+ok 58 - getMedBlockingReason - ativContext hidden returns empty string
+  ---
+  duration_ms: 0.220029
+  type: 'test'
+  ...
+# Subtest: getMedBlockingReason - hasAtivMed null returns blocking message
+ok 59 - getMedBlockingReason - hasAtivMed null returns blocking message
+  ---
+  duration_ms: 0.200403
+  type: 'test'
+  ...
+# Subtest: getMedBlockingReason - hasAtivMed false returns empty string
+ok 60 - getMedBlockingReason - hasAtivMed false returns empty string
+  ---
+  duration_ms: 2.463722
+  type: 'test'
+  ...
+# Subtest: getMedBlockingReason - ativMode null returns blocking message
+ok 61 - getMedBlockingReason - ativMode null returns blocking message
+  ---
+  duration_ms: 0.198301
+  type: 'test'
+  ...
+# Subtest: getMedBlockingReason - simples incomplete no qualifier returns blocking message
+ok 62 - getMedBlockingReason - simples incomplete no qualifier returns blocking message
+  ---
+  duration_ms: 0.201235
+  type: 'test'
+  ...
+# Subtest: getMedBlockingReason - simples incomplete no justification returns blocking message
+ok 63 - getMedBlockingReason - simples incomplete no justification returns blocking message
+  ---
+  duration_ms: 0.228549
+  type: 'test'
+  ...
+# Subtest: getMedBlockingReason - simples complete returns empty string
+ok 64 - getMedBlockingReason - simples complete returns empty string
+  ---
+  duration_ms: 0.194386
+  type: 'test'
+  ...
+# Subtest: getMedBlockingReason - completa incomplete returns blocking message
+ok 65 - getMedBlockingReason - completa incomplete returns blocking message
+  ---
+  duration_ms: 0.318766
+  type: 'test'
+  ...
+# Subtest: getMedBlockingReason - completa complete returns empty string
+ok 66 - getMedBlockingReason - completa complete returns empty string
+  ---
+  duration_ms: 0.233326
+  type: 'test'
+  ...
+# Subtest: computeJudicialTriage - no adminBase returns pendente_base
+ok 67 - computeJudicialTriage - no adminBase returns pendente_base
+  ---
+  duration_ms: 0.683586
+  type: 'test'
+  ...
+# Subtest: computeJudicialTriage - dirty draft returns pendente_refixacao
+ok 68 - computeJudicialTriage - dirty draft returns pendente_refixacao
+  ---
+  duration_ms: 0.256236
+  type: 'test'
+  ...
+# Subtest: computeJudicialTriage - medBlock present returns pendente_medica
+ok 69 - computeJudicialTriage - medBlock present returns pendente_medica
+  ---
+  duration_ms: 0.603447
+  type: 'test'
+  ...
+# Subtest: computeJudicialTriage - impedimentoLP false returns sem_impedimento_lp
+ok 70 - computeJudicialTriage - impedimentoLP false returns sem_impedimento_lp
+  ---
+  duration_ms: 0.342817
+  type: 'test'
+  ...
+# Subtest: computeJudicialTriage - testeA positive returns verificacao_administrativa_positiva
+ok 71 - computeJudicialTriage - testeA positive returns verificacao_administrativa_positiva
+  ---
+  duration_ms: 0.378409
+  type: 'test'
+  ...
+# Subtest: computeJudicialTriage - corpo_nl returns corpo_nl_irrelevante
+ok 72 - computeJudicialTriage - corpo_nl returns corpo_nl_irrelevante
+  ---
+  duration_ms: 0.378689
+  type: 'test'
+  ...
+# Subtest: computeJudicialTriage - testeB positive returns verificacao_atividades_medicas_positiva
+ok 73 - computeJudicialTriage - testeB positive returns verificacao_atividades_medicas_positiva
+  ---
+  duration_ms: 0.551785
+  type: 'test'
+  ...
+# Subtest: computeJudicialTriage - all negative returns avaliacao_social_necessaria
+ok 74 - computeJudicialTriage - all negative returns avaliacao_social_necessaria
+  ---
+  duration_ms: 0.408152
+  type: 'test'
+  ...
+# Subtest: buildJudicialControlText - sem adminBase retorna placeholder
+ok 75 - buildJudicialControlText - sem adminBase retorna placeholder
+  ---
+  duration_ms: 2.383709
+  type: 'test'
+  ...
+# Subtest: buildJudicialControlText - triage not ready retorna placeholder
+ok 76 - buildJudicialControlText - triage not ready retorna placeholder
+  ---
+  duration_ms: 0.374615
+  type: 'test'
+  ...
+# Subtest: buildJudicialControlText - reconhecimento: est + prog
+ok 77 - buildJudicialControlText - reconhecimento: est + prog
+  ---
+  duration_ms: 0.594199
+  type: 'test'
+  ...
+# Subtest: buildJudicialControlText - reconhecimento: somente est
+ok 78 - buildJudicialControlText - reconhecimento: somente est
+  ---
+  duration_ms: 0.420505
+  type: 'test'
+  ...
+# Subtest: buildJudicialControlText - reconhecimento: somente prog
+ok 79 - buildJudicialControlText - reconhecimento: somente prog
+  ---
+  duration_ms: 0.531272
+  type: 'test'
+  ...
+# Subtest: buildJudicialControlText - reconhecimento: nenhum
+ok 80 - buildJudicialControlText - reconhecimento: nenhum
+  ---
+  duration_ms: 0.215168
+  type: 'test'
+  ...
+# Subtest: buildJudicialControlText - dispensa sem_impedimento_lp
+ok 81 - buildJudicialControlText - dispensa sem_impedimento_lp
+  ---
+  duration_ms: 0.460254
+  type: 'test'
+  ...
+# Subtest: buildJudicialControlText - dispensa verificacao_administrativa_positiva
+ok 82 - buildJudicialControlText - dispensa verificacao_administrativa_positiva
+  ---
+  duration_ms: 0.331364
+  type: 'test'
+  ...
+# Subtest: buildJudicialControlText - dispensa corpo_nl_irrelevante
+ok 83 - buildJudicialControlText - dispensa corpo_nl_irrelevante
+  ---
+  duration_ms: 0.549761
+  type: 'test'
+  ...
+# Subtest: buildJudicialControlText - dispensa testeB positivo
+ok 84 - buildJudicialControlText - dispensa testeB positivo
+  ---
+  duration_ms: 0.979168
+  type: 'test'
+  ...
+# Subtest: buildJudicialControlText - necessaria com ativMedResolved
+ok 85 - buildJudicialControlText - necessaria com ativMedResolved
+  ---
+  duration_ms: 0.472812
+  type: 'test'
+  ...
+# Subtest: buildJudicialControlText - necessaria sem ativMedResolved
+ok 86 - buildJudicialControlText - necessaria sem ativMedResolved
+  ---
+  duration_ms: 0.227335
+  type: 'test'
+  ...
+# Subtest: configured padrao values match Portaria 34/2025 Anexo II
+ok 87 - configured padrao values match Portaria 34/2025 Anexo II
+  ---
+  duration_ms: 3.021524
+  type: 'test'
+  ...
+# Subtest: getPadraoApplyContext excludes child non-eligible domains by age cut
+ok 88 - getPadraoApplyContext excludes child non-eligible domains by age cut
+  ---
+  duration_ms: 0.839519
+  type: 'test'
+  ...
+# Subtest: getPadraoApplyContext keeps all mapped domains in adult mode
+ok 89 - getPadraoApplyContext keeps all mapped domains in adult mode
+  ---
+  duration_ms: 0.439684
+  type: 'test'
+  ...
+# Subtest: applyPadraoEntries updates state, button activation, and triggers one update
+ok 90 - applyPadraoEntries updates state, button activation, and triggers one update
+  ---
+  duration_ms: 1.067944
+  type: 'test'
+  ...
+# Subtest: pctToQ - Boundary values
+ok 91 - pctToQ - Boundary values
+  ---
+  duration_ms: 1.841261
+  type: 'test'
+  ...
+# Subtest: pctToQ - Edge cases
+ok 92 - pctToQ - Edge cases
+  ---
+  duration_ms: 0.265383
+  type: 'test'
+  ...
+# Subtest: pctToQ - Intermediate values
+ok 93 - pctToQ - Intermediate values
+  ---
+  duration_ms: 0.384169
+  type: 'test'
+  ...
+# Subtest: escapeHtml - basic security
+ok 94 - escapeHtml - basic security
+  ---
+  duration_ms: 2.320415
+  type: 'test'
+  ...
+# Subtest: escapeHtml - XSS vectors
+ok 95 - escapeHtml - XSS vectors
+  ---
+  duration_ms: 0.453549
+  type: 'test'
+  ...
+# Subtest: escapeHtml - mixed content
+ok 96 - escapeHtml - mixed content
+  ---
+  duration_ms: 0.314998
+  type: 'test'
+  ...
+# Subtest: Server Security
+    # Subtest: Server handles malformed URI without crashing
+    ok 1 - Server handles malformed URI without crashing
+      ---
+      duration_ms: 31.099113
+      type: 'test'
+      ...
+    # Subtest: Server handles null bytes (%00) without crashing
+    ok 2 - Server handles null bytes (%00) without crashing
+      ---
+      duration_ms: 3.74123
+      type: 'test'
+      ...
+    # Subtest: Server is still alive
+    ok 3 - Server is still alive
+      ---
+      duration_ms: 5.059246
+      type: 'test'
+      ...
+    1..3
+ok 97 - Server Security
+  ---
+  duration_ms: 140.287548
+  type: 'test'
+  ...
+# Subtest: createEmptyDomains - empty array
+ok 98 - createEmptyDomains - empty array
+  ---
+  duration_ms: 3.623421
+  type: 'test'
+  ...
+# Subtest: createEmptyDomains - single domain
+ok 99 - createEmptyDomains - single domain
+  ---
+  duration_ms: 0.445172
+  type: 'test'
+  ...
+# Subtest: createEmptyDomains - multiple domains
+ok 100 - createEmptyDomains - multiple domains
+  ---
+  duration_ms: 0.341351
+  type: 'test'
+  ...
+# Subtest: createEmptyDomains - duplicate domains
+ok 101 - createEmptyDomains - duplicate domains
+  ---
+  duration_ms: 0.339946
+  type: 'test'
+  ...
+# Subtest: createEmptyDomains - handles numeric strings as keys
+ok 102 - createEmptyDomains - handles numeric strings as keys
+  ---
+  duration_ms: 0.34268
+  type: 'test'
+  ...
+# Subtest: Anexo IV parser reads all 125 normative rows
+ok 103 - Anexo IV parser reads all 125 normative rows
+  ---
+  duration_ms: 2.860809
+  type: 'test'
+  ...
+# Subtest: tabelaConclusiva matches every Sim/Não decision from Anexo IV
+ok 104 - tabelaConclusiva matches every Sim/Não decision from Anexo IV
+  ---
+  duration_ms: 0.680507
+  type: 'test'
+  ...
+# Subtest: getItemNumber matches Anexo IV row numbering
+ok 105 - getItemNumber matches Anexo IV row numbering
+  ---
+  duration_ms: 0.649288
+  type: 'test'
+  ...
+# Subtest: tabelaConclusiva - Regras de Indeferimento (Corpo/Ativ <= 1)
+ok 106 - tabelaConclusiva - Regras de Indeferimento (Corpo/Ativ <= 1)
+  ---
+  duration_ms: 2.354496
+  type: 'test'
+  ...
+# Subtest: tabelaConclusiva - Regras de Deferimento Direto (Corpo/Ativ >= 3)
+ok 107 - tabelaConclusiva - Regras de Deferimento Direto (Corpo/Ativ >= 3)
+  ---
+  duration_ms: 0.363645
+  type: 'test'
+  ...
+# Subtest: tabelaConclusiva - Regra de Desempate (Corpo 2, Ativ 2)
+ok 108 - tabelaConclusiva - Regra de Desempate (Corpo 2, Ativ 2)
+  ---
+  duration_ms: 0.330579
+  type: 'test'
+  ...
+# Subtest: tabelaConclusiva - Tabela Verdade Completa (125 combinações)
+ok 109 - tabelaConclusiva - Tabela Verdade Completa (125 combinações)
+  ---
+  duration_ms: 0.479591
+  type: 'test'
+  ...
+1..109
+# tests 112
+# suites 0
+# pass 112
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 631.576463
