@@ -36,6 +36,19 @@ const MIME_TYPES = {
   '.map': 'application/json; charset=utf-8'
 };
 
+const SECURITY_HEADERS = {
+  'Cache-Control': 'no-store',
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY',
+  'Referrer-Policy': 'no-referrer',
+  'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none';",
+  'Permissions-Policy': 'geolocation=(), camera=(), microphone=()',
+  'Cross-Origin-Opener-Policy': 'same-origin',
+  'Cross-Origin-Embedder-Policy': 'require-corp',
+  'Cross-Origin-Resource-Policy': 'same-origin',
+  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains'
+};
+
 function resolvePath(urlPathname) {
   let decoded;
   try {
