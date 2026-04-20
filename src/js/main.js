@@ -404,41 +404,54 @@ function handleChangeIdadeUnidade(nextUnit) {
 }
 
 function applyChildRules() {
-  ATIV_DOMAINS.forEach(d => {
+  // ⚡ Optimization: Native for-loop to avoid Array.prototype.forEach callback allocation overhead in high frequency paths
+  for (let i = 0; i < ATIV_DOMAINS.length; i++) {
+    const d = ATIV_DOMAINS[i];
     const btns = getDomainButtons(d.id);
     if (crianca && idadeMeses < d.cut) {
       if (!(d.id in childDomainBackup)) childDomainBackup[d.id] = state[d.id];
       state[d.id] = 4;
-      for (let i = 0; i < btns.length; i++) {
-        const b = btns[i];
+      for (let j = 0; j < btns.length; j++) {
+        const b = btns[j];
         const isActive = +b.dataset.value === 4;
-        b.classList.toggle('active', isActive);
-        b.setAttribute('aria-pressed', isActive);
-        b.classList.add('locked');
-        b.setAttribute('aria-disabled', 'true');
-        b.setAttribute('title', `Não aplicável: idade informada (${idadeMeses} meses) é menor que o ponto de corte deste domínio (${d.cut} meses).`);
+        if (b.classList.contains('active') !== isActive) {
+          b.classList.toggle('active', isActive);
+          b.setAttribute('aria-pressed', isActive);
+        }
+        if (!b.classList.contains('locked')) {
+          b.classList.add('locked');
+          b.setAttribute('aria-disabled', 'true');
+        }
+        const expectedTitle = `Não aplicável: idade informada (${idadeMeses} meses) é menor que o ponto de corte deste domínio (${d.cut} meses).`;
+        if (b.getAttribute('title') !== expectedTitle) {
+          b.setAttribute('title', expectedTitle);
+        }
       }
     } else {
       if (d.id in childDomainBackup) {
         state[d.id] = childDomainBackup[d.id];
         delete childDomainBackup[d.id];
       }
-      for (let i = 0; i < btns.length; i++) {
-        const b = btns[i];
-        b.classList.remove('locked');
-        b.removeAttribute('aria-disabled');
+      for (let j = 0; j < btns.length; j++) {
+        const b = btns[j];
+        if (b.classList.contains('locked')) {
+          b.classList.remove('locked');
+          b.removeAttribute('aria-disabled');
+        }
         const originalLabel = b.getAttribute('aria-label');
         if (originalLabel) {
-          b.setAttribute('title', originalLabel);
+          if (b.getAttribute('title') !== originalLabel) b.setAttribute('title', originalLabel);
         } else {
           b.removeAttribute('title');
         }
         const isActive = +b.dataset.value === state[d.id];
-        b.classList.toggle('active', isActive);
-        b.setAttribute('aria-pressed', isActive);
+        if (b.classList.contains('active') !== isActive) {
+          b.classList.toggle('active', isActive);
+          b.setAttribute('aria-pressed', isActive);
+        }
       }
     }
-  });
+  }
   updateChildAutoSummary();
 }
 
