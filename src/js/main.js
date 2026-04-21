@@ -493,7 +493,7 @@ function closeSimHelpPopover() {
   if (excerptBtn) {
     excerptBtn.textContent = 'Ver base legal (trecho)';
     excerptBtn.setAttribute('aria-expanded', 'false');
-    excerptBtn.removeAttribute('title');
+    excerptBtn.setAttribute('title', 'Ler o trecho específico da norma que fundamenta este item.');
   }
   if (!popover) return;
   popover.classList.add('hidden');
@@ -582,7 +582,7 @@ function openSimHelpPopover(helpKey, trigger) {
   if (!entry.legalExcerpt) {
     excerptBtn.setAttribute('title', 'Não há trecho legal específico disponível para este item.');
   } else {
-    excerptBtn.removeAttribute('title');
+    excerptBtn.setAttribute('title', 'Ler o trecho específico da norma que fundamenta este item.');
   }
   portariaBtn.dataset.helpKey = helpKey;
   portariaBtn.dataset.portariaSourceKey = entry.portariaSourceKey || DEFAULT_PORTARIA_SOURCE_KEY;
