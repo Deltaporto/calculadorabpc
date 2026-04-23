@@ -56,6 +56,10 @@ import { initFlowchartView } from './flowchart-view.js';
 // ============ STATE ============
 const ALL_DOMAINS = [...DOM_AMB, ...DOM_CORPO, ...DOM_ATIV_M, ...DOM_ATIV_S];
 const ATIV_DOMAINS = [...DOM_ATIV_M, ...DOM_ATIV_S];
+const ATIV_DOMAINS_MAP = Object.create(null);
+for (let i = 0; i < ATIV_DOMAINS.length; i++) {
+  ATIV_DOMAINS_MAP[ATIV_DOMAINS[i].id] = ATIV_DOMAINS[i];
+}
 const state = createDomainState(ALL_DOMAINS);
 let progDesfav = false, estrMaior = false, impedimento = false, crianca = false, idadeMeses = CHILD_AGE_LIMIT_MONTHS, idadeValor = 15, idadeUnidade = 'anos';
 let savedINSS = null;
@@ -615,15 +619,30 @@ function toggleSimHelpPopover(trigger) {
 // Padrão Médio Social
 function getPadraoApplyContext() {
   let skippedByAgeCut = 0;
-  const eligibleEntries = PADRAO_MEDIO_ENTRIES.filter(([id]) => {
+  const eligibleEntries = [];
+  const manuallyFilledEligible = [];
+  const entriesPreserve = [];
+
+  for (let i = 0; i < PADRAO_MEDIO_ENTRIES.length; i++) {
+    const entry = PADRAO_MEDIO_ENTRIES[i];
+    const id = entry[0];
+
     if (crianca) {
-      const d = ATIV_DOMAINS.find(x => x.id === id);
-      if (d && idadeMeses < d.cut) { skippedByAgeCut++; return false; }
+      const d = ATIV_DOMAINS_MAP[id];
+      if (d && idadeMeses < d.cut) {
+        skippedByAgeCut++;
+        continue;
+      }
     }
-    return true;
-  });
-  const manuallyFilledEligible = eligibleEntries.filter(([id]) => userFilledDomains.has(id));
-  const entriesPreserve = eligibleEntries.filter(([id]) => !userFilledDomains.has(id));
+
+    eligibleEntries.push(entry);
+    if (userFilledDomains.has(id)) {
+      manuallyFilledEligible.push(entry);
+    } else {
+      entriesPreserve.push(entry);
+    }
+  }
+
   const entriesOverwrite = eligibleEntries;
   return { eligibleEntries, manuallyFilledEligible, entriesPreserve, entriesOverwrite, skippedByAgeCut };
 }
