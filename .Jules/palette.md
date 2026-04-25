@@ -75,3 +75,7 @@
 ## 2024-05-18 - Prevent hover state on disabled elements
 **Learning:** Native form elements (like `button`) support the `:disabled` pseudo-class natively, while standard elements like `a` or `label` do not. Applying `:not(:disabled)` to links will not work; instead, we must use `:not(.disabled):not([aria-disabled="true"])`.
 **Action:** Always verify if an element is a native form element before using `:disabled` in CSS pseudo-class selection to restrict interactive states.
+
+## 2026-03-08 - Consistent Visual Progress Indicators
+**Learning:** Providing visual progress bars in some panels but not others creates an inconsistent user experience and missing ARIA `role="progressbar"` context for screen readers in the related panels.
+**Action:** Always verify that structurally related scoring/evaluation panels share consistent visual elements (like progress bars) and ARIA attributes for predictability and accessibility.
