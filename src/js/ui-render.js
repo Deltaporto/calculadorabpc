@@ -95,6 +95,8 @@ function ensureRefs() {
     fCorpoSpacer: fCorpoNodes[2],
     fCorpoFinal: fCorpoNodes[3],
     fCorpoSuffix: fCorpoNodes[4],
+    barCorpoContainer: getById('barCorpoContainer'),
+    barCorpo: getById('barCorpo'),
     qCorpo: getById('qCorpo'),
     nameCorpo: getById('nameCorpo'),
     fAtiv: getById('fAtiv'),
@@ -215,6 +217,15 @@ export function runMainUpdate({
   setTextIfChanged(refs.fCorpoFinal, corpo.majorado ? String(corpo.final) : '');
   setTextIfChanged(refs.fCorpoSuffix, corpo.majorado ? ' (majoração +1)' : '');
   setStyleIfChanged(refs.fCorpoFinal, 'display', corpo.majorado ? '' : 'none');
+
+  const corpoPctClamped = Math.min(100, corpo.max * 25);
+  if (refs.barCorpoContainer) {
+    if (refs.barCorpoContainer.getAttribute('aria-valuenow') !== String(corpoPctClamped)) {
+      refs.barCorpoContainer.setAttribute('aria-valuenow', String(corpoPctClamped));
+    }
+  }
+  setStyleIfChanged(refs.barCorpo, 'width', `${corpoPctClamped}%`);
+  setStyleIfChanged(refs.barCorpo, 'background', `var(--q${qLabels[corpo.q]})`);
 
   setQBadgeElement(refs.qCorpo, corpo.q, qLabels);
   setTextIfChanged(refs.nameCorpo, qFull.corpo[corpo.q]);
