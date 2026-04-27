@@ -169,11 +169,6 @@ const DOM_ATIV_M = extractExportedArray('DOM_ATIV_M');
 const DOM_ATIV_S = extractExportedArray('DOM_ATIV_S');
 const configuredPadrao = extractConfiguredPadrao();
 
-const ATIV_DOMAINS_MAP = Object.create(null);
-for (const d of [...DOM_ATIV_M, ...DOM_ATIV_S]) {
-  ATIV_DOMAINS_MAP[d.id] = d;
-}
-
 const runGetPadraoApplyContext = buildMainFunction('getPadraoApplyContext');
 const runApplyPadraoEntries = buildMainFunction('applyPadraoEntries');
 
@@ -190,7 +185,6 @@ test('getPadraoApplyContext excludes child non-eligible domains by age cut', () 
     DOM_ATIV_M,
     DOM_ATIV_S,
     ATIV_DOMAINS: [...DOM_ATIV_M, ...DOM_ATIV_S],
-    ATIV_DOMAINS_MAP,
     crianca: true,
     idadeMeses: 5,
     userFilledDomains: new Set(['e1', 'd6', 'd8']),
@@ -210,7 +204,6 @@ test('getPadraoApplyContext keeps all mapped domains in adult mode', () => {
     DOM_ATIV_M,
     DOM_ATIV_S,
     ATIV_DOMAINS: [...DOM_ATIV_M, ...DOM_ATIV_S],
-    ATIV_DOMAINS_MAP,
     crianca: false,
     idadeMeses: 192,
     userFilledDomains: new Set(['e1', 'd6', 'd8']),

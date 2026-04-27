@@ -1,0 +1,30 @@
+--- tests/padrao-medio.portaria.test.js
++++ tests/padrao-medio.portaria.test.js
+@@ -171,6 +171,11 @@
+ const DOM_ATIV_S = extractExportedArray('DOM_ATIV_S');
+ const configuredPadrao = extractConfiguredPadrao();
+
++const ATIV_DOMAINS_MAP = Object.create(null);
++for (const d of [...DOM_ATIV_M, ...DOM_ATIV_S]) {
++  ATIV_DOMAINS_MAP[d.id] = d;
++}
++
+ const runGetPadraoApplyContext = buildMainFunction('getPadraoApplyContext');
+ const runApplyPadraoEntries = buildMainFunction('applyPadraoEntries');
+
+@@ -186,6 +191,7 @@
+     DOM_ATIV_M,
+     DOM_ATIV_S,
+     ATIV_DOMAINS: [...DOM_ATIV_M, ...DOM_ATIV_S],
++    ATIV_DOMAINS_MAP,
+     crianca: true,
+     idadeMeses: 5,
+     userFilledDomains: new Set(['e1', 'd6', 'd8']),
+@@ -205,6 +211,7 @@
+     DOM_ATIV_M,
+     DOM_ATIV_S,
+     ATIV_DOMAINS: [...DOM_ATIV_M, ...DOM_ATIV_S],
++    ATIV_DOMAINS_MAP,
+     crianca: false,
+     idadeMeses: 192,
+     userFilledDomains: new Set(['e1', 'd6', 'd8']),
