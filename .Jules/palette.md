@@ -75,3 +75,7 @@
 ## 2024-05-18 - Prevent hover state on disabled elements
 **Learning:** Native form elements (like `button`) support the `:disabled` pseudo-class natively, while standard elements like `a` or `label` do not. Applying `:not(:disabled)` to links will not work; instead, we must use `:not(.disabled):not([aria-disabled="true"])`.
 **Action:** Always verify if an element is a native form element before using `:disabled` in CSS pseudo-class selection to restrict interactive states.
+
+## 2026-03-08 - Consistent Keyboard Navigation for Button Groups
+**Learning:** Adding custom radio-button-like groups (e.g., the `.flowchart-step-nav` container for navigation in the Flowchart view) without implementing roving `tabindex` forces keyboard users to `Tab` through each option individually, unlike other similar button groups in the application that use arrow keys. Additionally, these custom groups should use the `role="group"` attribute.
+**Action:** When creating new mutually exclusive custom button groups, ensure they receive `role="group"` and are included in the centralized roving `tabindex` implementation (e.g., by adding their class to `groupSelector` in `a11y.js`) to guarantee consistent and accessible keyboard navigation.
