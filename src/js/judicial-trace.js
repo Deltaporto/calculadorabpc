@@ -55,7 +55,13 @@ export function createAtivMedTraceLineElement({
 
   if (med.ativMode === 'completa') {
     const computed = med.ativMedComputed || computeAtivFromDomains(med.ativMedDomains);
-    const details = ativDomainIds.map(id => `${id.toUpperCase()}=${qLabels[med.ativMedDomains[id]]}`).join(' · ');
+    let details = '';
+    // ⚡ Optimization: Single native for-loop to avoid Array.prototype.map/join and intermediate allocations
+    for (let i = 0; i < ativDomainIds.length; i++) {
+      const id = ativDomainIds[i];
+      if (i > 0) details += ' · ';
+      details += `${id.toUpperCase()}=${qLabels[med.ativMedDomains[id]]}`;
+    }
     if (!computed) {
       return createTraceLine('<strong>Origem da reclassificação médica de Atividades e Participação</strong>: modo completo (d1–d9) ainda incompleto.');
     }
