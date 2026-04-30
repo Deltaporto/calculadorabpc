@@ -131,22 +131,29 @@ export function resolveCorpoJudFlow({
   }
 
   if (med.corpoChangeReason === 'dominio_max') {
-    const filledDomains = corpoDomainIds.filter(id => med.corpoAdminDomains[id] != null);
-    if (!filledDomains.length) {
-      return { ready: false, q: null, reason: 'No motivo "Domínio administrativo b1–b8 mais grave", informe ao menos um domínio b1 a b8.', mode: 'pending' };
-    }
-    // ⚡ Optimization: Native for-loop to avoid Array.prototype.reduce callback allocation overhead
     let q = 0;
-    for (let i = 0; i < filledDomains.length; i++) {
-      const val = med.corpoAdminDomains[filledDomains[i]];
-      if (val > q) q = val;
+    let hasAny = false;
+    let domainsText = '';
+    // ⚡ Optimization: Single native for-loop to avoid Array.prototype.filter/map/join and intermediate allocations
+    for (let i = 0; i < corpoDomainIds.length; i++) {
+      const id = corpoDomainIds[i];
+      const val = med.corpoAdminDomains[id];
+      if (val != null) {
+        if (val > q) q = val;
+        if (hasAny) domainsText += ' · ';
+        domainsText += `${id.toUpperCase()}=${qLabels[val]}`;
+        hasAny = true;
+      }
+    }
+    if (!hasAny) {
+      return { ready: false, q: null, reason: 'No motivo "Domínio administrativo b1–b8 mais grave", informe ao menos um domínio b1 a b8.', mode: 'pending' };
     }
     return {
       ready: true,
       q,
       mode: 'dominio_max',
       reason: 'Regra aplicada: para Funções do Corpo prevalece o domínio administrativo mais grave entre os domínios informados (b1–b8).',
-      domainsText: filledDomains.map(id => `${id.toUpperCase()}=${qLabels[med.corpoAdminDomains[id]]}`).join(' · '),
+      domainsText,
       decreased: q < base.corpo
     };
   }
