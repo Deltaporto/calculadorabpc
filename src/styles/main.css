@@ -4415,6 +4415,8 @@ footer {
 .jc-select:focus-visible,
 .standard-text textarea:focus-visible,
 .toast-close:focus-visible,
+.sim-help-popover:focus-visible,
+.portaria-modal:focus-visible,
 .toggle-label:has(input[type=checkbox]:focus-visible),
 .jc-reduction-alert label:has(input[type=checkbox]:focus-visible) {
   outline: 2px solid transparent;
