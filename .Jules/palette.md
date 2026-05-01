@@ -75,3 +75,7 @@
 ## 2024-05-18 - Prevent hover state on disabled elements
 **Learning:** Native form elements (like `button`) support the `:disabled` pseudo-class natively, while standard elements like `a` or `label` do not. Applying `:not(:disabled)` to links will not work; instead, we must use `:not(.disabled):not([aria-disabled="true"])`.
 **Action:** Always verify if an element is a native form element before using `:disabled` in CSS pseudo-class selection to restrict interactive states.
+
+## 2026-03-09 - Focus Visibility on Native Dialogs
+**Learning:** Native `<dialog>` elements and custom popover containers that receive programmatic focus (`tabindex="-1"`) may lack consistent browser-default `:focus-visible` outlines, rendering them invisible to keyboard navigation.
+**Action:** Always explicitly style `:focus-visible` for container elements like native dialogs and popovers to ensure clear focus indication for keyboard and screen reader users when they are opened and focused.

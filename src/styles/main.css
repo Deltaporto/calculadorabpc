@@ -3821,6 +3821,11 @@ footer {
   color: var(--text);
 }
 
+.sim-help-popover:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--blue) 72%, #fff 28%);
+  outline-offset: 2px;
+}
+
 .sim-help-popover-header {
   display: flex;
   align-items: center;
@@ -3960,6 +3965,11 @@ footer {
   color: var(--text);
   background: var(--surface);
   box-shadow: var(--shadow-lg);
+}
+
+.portaria-modal:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--blue) 72%, #fff 28%);
+  outline-offset: 2px;
 }
 
 .portaria-modal::backdrop {
