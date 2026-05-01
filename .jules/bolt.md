@@ -50,3 +50,7 @@ Instead, a significantly safer optimization is removing global queries like `doc
 ## 2025-10-27 - Eliminate Intermediate Allocations in Render Loop Tracking
 **Learning:** During UI rendering, tracking invalid elements using an intermediate `Set` and spreading it to an array (`[...uniqueIds]`) solely to ensure uniqueness before applying DOM classes creates completely unnecessary memory allocations and garbage collection pressure on every change. Since DOM mutation APIs or local `Set`s (like `currentInvalidElements`) already prevent redundant operations, the intermediate deduplication step is a net-negative micro-optimization.
 **Action:** Removed intermediate `Set` and array spread allocations in high-frequency validation tracking. Pass the raw items array directly to the DOM-updating function and rely on the existing state-tracking `Set` to prevent redundant operations.
+
+## 2025-05-23 - Multi-array Population Loop vs Array.prototype.filter Chaining
+**Learning:** In state processing functions like `getPadraoApplyContext`, chaining multiple `.filter()` calls to build mutually exclusive state arrays creates unnecessary intermediate array allocations, O(N*M) callback invocations, and garbage collection pressure.
+**Action:** Replace multiple `.filter()` calls and nested lookups with a single, unified native `for` loop that evaluates each element once and simultaneously populates all required arrays using `push()`. Combine with pre-computed `Map` or hash map structures (`Object.create(null)`) for O(1) lookups instead of `.find()`.
