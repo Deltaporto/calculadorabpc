@@ -181,10 +181,14 @@ test('configured padrao values match Portaria 34/2025 Anexo II', () => {
 });
 
 test('getPadraoApplyContext excludes child non-eligible domains by age cut', () => {
+  const ATIV_DOMAINS_TEMP = [...DOM_ATIV_M, ...DOM_ATIV_S];
+  const ATIV_DOMAINS_MAP_TEMP = Object.create(null);
+  ATIV_DOMAINS_TEMP.forEach(d => ATIV_DOMAINS_MAP_TEMP[d.id] = d);
   const ctx = {
     DOM_ATIV_M,
     DOM_ATIV_S,
     ATIV_DOMAINS: [...DOM_ATIV_M, ...DOM_ATIV_S],
+    ATIV_DOMAINS_MAP: ATIV_DOMAINS_MAP_TEMP,
     crianca: true,
     idadeMeses: 5,
     userFilledDomains: new Set(['e1', 'd6', 'd8']),
@@ -200,10 +204,14 @@ test('getPadraoApplyContext excludes child non-eligible domains by age cut', () 
 });
 
 test('getPadraoApplyContext keeps all mapped domains in adult mode', () => {
+  const ATIV_DOMAINS_TEMP = [...DOM_ATIV_M, ...DOM_ATIV_S];
+  const ATIV_DOMAINS_MAP_TEMP = Object.create(null);
+  ATIV_DOMAINS_TEMP.forEach(d => ATIV_DOMAINS_MAP_TEMP[d.id] = d);
   const ctx = {
     DOM_ATIV_M,
     DOM_ATIV_S,
     ATIV_DOMAINS: [...DOM_ATIV_M, ...DOM_ATIV_S],
+    ATIV_DOMAINS_MAP: ATIV_DOMAINS_MAP_TEMP,
     crianca: false,
     idadeMeses: 192,
     userFilledDomains: new Set(['e1', 'd6', 'd8']),
@@ -223,6 +231,9 @@ test('applyPadraoEntries updates state, button activation, and triggers one upda
   const { document, buttonMap } = createDomainDocument(['e1', 'd6', 'd9'], state);
   let updates = 0;
 
+  const ATIV_DOMAINS_TEMP = [...DOM_ATIV_M, ...DOM_ATIV_S];
+  const ATIV_DOMAINS_MAP_TEMP = Object.create(null);
+  ATIV_DOMAINS_TEMP.forEach(d => ATIV_DOMAINS_MAP_TEMP[d.id] = d);
   const ctx = {
     state,
     document,
