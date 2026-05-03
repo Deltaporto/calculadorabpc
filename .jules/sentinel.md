@@ -10,3 +10,7 @@
 **Vulnerability:** The local development server (`scripts/serve.js`) previously lacked HTTP method restrictions, allowing it to process potentially unexpected HTTP verbs (like `POST`, `PUT`, `DELETE`). While it only served files, this deviates from security best practices where unexpected methods should be explicitly rejected.
 **Learning:** Simple custom file servers often process all requests identically regardless of the HTTP method. Explicitly filtering allowed methods ensures the server only responds to intended request types.
 **Prevention:** Always check and enforce allowed HTTP methods (e.g., `GET`, `HEAD`) at the entry point of request processing, returning a `405 Method Not Allowed` for unauthorized verbs.
+## 2026-05-15 - [MEDIUM] URI Length and Global Timeout DoS
+**Vulnerability:** The local dev server (`scripts/serve.js`) lacked URI length limits and global timeouts, making it vulnerable to Slowloris and URI-based Denial of Service (DoS) attacks.
+**Learning:** Custom HTTP servers created with `http.createServer` do not inherit production-grade limits by default. They will accept extremely long URIs and keep connections open indefinitely if not explicitly configured.
+**Prevention:** Always implement explicit request validation (like `req.url.length > 2048`) and configure global timeouts (`server.setTimeout(30000)`) to mitigate resource exhaustion attacks.
