@@ -84,6 +84,20 @@ test('Server Security', async (t) => {
         }
     });
 
+    await t.test('Server handles extremely long URIs with 414', async () => {
+        try {
+            const longPath = '/' + 'a'.repeat(2048);
+            const res = await makeRequest(longPath);
+            assert.strictEqual(res.statusCode, 414, 'Should return 414 URI Too Long status code, got ' + res.statusCode);
+        } catch (e) {
+             if (e.code === 'ECONNRESET' || e.message === 'socket hang up') {
+                 assert.fail('Server crashed on long URI: ' + e.message);
+             } else {
+                 throw e;
+             }
+        }
+    });
+
     // Verify server is still running by making a valid request
     await t.test('Server is still alive', async () => {
          try {
