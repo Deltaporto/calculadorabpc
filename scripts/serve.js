@@ -84,6 +84,12 @@ function send(res, status, body, type = 'text/plain; charset=utf-8') {
 }
 
 const server = http.createServer((req, res) => {
+  // DoS Protection: URI too long
+  if (req.url && req.url.length > 2048) {
+    send(res, 414, 'URI Too Long');
+    return;
+  }
+
   if (req.method !== 'GET' && req.method !== 'HEAD') {
     send(res, 405, 'Method Not Allowed');
     return;
@@ -124,6 +130,11 @@ const server = http.createServer((req, res) => {
     });
   });
 });
+
+// Slowloris protection
+server.setTimeout(5000); // 5 seconds
+server.keepAliveTimeout = 5000;
+server.headersTimeout = 6000;
 
 server.listen(port, host, () => {
   console.log(`Servidor local: http://${host}:${port}/index.html`);
