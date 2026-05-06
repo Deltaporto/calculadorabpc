@@ -195,6 +195,7 @@ export function bindJudicialControlEvents({
 
   document.getElementById('btnGerarCopiarControleTexto').addEventListener('click', generateAndCopyJudicialText);
   document.getElementById('btnCopiarControleTexto').addEventListener('click', copyJudicialControlText);
+  document.getElementById('textoControleJudicial').addEventListener('click', function() { this.select(); });
   document.getElementById('btnLimparControleJudicial').addEventListener('click', () => {
     notifyInteraction('btnLimparControleJudicial');
     clearJudicialMedicalAndTriage();
