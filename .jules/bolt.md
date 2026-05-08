@@ -50,3 +50,11 @@ Instead, a significantly safer optimization is removing global queries like `doc
 ## 2025-10-27 - Eliminate Intermediate Allocations in Render Loop Tracking
 **Learning:** During UI rendering, tracking invalid elements using an intermediate `Set` and spreading it to an array (`[...uniqueIds]`) solely to ensure uniqueness before applying DOM classes creates completely unnecessary memory allocations and garbage collection pressure on every change. Since DOM mutation APIs or local `Set`s (like `currentInvalidElements`) already prevent redundant operations, the intermediate deduplication step is a net-negative micro-optimization.
 **Action:** Removed intermediate `Set` and array spread allocations in high-frequency validation tracking. Pass the raw items array directly to the DOM-updating function and rely on the existing state-tracking `Set` to prevent redundant operations.
+
+## 2026-05-18 - Single Loop Multi-Array Construction
+**Learning:** In Vanilla JS algorithms that construct multiple separate target arrays based on conditions (like `getPadraoApplyContext`), chaining multiple `.filter()` calls against the source data creates multiple redundant $O(N)$ passes and multiple intermediate array allocations.
+**Action:** Replace multiple `.filter()` passes with a single native `for` loop that iterates the dataset once, runs the conditions inline, and pushes to the multiple respective target arrays simultaneously, drastically reducing CPU cycles and garbage collection overhead.
+
+## 2026-05-18 - O(1) Map Pre-calculation for Loops
+**Learning:** Calling `Array.prototype.find()` inside a loop (like finding a domain object inside the `PADRAO_MEDIO_ENTRIES` iteration) creates an $O(N^2)$ algorithm.
+**Action:** If a static dataset needs to be queried repeatedly inside a hot path or loop, pre-calculate it into an $O(1)$ Hash Map (using `Object.create(null)`) at the module level to avoid the $O(N^2)$ traversal.
