@@ -71,6 +71,7 @@ export function bindAppEvents({
   document.getElementById('btnClearComp').addEventListener('click', onClearComp);
 
   document.getElementById('btnCopiarTexto').addEventListener('click', onCopiarTexto);
+  document.getElementById('textoPadrao').addEventListener('click', function() { this.select(); });
   document.getElementById('modeSwitcher').addEventListener('click', e => {
     const btn = e.target.closest('.mode-btn');
     if (!btn) return;
