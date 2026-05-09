@@ -10,3 +10,7 @@
 **Vulnerability:** The local development server (`scripts/serve.js`) previously lacked HTTP method restrictions, allowing it to process potentially unexpected HTTP verbs (like `POST`, `PUT`, `DELETE`). While it only served files, this deviates from security best practices where unexpected methods should be explicitly rejected.
 **Learning:** Simple custom file servers often process all requests identically regardless of the HTTP method. Explicitly filtering allowed methods ensures the server only responds to intended request types.
 **Prevention:** Always check and enforce allowed HTTP methods (e.g., `GET`, `HEAD`) at the entry point of request processing, returning a `405 Method Not Allowed` for unauthorized verbs.
+## 2025-06-19 - [MEDIUM] Fix DoS and Slowloris vulnerability in local server
+**Vulnerability:** The local development server (`scripts/serve.js`) lacked URI length limits and explicit timeout configurations, making it susceptible to Denial of Service (DoS) and Slowloris attacks.
+**Learning:** Custom Node.js HTTP servers without explicit URI length limits and timeouts are vulnerable to DoS attacks by malicious clients sending excessively long URIs or keeping connections open indefinitely.
+**Prevention:** Always implement active protections against DoS and Slowloris attacks, including strict URI length limits (e.g., returning a 414 URI Too Long response) and global server timeout configurations (e.g., `server.timeout`, `server.keepAliveTimeout`, `server.headersTimeout`).

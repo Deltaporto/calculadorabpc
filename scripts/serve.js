@@ -84,6 +84,11 @@ function send(res, status, body, type = 'text/plain; charset=utf-8') {
 }
 
 const server = http.createServer((req, res) => {
+  if ((req.url || '').length > 2048) {
+    send(res, 414, 'URI Too Long');
+    return;
+  }
+
   if (req.method !== 'GET' && req.method !== 'HEAD') {
     send(res, 405, 'Method Not Allowed');
     return;
@@ -124,6 +129,10 @@ const server = http.createServer((req, res) => {
     });
   });
 });
+
+server.timeout = 10000;
+server.keepAliveTimeout = 5000;
+server.headersTimeout = 10000;
 
 server.listen(port, host, () => {
   console.log(`Servidor local: http://${host}:${port}/index.html`);
