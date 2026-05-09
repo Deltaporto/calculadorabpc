@@ -4487,6 +4487,11 @@ footer {
   color: var(--text);
 }
 
+.toast-close:not(:disabled):active {
+  transform: scale(0.96);
+  transition-duration: 0.05s;
+}
+
 .toast-success {
   border-left: 4px solid var(--yes);
 }
@@ -4560,6 +4565,11 @@ footer {
   background: color-mix(in srgb, var(--accent) 85%, black);
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, .2);
+}
+
+.back-to-top:not(:disabled):active {
+  transform: scale(0.96);
+  transition-duration: 0.05s;
 }
 
 .back-to-top:focus-visible {
