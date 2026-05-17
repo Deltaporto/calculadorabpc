@@ -29,3 +29,7 @@
 ## 2024-05-05 - Auto-select readonly generated textareas
 **Learning:** For sections presenting large blocks of generated text meant for copying (like `#textoPadrao` and `#textoControleJudicial`), providing a dedicated "Copy" button is great, but many users default to keyboard shortcuts (Ctrl+C / Cmd+C). When the text is in a `readonly` textarea, clicking to focus usually places the caret, requiring the user to manually drag-select or press Ctrl+A. Automatically calling `.select()` when the user clicks inside significantly reduces friction and provides a clear visual selection state.
 **Action:** Whenever implementing a read-only textarea explicitly designed for content extraction, bind a `click` event listener to trigger `this.select()` to support fast keyboard-driven copying.
+
+## 2025-05-17 - Programmatically Focused Dialog Outlines
+**Learning:** Native `<dialog>` elements and custom popovers that receive programmatic focus (`tabindex="-1"`) may lack consistent browser-default `:focus-visible` outlines. Always explicitly style `:focus-visible` for these container elements (e.g., `.portaria-modal:focus-visible`) to ensure accessibility during keyboard navigation.
+**Action:** When creating native `<dialog>` elements or programmatic modal containers, always append them to the global `:focus-visible` outline styles list (e.g. alongside `.btn:focus-visible`) to ensure keyboard users have visual feedback that focus has successfully moved to the modal.
