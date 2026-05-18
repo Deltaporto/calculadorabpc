@@ -137,16 +137,26 @@ export function resolveCorpoJudFlow({
     }
     // ⚡ Optimization: Native for-loop to avoid Array.prototype.reduce callback allocation overhead
     let q = 0;
+    let domainsText = '';
     for (let i = 0; i < filledDomains.length; i++) {
-      const val = med.corpoAdminDomains[filledDomains[i]];
+      const id = filledDomains[i];
+      const val = med.corpoAdminDomains[id];
       if (val > q) q = val;
+
+      // ⚡ Optimization: Native for-loop to avoid intermediate array allocation and .map callback overhead
+      const formattedDomain = `${id.toUpperCase()}=${qLabels[val]}`;
+      if (i === 0) {
+        domainsText = formattedDomain;
+      } else {
+        domainsText += ' · ' + formattedDomain;
+      }
     }
     return {
       ready: true,
       q,
       mode: 'dominio_max',
       reason: 'Regra aplicada: para Funções do Corpo prevalece o domínio administrativo mais grave entre os domínios informados (b1–b8).',
-      domainsText: filledDomains.map(id => `${id.toUpperCase()}=${qLabels[med.corpoAdminDomains[id]]}`).join(' · '),
+      domainsText,
       decreased: q < base.corpo
     };
   }

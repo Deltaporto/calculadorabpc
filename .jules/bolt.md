@@ -58,3 +58,7 @@ Instead, a significantly safer optimization is removing global queries like `doc
 ## 2026-05-18 - O(1) Map Pre-calculation for Loops
 **Learning:** Calling `Array.prototype.find()` inside a loop (like finding a domain object inside the `PADRAO_MEDIO_ENTRIES` iteration) creates an $O(N^2)$ algorithm.
 **Action:** If a static dataset needs to be queried repeatedly inside a hot path or loop, pre-calculate it into an $O(1)$ Hash Map (using `Object.create(null)`) at the module level to avoid the $O(N^2)$ traversal.
+
+## 2024-05-18 - String Building Overhead in Hot Paths
+**Learning:** Replaced `[...].map().join()` with native `for` loops in string building processes within hot paths (e.g. `renderStandardText`, `resolveCorpoJudFlow`) to avoid intermediate array allocation and callback overhead.
+**Action:** When dynamically assembling strings from arrays during render cycles or trace generations, use native `for` loops instead of chaining `.map()` and `.join()` array prototype methods.

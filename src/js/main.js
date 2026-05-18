@@ -1948,16 +1948,29 @@ function updateChildAutoSummary() {
     return;
   }
   summary.classList.remove('hidden');
-  summary.textContent = `Autoqualificados por corte etário: ${forced.map(d => d.id.toUpperCase()).join(', ')}.`;
+
+  // ⚡ Optimization: Native for-loop to avoid intermediate array allocation and .map callback overhead
+  let forcedText = forced[0].id.toUpperCase();
+  for (let i = 1; i < forced.length; i++) {
+    forcedText += ', ' + forced[i].id.toUpperCase();
+  }
+  summary.textContent = `Autoqualificados por corte etário: ${forcedText}.`;
 }
 
 function renderStandardText(amb = calcAmbiente(), ativ = calcAtividades(), corpo = calcCorpo()) {
   const yes = !impedimento && tabelaConclusiva(amb.q, ativ.q, corpo.q);
   const reason = getDecisionReason(amb.q, ativ.q, corpo.q, yes);
   const forced = getAutoQualifiedChildDomains();
-  const forcedText = forced.length
-    ? `Nos domínios de Atividades e Participação abaixo do ponto de corte etário, foi aplicado automaticamente o qualificador 4 (dificuldade completa), conforme Portaria Conjunta MDS/INSS nº 2/2015: ${forced.map(d => `${d.id.toUpperCase()} (${d.name}, corte ${d.cut} meses)`).join('; ')}.`
-    : '';
+
+  // ⚡ Optimization: Native for-loop to avoid intermediate array allocation and .map callback overhead
+  let forcedText = '';
+  if (forced.length > 0) {
+    forcedText = `${forced[0].id.toUpperCase()} (${forced[0].name}, corte ${forced[0].cut} meses)`;
+    for (let i = 1; i < forced.length; i++) {
+      forcedText += `; ${forced[i].id.toUpperCase()} (${forced[i].name}, corte ${forced[i].cut} meses)`;
+    }
+    forcedText = `Nos domínios de Atividades e Participação abaixo do ponto de corte etário, foi aplicado automaticamente o qualificador 4 (dificuldade completa), conforme Portaria Conjunta MDS/INSS nº 2/2015: ${forcedText}.`;
+  }
   const idadeTexto = crianca
     ? `Foi assinalada idade inferior a 16 anos, com idade informada de ${idadeValor} ${idadeUnidade} (${idadeMeses} meses).`
     : '';
@@ -1990,7 +2003,8 @@ function renderStandardText(amb = calcAmbiente(), ativ = calcAtividades(), corpo
   }
 
   if (textoPadrao) {
-    textoPadrao.value = [paragrafo1, paragrafo2].filter(Boolean).join('\n\n');
+    // ⚡ Optimization: Avoid array allocation, .filter, and .join overhead
+    textoPadrao.value = paragrafo1 && paragrafo2 ? `${paragrafo1}\n\n${paragrafo2}` : paragrafo1 || paragrafo2 || '';
   }
 }
 
