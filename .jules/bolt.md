@@ -62,3 +62,6 @@ Instead, a significantly safer optimization is removing global queries like `doc
 ## 2024-05-18 - String Building Overhead in Hot Paths
 **Learning:** Replaced `[...].map().join()` with native `for` loops in string building processes within hot paths (e.g. `renderStandardText`, `resolveCorpoJudFlow`) to avoid intermediate array allocation and callback overhead.
 **Action:** When dynamically assembling strings from arrays during render cycles or trace generations, use native `for` loops instead of chaining `.map()` and `.join()` array prototype methods.
+## 2025-05-18 - Avoid Array allocations and Array.prototype.forEach overhead in DOM rendering
+**Learning:** Replaced `Array.prototype.forEach` (e.g. `[0, 1, 2, 3, 4].forEach()`) with native `for` loops in DOM construction routines to remove intermediate array allocations and callback dispatch overhead during rendering.
+**Action:** Always prefer native `for` loops in rendering hot paths to minimize allocation and dispatch taxes.
