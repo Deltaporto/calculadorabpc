@@ -188,7 +188,8 @@ function renderSafeHTML(content) {
   const parts = content.split(/(<\/?strong>)/g);
   let inside = false;
 
-  parts.forEach(part => {
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i];
     if (part === '<strong>') {
       inside = true;
     } else if (part === '</strong>') {
@@ -202,7 +203,7 @@ function renderSafeHTML(content) {
         fragment.appendChild(document.createTextNode(part));
       }
     }
-  });
+  }
   return fragment;
 }
 
@@ -408,7 +409,8 @@ function handleChangeIdadeUnidade(nextUnit) {
 }
 
 function applyChildRules() {
-  ATIV_DOMAINS.forEach(d => {
+  for (let idx = 0; idx < ATIV_DOMAINS.length; idx++) {
+    const d = ATIV_DOMAINS[idx];
     const btns = getDomainButtons(d.id);
     if (crianca && idadeMeses < d.cut) {
       if (!(d.id in childDomainBackup)) childDomainBackup[d.id] = state[d.id];
@@ -442,16 +444,18 @@ function applyChildRules() {
         b.setAttribute('aria-pressed', isActive);
       }
     }
-  });
+  }
   updateChildAutoSummary();
 }
 
 function handleAmbTabClick({ tab, value }) {
   currentAmbTab = value;
-  document.querySelectorAll('.amb-tab').forEach(ambTab => {
+  const ambTabs = document.getElementsByClassName('amb-tab');
+  for (let i = 0; i < ambTabs.length; i++) {
+    const ambTab = ambTabs[i];
     ambTab.classList.remove('active');
     ambTab.setAttribute('aria-pressed', 'false');
-  });
+  }
   tab.classList.add('active');
   tab.setAttribute('aria-pressed', 'true');
   buildTabelaGrid();
@@ -648,7 +652,8 @@ function getPadraoApplyContext() {
 }
 
 function applyPadraoEntries(entriesToApply) {
-  entriesToApply.forEach(([id, v]) => {
+  for (let idx = 0; idx < entriesToApply.length; idx++) {
+    const [id, v] = entriesToApply[idx];
     state[id] = v;
     const btns = getDomainButtons(id);
     for (let i = 0; i < btns.length; i++) {
@@ -656,7 +661,7 @@ function applyPadraoEntries(entriesToApply) {
       b.classList.remove('active');
       if (+b.dataset.value === v) b.classList.add('active');
     }
-  });
+  }
   update();
 }
 
@@ -1144,11 +1149,15 @@ function getTraceSecondaryReferenceSentence(causeCode) {
 }
 
 function syncModeSwitcher() {
-  document.querySelectorAll('#modeSwitcher .mode-btn').forEach(btn => {
+  const modeSwitcher = document.getElementById('modeSwitcher');
+  if (!modeSwitcher) return;
+  const btns = modeSwitcher.getElementsByClassName('mode-btn');
+  for (let i = 0; i < btns.length; i++) {
+    const btn = btns[i];
     const isActive = btn.dataset.mode === uiMode;
     btn.classList.toggle('active', isActive);
     btn.setAttribute('aria-pressed', isActive);
-  });
+  }
 }
 
 function scrollToJudicialControlSection() {

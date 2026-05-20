@@ -65,3 +65,7 @@ Instead, a significantly safer optimization is removing global queries like `doc
 ## 2025-05-18 - Avoid Array allocations and Array.prototype.forEach overhead in DOM rendering
 **Learning:** Replaced `Array.prototype.forEach` (e.g. `[0, 1, 2, 3, 4].forEach()`) with native `for` loops in DOM construction routines to remove intermediate array allocations and callback dispatch overhead during rendering.
 **Action:** Always prefer native `for` loops in rendering hot paths to minimize allocation and dispatch taxes.
+
+## 2024-05-20 - [Eliminated callback allocation overhead in critical loops]
+**Learning:** Functional array methods (`.forEach`, `.map`, etc.) combined with `.querySelectorAll` inside frequently executed functions (like UI updates, tab switches, and rule application) create significant, measurable memory allocation and garbage collection pressure due to NodeList and callback function allocations. This is particularly noticeable in complex forms.
+**Action:** For all DOM manipulation loops or data iterations on the hot path, standard native `for` loops combined with live `HTMLCollection`s (e.g. `getElementsByClassName`) should be used over functional array wrappers and `.querySelectorAll()` to ensure consistent performance.
