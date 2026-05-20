@@ -75,3 +75,7 @@
 ## 2024-05-18 - Prevent hover state on disabled elements
 **Learning:** Native form elements (like `button`) support the `:disabled` pseudo-class natively, while standard elements like `a` or `label` do not. Applying `:not(:disabled)` to links will not work; instead, we must use `:not(.disabled):not([aria-disabled="true"])`.
 **Action:** Always verify if an element is a native form element before using `:disabled` in CSS pseudo-class selection to restrict interactive states.
+
+## 2026-03-09 - Focus Rings on Dialog Containers
+**Learning:** Native `<dialog>` elements and custom popover containers used with programmatically shifted focus (`tabindex="-1"`) do not inherently receive consistent or aesthetically pleasing `:focus-visible` outlines from browsers, which can break visual harmony and lower accessibility quality when keyboard navigating.
+**Action:** Always include `.sim-help-popover:focus-visible` and `.portaria-modal:focus-visible` (or equivalent dialog classes) within the global explicit `:focus-visible` reset block to ensure clear, consistent focus styling when they receive focus.
