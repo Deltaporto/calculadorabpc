@@ -1,21 +1,29 @@
 export function initStaticRatingA11yLabels(labels) {
-  document.querySelectorAll('.jc-q-btn, .amb-tab').forEach(btn => {
+  const qBtns = document.querySelectorAll('.jc-q-btn, .amb-tab');
+  for (let i = 0; i < qBtns.length; i++) {
+    const btn = qBtns[i];
     const value = +(btn.dataset.value ?? btn.dataset.a);
     if (labels[value]) {
       btn.setAttribute('aria-label', labels[value]);
       btn.setAttribute('title', labels[value]);
     }
     btn.setAttribute('aria-pressed', btn.classList.contains('active'));
-  });
-  document.querySelectorAll('.jc-seg-btn').forEach(btn => {
+  }
+
+  const segBtns = document.querySelectorAll('.jc-seg-btn');
+  for (let i = 0; i < segBtns.length; i++) {
+    const btn = segBtns[i];
     btn.setAttribute('aria-pressed', btn.classList.contains('active'));
-  });
-  document.querySelectorAll('.sim-help-btn, .sim-help-close, .portaria-close-btn').forEach(btn => {
+  }
+
+  const helpBtns = document.querySelectorAll('.sim-help-btn, .sim-help-close, .portaria-close-btn');
+  for (let i = 0; i < helpBtns.length; i++) {
+    const btn = helpBtns[i];
     const ariaLabel = btn.getAttribute('aria-label');
     if (ariaLabel && !btn.hasAttribute('title')) {
       btn.setAttribute('title', ariaLabel);
     }
-  });
+  }
 }
 
 export function initKeyboardNav() {
@@ -24,22 +32,25 @@ export function initKeyboardNav() {
   const groupSelector = '.note-buttons, .jc-q-buttons, .jc-segmented, .amb-tabs, .jc-segmented-wide, .app-mode-switch';
 
   // Initialize static groups
-  document.querySelectorAll(groupSelector).forEach(group => {
+  const groups = document.querySelectorAll(groupSelector);
+  for (let i = 0; i < groups.length; i++) {
+    const group = groups[i];
     // ⚡ Optimization: Fast path using single DOM query instead of array creation
-    if (group.querySelector('button[tabindex="0"]')) return;
+    if (group.querySelector('button[tabindex="0"]')) continue;
 
     const buttons = group.querySelectorAll('button:not([disabled])');
-    if (buttons.length === 0) return;
+    if (buttons.length === 0) continue;
 
     let activeBtn = group.querySelector('button.active, button[aria-pressed="true"]');
     if (!activeBtn || activeBtn.disabled) {
       activeBtn = buttons[0];
     }
 
-    buttons.forEach(btn => {
+    for (let j = 0; j < buttons.length; j++) {
+      const btn = buttons[j];
       btn.setAttribute('tabindex', btn === activeBtn ? '0' : '-1');
-    });
-  });
+    }
+  }
 
   // Handle Arrow Keys (Roving Tabindex)
   document.addEventListener('keydown', (e) => {
@@ -70,7 +81,9 @@ export function initKeyboardNav() {
 
     const nextBtn = buttons[nextIndex];
 
-    buttons.forEach(b => b.setAttribute('tabindex', '-1'));
+    for (let i = 0; i < buttons.length; i++) {
+      buttons[i].setAttribute('tabindex', '-1');
+    }
     nextBtn.setAttribute('tabindex', '0');
     nextBtn.focus();
   });
@@ -86,7 +99,10 @@ export function initKeyboardNav() {
     // Only update if this button is part of the group
     // ⚡ Optimization: Borrow includes from Array to use directly on the NodeList
     if (Array.prototype.includes.call(buttons, btn)) {
-        buttons.forEach(b => b.setAttribute('tabindex', b === btn ? '0' : '-1'));
+      for (let i = 0; i < buttons.length; i++) {
+        const b = buttons[i];
+        b.setAttribute('tabindex', b === btn ? '0' : '-1');
+      }
     }
   });
 }
