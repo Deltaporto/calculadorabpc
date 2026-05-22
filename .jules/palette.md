@@ -33,3 +33,7 @@
 ## 2025-05-17 - Programmatically Focused Dialog Outlines
 **Learning:** Native `<dialog>` elements and custom popovers that receive programmatic focus (`tabindex="-1"`) may lack consistent browser-default `:focus-visible` outlines. Always explicitly style `:focus-visible` for these container elements (e.g., `.portaria-modal:focus-visible`) to ensure accessibility during keyboard navigation.
 **Action:** When creating native `<dialog>` elements or programmatic modal containers, always append them to the global `:focus-visible` outline styles list (e.g. alongside `.btn:focus-visible`) to ensure keyboard users have visual feedback that focus has successfully moved to the modal.
+
+## 2025-05-17 - Programmatically Focused Native Elements
+**Learning:** Certain standard block elements used as wrappers (like `.simulador-details`, `.judicial-control`, `.flowchart-view`, `.sim-help-popover`) that receive programmatic focus via `tabindex="-1"` may lack consistent browser-default `:focus-visible` outlines just like `<dialog>` elements. Always explicitly style `:focus-visible` for these programmatic containers to ensure accessibility during keyboard navigation.
+**Action:** When creating programmatic focus targets for routing or focus-management (e.g. for skip links or modal-like popovers), always append them to the global `:focus-visible` outline styles list to ensure keyboard users have visual feedback that focus has successfully moved.
