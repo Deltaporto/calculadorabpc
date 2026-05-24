@@ -931,10 +931,11 @@ function notifyJudicialInteraction(sourceId) {
 const currentInvalidElements = new Set();
 
 function clearJudicialInvalidHighlights() {
-  currentInvalidElements.forEach(el => {
+  // ⚡ Optimization: Native for...of loop to prevent Set.prototype.forEach callback allocation overhead
+  for (const el of currentInvalidElements) {
     el.classList.remove('jc-invalid');
     el.removeAttribute('aria-invalid');
-  });
+  }
   currentInvalidElements.clear();
 }
 

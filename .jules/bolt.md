@@ -69,3 +69,7 @@ Instead, a significantly safer optimization is removing global queries like `doc
 ## 2024-05-20 - [Eliminated callback allocation overhead in critical loops]
 **Learning:** Functional array methods (`.forEach`, `.map`, etc.) combined with `.querySelectorAll` inside frequently executed functions (like UI updates, tab switches, and rule application) create significant, measurable memory allocation and garbage collection pressure due to NodeList and callback function allocations. This is particularly noticeable in complex forms.
 **Action:** For all DOM manipulation loops or data iterations on the hot path, standard native `for` loops combined with live `HTMLCollection`s (e.g. `getElementsByClassName`) should be used over functional array wrappers and `.querySelectorAll()` to ensure consistent performance.
+
+## 2025-10-28 - Replace Set.prototype.forEach with Native Loops
+**Learning:** During frequent UI rendering operations (e.g. clearing validation errors), using `Set.prototype.forEach` introduces callback dispatch overhead and potential garbage collection pressure compared to native C++ backed standard loops.
+**Action:** Replace `Set.prototype.forEach` with standard native `for...of` loops when iterating over `Set` objects in performance-sensitive contexts to bypass callback allocation overhead.
