@@ -29,7 +29,7 @@ export function initKeyboardNav() {
     return enabled;
   };
 
-  const groupSelector = '.note-buttons, .jc-q-buttons, .jc-segmented, .amb-tabs, .jc-segmented-wide, .app-mode-switch';
+  const groupSelector = '.note-buttons, .jc-q-buttons, .jc-segmented, .amb-tabs, .jc-segmented-wide, .app-mode-switch, .flowchart-step-nav';
 
   // Initialize static groups
   const groups = document.querySelectorAll(groupSelector);

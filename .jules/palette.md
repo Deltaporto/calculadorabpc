@@ -37,3 +37,7 @@
 ## 2025-05-17 - Programmatically Focused Native Elements
 **Learning:** Certain standard block elements used as wrappers (like `.simulador-details`, `.judicial-control`, `.flowchart-view`, `.sim-help-popover`) that receive programmatic focus via `tabindex="-1"` may lack consistent browser-default `:focus-visible` outlines just like `<dialog>` elements. Always explicitly style `:focus-visible` for these programmatic containers to ensure accessibility during keyboard navigation.
 **Action:** When creating programmatic focus targets for routing or focus-management (e.g. for skip links or modal-like popovers), always append them to the global `:focus-visible` outline styles list to ensure keyboard users have visual feedback that focus has successfully moved.
+
+## 2026-03-09 - Navigation Landmark Roving Tabindex
+**Learning:** Components functioning as semantic step navigations using native elements like `<nav>` inherently represent a structured group of links or buttons. Even when they lack an explicit `role="group"` due to their existing landmark role, they still require roving tabindex implementations if their children function as mutually exclusive toggle steps or tabs, as they will otherwise create a bloated tab order.
+**Action:** Always include step navigation containers (like `.flowchart-step-nav`) in the centralized roving tabindex logic (e.g., `groupSelector`) to ensure keyboard users can navigate their children efficiently using arrow keys instead of forcing sequential tab stops.
