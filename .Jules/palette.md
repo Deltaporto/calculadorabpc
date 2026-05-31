@@ -75,3 +75,7 @@
 ## 2024-05-18 - Prevent hover state on disabled elements
 **Learning:** Native form elements (like `button`) support the `:disabled` pseudo-class natively, while standard elements like `a` or `label` do not. Applying `:not(:disabled)` to links will not work; instead, we must use `:not(.disabled):not([aria-disabled="true"])`.
 **Action:** Always verify if an element is a native form element before using `:disabled` in CSS pseudo-class selection to restrict interactive states.
+
+## 2026-03-09 - Dialog Triggers Missing aria-haspopup
+**Learning:** Help buttons and action buttons that open modals (like the `simHelpPopover` or confirmation dialogs) failed to inform screen reader users of the upcoming context change because they lacked `aria-haspopup="dialog"`.
+**Action:** Always verify that buttons whose primary function is to open a modal dialog implement `aria-haspopup="dialog"` to properly manage screen reader expectations.

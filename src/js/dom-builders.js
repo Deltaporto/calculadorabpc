@@ -50,6 +50,7 @@ export function buildDomainRows(container, domains, labels, names, domainHelpKey
       helpBtn.setAttribute('title', helpLabel);
       helpBtn.setAttribute('aria-controls', 'simHelpPopover');
       helpBtn.setAttribute('aria-expanded', 'false');
+      helpBtn.setAttribute('aria-haspopup', 'dialog');
       helpBtn.textContent = 'i';
       nameWrap.appendChild(helpBtn);
     }
