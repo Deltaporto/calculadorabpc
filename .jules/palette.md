@@ -41,3 +41,7 @@
 ## 2026-03-09 - Navigation Landmark Roving Tabindex
 **Learning:** Components functioning as semantic step navigations using native elements like `<nav>` inherently represent a structured group of links or buttons. Even when they lack an explicit `role="group"` due to their existing landmark role, they still require roving tabindex implementations if their children function as mutually exclusive toggle steps or tabs, as they will otherwise create a bloated tab order.
 **Action:** Always include step navigation containers (like `.flowchart-step-nav`) in the centralized roving tabindex logic (e.g., `groupSelector`) to ensure keyboard users can navigate their children efficiently using arrow keys instead of forcing sequential tab stops.
+
+## 2024-06-12 - Aria-Disabled Styles on Buttons
+**Learning:** When using `aria-disabled="true"` on interactive components like `.btn` to maintain keyboard focusability while acting disabled, the visual disabled styling is often missed because it was only bound to `:disabled`. This leaves users confused about the button's state.
+**Action:** Explicitly pair visual disabled selectors (like `.btn:disabled, .btn[aria-disabled="true"]`) to keep visual and semantic states aligned.
