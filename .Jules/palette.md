@@ -79,3 +79,7 @@
 ## 2026-03-09 - Dialog Triggers Missing aria-haspopup
 **Learning:** Help buttons and action buttons that open modals (like the `simHelpPopover` or confirmation dialogs) failed to inform screen reader users of the upcoming context change because they lacked `aria-haspopup="dialog"`.
 **Action:** Always verify that buttons whose primary function is to open a modal dialog implement `aria-haspopup="dialog"` to properly manage screen reader expectations.
+
+## 2026-03-09 - Interactive Readonly Textareas
+**Learning:** Textareas marked as `readonly` but used as clickable elements to automatically copy text to the clipboard lack visual affordance for their interactivity, confusing users.
+**Action:** Always apply `cursor: pointer` to interactive `readonly` textareas (like `.standard-text textarea` or `.jc-textarea`) to indicate to users that the element can be clicked for an action.
