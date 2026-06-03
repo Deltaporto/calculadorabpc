@@ -3669,6 +3669,7 @@ header .badge {
   border: 1px solid var(--border);
   background: var(--bg-soft);
   font-size: .85rem;
+  cursor: pointer;
 }
 
 .jc-progress-wrap {
