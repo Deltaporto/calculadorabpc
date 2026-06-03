@@ -18,3 +18,7 @@
 **Vulnerability:** While `scripts/serve.js` enforces a strong Content Security Policy via HTTP headers, the static HTML files (`index.html` and `docs/manual.html`) lacked fallback `<meta http-equiv="Content-Security-Policy">` tags. If the application is ever hosted statically on environments that do not automatically inject security headers (e.g., raw GitHub Pages without configuration, or simple file servers), the app would be vulnerable to XSS and framing attacks.
 **Learning:** Security measures implemented exclusively in the local development server do not necessarily extend to production static hosting.
 **Prevention:** Always implement defense-in-depth by embedding core CSP directives directly in the HTML `<meta>` tags as a fallback for static deployments, ensuring baseline security regardless of the hosting environment.
+## 2025-06-25 - [MEDIUM] Missing input length limits on textareas
+**Vulnerability:** Unbounded text inputs like `<textarea>` elements (e.g., `#jcAtivMedJustification`) lacked `maxlength` attributes, presenting a client-side Denial of Service (DoS) and memory exhaustion risk from excessively large user inputs.
+**Learning:** Even entirely client-side web applications can suffer performance degradation, UI freezing, or memory exhaustion if users can paste gigabytes of text into unconstrained input fields.
+**Prevention:** Always enforce reasonable bounds on client-side inputs. Ensure all unbounded text inputs like `<textarea>` have explicit `maxlength` attributes configured.
