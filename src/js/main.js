@@ -574,11 +574,12 @@ function openSimHelpPopover(helpKey, trigger) {
   titleEl.textContent = entry.title;
   summaryEl.textContent = entry.summary;
   const listFragment = document.createDocumentFragment();
-  entry.bullets.forEach(item => {
+  // ⚡ Optimization: Native for-loop to avoid Array.prototype.forEach callback allocation overhead in DOM rendering
+  for (let i = 0; i < entry.bullets.length; i++) {
     const li = document.createElement('li');
-    li.textContent = item;
+    li.textContent = entry.bullets[i];
     listFragment.appendChild(li);
-  });
+  }
   listEl.replaceChildren(listFragment);
   sourceEl.textContent = `Base legal: ${entry.source}`;
   excerptEl.textContent = entry.legalExcerpt || '';
@@ -761,14 +762,16 @@ function openPadraoDecisionDialog(context) {
     { label: 'Domínios manuais elegíveis: ', val: context.manuallyFilledEligible.length },
     { label: 'Não aplicáveis por corte etário: ', val: context.skippedByAgeCut }
   ];
-  summaryLines.forEach(line => {
+  // ⚡ Optimization: Native for-loop to avoid Array.prototype.forEach callback allocation overhead in DOM rendering
+  for (let i = 0; i < summaryLines.length; i++) {
+    const line = summaryLines[i];
     const div = document.createElement('div');
     const strong = document.createElement('strong');
     strong.textContent = line.label;
     div.appendChild(strong);
     div.appendChild(document.createTextNode(String(line.val)));
     summaryFragment.appendChild(div);
-  });
+  }
   summaryEl.replaceChildren(summaryFragment);
 
   preserveBtn.disabled = hasOnlyManual;
