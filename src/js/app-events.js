@@ -51,11 +51,14 @@ export function bindAppEvents({
     onChangeIdadeUnidade(e.target.value);
   });
 
-  document.querySelectorAll('.amb-tab').forEach(tab => {
+  // ⚡ Optimization: Live HTMLCollection and native for-loop to avoid querySelectorAll allocations and callback overhead
+  const ambTabs = document.getElementsByClassName('amb-tab');
+  for (let i = 0; i < ambTabs.length; i++) {
+    const tab = ambTabs[i];
     tab.addEventListener('click', () => {
       onAmbTabClick({ tab, value: +tab.dataset.a });
     });
-  });
+  }
 
   document.getElementById('btnPadrao').addEventListener('click', () => {
     onApplyPadrao();
