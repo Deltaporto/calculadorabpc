@@ -3670,6 +3670,10 @@ header .badge {
   border: 1px solid var(--border);
   background: var(--bg-soft);
   font-size: .85rem;
+}
+
+.standard-text textarea[readonly],
+.jc-textarea[readonly] {
   cursor: pointer;
 }
 
