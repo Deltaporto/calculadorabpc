@@ -22,3 +22,7 @@
 **Vulnerability:** Unbounded text inputs like `<textarea>` elements (e.g., `#jcAtivMedJustification`) lacked `maxlength` attributes, presenting a client-side Denial of Service (DoS) and memory exhaustion risk from excessively large user inputs.
 **Learning:** Even entirely client-side web applications can suffer performance degradation, UI freezing, or memory exhaustion if users can paste gigabytes of text into unconstrained input fields.
 **Prevention:** Always enforce reasonable bounds on client-side inputs. Ensure all unbounded text inputs like `<textarea>` have explicit `maxlength` attributes configured.
+## 2025-02-18 - Fix Path Traversal in Development Server via Encoded Backslashes
+**Vulnerability:** The local development server (`scripts/serve.js`) was vulnerable to path traversal because it relied solely on `path.normalize()` which does not handle backslashes on POSIX environments correctly. An attacker could bypass path restrictions using URL-encoded backslashes (e.g., `/%5c..%5c..%5cpackage.json`).
+**Learning:** URL decoding occurs before path normalization. On POSIX environments, `path.normalize()` doesn't consider `\` as a path separator, meaning traversal using backslashes isn't simplified/caught, and ultimately the operating system or other underlying APIs may still interpret the raw strings leading to reading unauthorized files.
+**Prevention:** Explicitly sanitize and replace backslashes (`\`) with forward slashes (`/`) immediately after URL decoding, and prior to path validation/normalization routines.
