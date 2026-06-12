@@ -45,6 +45,9 @@ function resolvePath(urlPathname) {
   }
   if (decoded.includes('\0')) return null;
 
+  // Replace backslashes with forward slashes to prevent traversal on POSIX
+  decoded = decoded.replace(/\\/g, '/');
+
   const normalized = path.normalize(decoded).replace(/^([.][.][/\\])+/, '');
   const relative = normalized === '/' ? '/index.html' : normalized;
 
