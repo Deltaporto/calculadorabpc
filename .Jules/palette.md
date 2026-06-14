@@ -83,3 +83,7 @@
 ## 2026-03-09 - Interactive Readonly Textareas
 **Learning:** Textareas marked as `readonly` but used as clickable elements to automatically copy text to the clipboard lack visual affordance for their interactivity, confusing users.
 **Action:** Always apply `cursor: pointer` to interactive `readonly` textareas (like `.standard-text textarea` or `.jc-textarea`) to indicate to users that the element can be clicked for an action.
+
+## 2026-03-09 - Inconsistent Dynamic Iconography (Text vs. SVG)
+**Learning:** Using plain text characters (like "×") for icons in dynamically generated DOM elements (like toast close buttons) causes subtle visual inconsistencies and alignment issues compared to components using the established SVG sprite system.
+**Action:** Always use the design system's consistent SVG sprites (`<svg><use href="#i-..."/></svg>`) for iconography in JavaScript-generated elements, rather than relying on raw text characters, to ensure uniform styling and scalability.
