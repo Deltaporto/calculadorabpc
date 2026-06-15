@@ -40,7 +40,14 @@ export function showToast(message, type = 'info', duration = 4000) {
   closeBtn.className = 'toast-close';
   closeBtn.setAttribute('aria-label', 'Fechar notificação');
   closeBtn.setAttribute('title', 'Fechar notificação');
-  closeBtn.textContent = '×';
+
+  const closeSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  closeSvg.setAttribute('class', 'ui-icon sm');
+  closeSvg.setAttribute('aria-hidden', 'true');
+  const closeUse = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+  closeUse.setAttribute('href', '#i-close');
+  closeSvg.appendChild(closeUse);
+  closeBtn.appendChild(closeSvg);
 
   toast.appendChild(iconDiv);
   toast.appendChild(messageDiv);
