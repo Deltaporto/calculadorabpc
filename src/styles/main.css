@@ -3677,6 +3677,12 @@ header .badge {
   cursor: pointer;
 }
 
+.standard-text textarea[readonly]:not(:disabled):hover,
+.jc-textarea[readonly]:not(:disabled):hover {
+  background: color-mix(in srgb, var(--surface) 80%, var(--border));
+  border-color: color-mix(in srgb, var(--blue) 40%, var(--border));
+}
+
 .jc-progress-wrap {
   border-radius: 12px;
   border: 1px solid var(--border);

@@ -83,3 +83,7 @@
 ## 2026-03-09 - Interactive Readonly Textareas
 **Learning:** Textareas marked as `readonly` but used as clickable elements to automatically copy text to the clipboard lack visual affordance for their interactivity, confusing users.
 **Action:** Always apply `cursor: pointer` to interactive `readonly` textareas (like `.standard-text textarea` or `.jc-textarea`) to indicate to users that the element can be clicked for an action.
+
+## 2026-03-09 - Interactive Readonly Textareas Hover States
+**Learning:** Adding `cursor: pointer` to `readonly` textareas that can be clicked to select content is good, but without a visual `:hover` effect, it lacks sufficient affordance and feels inconsistent with other interactive elements.
+**Action:** When making non-standard interactive areas like `readonly` textareas clickable, always pair the pointer cursor with a subtle `:hover` state change (like a background or border shift) to reinforce the interactivity.
