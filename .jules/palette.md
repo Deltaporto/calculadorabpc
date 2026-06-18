@@ -45,3 +45,7 @@
 ## 2024-06-12 - Aria-Disabled Styles on Buttons
 **Learning:** When using `aria-disabled="true"` on interactive components like `.btn` to maintain keyboard focusability while acting disabled, the visual disabled styling is often missed because it was only bound to `:disabled`. This leaves users confused about the button's state.
 **Action:** Explicitly pair visual disabled selectors (like `.btn:disabled, .btn[aria-disabled="true"]`) to keep visual and semantic states aligned.
+
+## 2025-05-17 - Consistent Icon System for Dynamic Elements
+**Learning:** Using plain text characters (like "×") for close buttons in dynamically generated components (like toasts) causes alignment quirks and visual inconsistencies with the rest of the interface, which uses an SVG sprite system.
+**Action:** Consistently use the application's established SVG sprite system and `document.createElementNS` when dynamically creating DOM elements with icons to maintain visual harmony.
