@@ -3674,7 +3674,7 @@ header .badge {
 
 .standard-text textarea[readonly],
 .jc-textarea[readonly] {
-  cursor: pointer;
+  cursor: text;
 }
 
 .jc-progress-wrap {
