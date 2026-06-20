@@ -87,3 +87,6 @@
 ## 2024-06-17 - Consistency in Dynamic Interactive Icons
 **Learning:** Using plain text characters (like "×") for dynamic DOM elements like a toast close button creates alignment quirks and visual inconsistencies compared to the rest of the UI which uses a centralized SVG sprite system.
 **Action:** Consistently use the application's established SVG sprite system and `document.createElementNS('http://www.w3.org/2000/svg', ...)` when dynamically creating interactive icon elements via JavaScript.
+## 2025-02-04 - Read-only textareas should use text cursor
+**Learning:** Using `cursor: pointer` on read-only textareas falsely implies they are button/link actions, even if they have an auto-select click behavior (e.g. `this.select()`).
+**Action:** Always use the native `cursor: text` for read-only textareas to indicate their selectability, preserving the expected semantic feedback for the user.
