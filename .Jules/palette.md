@@ -91,3 +91,7 @@
 ## 2026-03-09 - Avoid pointer cursor on read-only textareas
 **Learning:** Do not apply `cursor: pointer` to read-only textareas (like `#textoPadrao` or `#textoControleJudicial`) even if they auto-select text on click (via `this.select()`). The `pointer` cursor falsely implies a button or link action. Read-only textareas should typically retain the native `text` cursor to indicate selectability.
 **Action:** Remove `cursor: pointer` from read-only textareas and ensure they use the standard `cursor: text` to accurately reflect their behavior.
+
+## 2026-03-09 - Prevent false interactivity on aria-disabled elements
+**Learning:** Elements that use `aria-disabled="true"` to indicate a disabled state (to maintain keyboard focusability, unlike the native `disabled` attribute) may still falsely trigger interactive `:hover` and `:active` CSS states if the CSS is only scoped with `:not(:disabled)`. This conveys false interactivity to the user.
+**Action:** When scoping `:hover` and `:active` states for elements, always use `:not(:disabled):not([aria-disabled="true"])` to ensure elements with ARIA disabled states do not show visual feedback associated with interactivity.
