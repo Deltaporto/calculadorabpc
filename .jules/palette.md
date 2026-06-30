@@ -45,3 +45,7 @@
 ## 2024-06-12 - Aria-Disabled Styles on Buttons
 **Learning:** When using `aria-disabled="true"` on interactive components like `.btn` to maintain keyboard focusability while acting disabled, the visual disabled styling is often missed because it was only bound to `:disabled`. This leaves users confused about the button's state.
 **Action:** Explicitly pair visual disabled selectors (like `.btn:disabled, .btn[aria-disabled="true"]`) to keep visual and semantic states aligned.
+
+## 2024-11-20 - Scoping aria-disabled button visual states
+**Learning:** When using `aria-disabled="true"` on interactive components like `.btn` to maintain keyboard focusability while acting disabled, hovering or clicking those buttons will falsely trigger `:hover` and `:active` CSS visual feedback if those states are only scoped with `:not(:disabled)`. This can mislead users into thinking the button is active.
+**Action:** When scoping `:hover` and `:active` CSS states, always use `:not(:disabled):not([aria-disabled="true"])` to prevent false visual feedback of interactivity on elements that use `aria-disabled="true"` to indicate a disabled state.
