@@ -1111,14 +1111,15 @@ function getMedPendingItems(corpoFlow, ativContext) {
           items.push({ label: 'preencha a justificativa médica do modo simples', targetId: 'jcAtivMedJustification' });
         }
       } else if (m.ativMode === 'completa') {
-        JC_ATIV_RECLASS_DOMAINS.forEach(id => {
+        for (let i = 0; i < JC_ATIV_RECLASS_DOMAINS.length; i++) {
+          const id = JC_ATIV_RECLASS_DOMAINS[i];
           if (m.ativMedDomains[id] == null) {
             items.push({
               label: `preencha ${id.toUpperCase()} em Atividades e Participação`,
               targetId: `jcAtiv${id.toUpperCase()}Buttons`
             });
           }
-        });
+        }
       }
     }
   }
