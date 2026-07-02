@@ -24,7 +24,7 @@ export function initKeyboardNav() {
     const allBtns = group.getElementsByTagName('button');
     const enabled = [];
     for (let i = 0; i < allBtns.length; i++) {
-      if (!allBtns[i].disabled) enabled.push(allBtns[i]);
+      if (!allBtns[i].disabled && allBtns[i].getAttribute('aria-disabled') !== 'true') enabled.push(allBtns[i]);
     }
     return enabled;
   };
@@ -42,7 +42,7 @@ export function initKeyboardNav() {
     if (buttons.length === 0) continue;
 
     let activeBtn = group.querySelector('button.active, button[aria-pressed="true"]');
-    if (!activeBtn || activeBtn.disabled) {
+    if (!activeBtn || activeBtn.disabled || activeBtn.getAttribute('aria-disabled') === 'true') {
       activeBtn = buttons[0];
     }
 

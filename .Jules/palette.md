@@ -91,3 +91,7 @@
 ## 2026-03-09 - Avoid pointer cursor on read-only textareas
 **Learning:** Do not apply `cursor: pointer` to read-only textareas (like `#textoPadrao` or `#textoControleJudicial`) even if they auto-select text on click (via `this.select()`). The `pointer` cursor falsely implies a button or link action. Read-only textareas should typically retain the native `text` cursor to indicate selectability.
 **Action:** Remove `cursor: pointer` from read-only textareas and ensure they use the standard `cursor: text` to accurately reflect their behavior.
+
+## 2026-03-09 - Custom Keyboard Navigation with aria-disabled
+**Learning:** When filtering interactive elements for custom keyboard navigation routines (like roving tabindex), explicitly check that the element does not have `aria-disabled="true"` in addition to checking the native `.disabled` property. This prevents keyboard users from navigating to or focusing on semantically disabled controls.
+**Action:** Update functions that collect navigable elements (e.g., `getEnabledButtons`) to include `!element.disabled && element.getAttribute('aria-disabled') !== 'true'`.
