@@ -91,3 +91,7 @@
 ## 2026-03-09 - Avoid pointer cursor on read-only textareas
 **Learning:** Do not apply `cursor: pointer` to read-only textareas (like `#textoPadrao` or `#textoControleJudicial`) even if they auto-select text on click (via `this.select()`). The `pointer` cursor falsely implies a button or link action. Read-only textareas should typically retain the native `text` cursor to indicate selectability.
 **Action:** Remove `cursor: pointer` from read-only textareas and ensure they use the standard `cursor: text` to accurately reflect their behavior.
+
+## 2025-02-12 - Tactile feedback for icon buttons
+**Learning:** Standalone interactive elements like icon buttons (`.back-to-top`) lack native tactile feedback, which reduces perceived responsiveness.
+**Action:** Explicitly define an `:active` state in CSS using `transform: scale(0.96); transition-duration: 0.05s;` to simulate a physical button press for all icon buttons.
