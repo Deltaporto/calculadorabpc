@@ -24,7 +24,7 @@ export function initKeyboardNav() {
     const allBtns = group.getElementsByTagName('button');
     const enabled = [];
     for (let i = 0; i < allBtns.length; i++) {
-      if (!allBtns[i].disabled) enabled.push(allBtns[i]);
+      if (!allBtns[i].disabled && allBtns[i].getAttribute('aria-disabled') !== 'true') enabled.push(allBtns[i]);
     }
     return enabled;
   };
