@@ -77,3 +77,7 @@ Instead, a significantly safer optimization is removing global queries like `doc
 ## 2026-05-18 - [Avoid NodeList and Array allocations in high-frequency event listeners]
 **Learning:** In global, high-frequency event listeners (like application-wide `keydown` for roving tabindex), continuously calling `querySelectorAll()` or manipulating resulting NodeLists with array-like operations (`Array.prototype.indexOf.call()`, `.forEach`) causes severe, measurable GC pressure and callback allocation overhead on every keystroke.
 **Action:** Replaced `querySelectorAll('button:not([disabled])')` with a faster native query (`getElementsByTagName('button')` returning an HTMLCollection) combined with a single manual native `for` loop to filter state. Eliminated all `.forEach` callbacks in favor of standard `for` loops in hot path event handlers to maximize keyboard navigation responsiveness.
+
+## 2026-05-18 - Single Loop Array Filtering and Formatting
+**Learning:** In Vanilla JS, using `Array.prototype.filter()` creates an intermediate array. When you follow a `.filter()` immediately with a `for` loop (or `.reduce`/`.map`) over the filtered result to aggregate data and build strings, you allocate memory twice and traverse the data twice.
+**Action:** Replace `Array.prototype.filter()` followed by a `for` loop with a single native `for` loop over the original array. Apply the filtering condition inline with an `if` statement, and aggregate the values/strings simultaneously to avoid intermediate array allocations and reduce GC pressure.
