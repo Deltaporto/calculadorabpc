@@ -91,3 +91,7 @@
 ## 2026-03-09 - Avoid pointer cursor on read-only textareas
 **Learning:** Do not apply `cursor: pointer` to read-only textareas (like `#textoPadrao` or `#textoControleJudicial`) even if they auto-select text on click (via `this.select()`). The `pointer` cursor falsely implies a button or link action. Read-only textareas should typically retain the native `text` cursor to indicate selectability.
 **Action:** Remove `cursor: pointer` from read-only textareas and ensure they use the standard `cursor: text` to accurately reflect their behavior.
+
+## 2026-03-10 - Tooltips on Enabled Disclosure Widgets
+**Learning:** When a disclosure widget (like a button expanding legal excerpts) has its disabled state clearly explained via a tooltip, removing the tooltip entirely when enabled leaves users without guidance on its exact action.
+**Action:** Ensure that disclosure widgets have descriptive `title` attributes in both disabled and enabled states to clarify their function.
