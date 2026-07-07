@@ -590,7 +590,7 @@ function openSimHelpPopover(helpKey, trigger) {
   if (!entry.legalExcerpt) {
     excerptBtn.setAttribute('title', 'Não há trecho legal específico disponível para este item.');
   } else {
-    excerptBtn.removeAttribute('title');
+    excerptBtn.setAttribute('title', 'Expande ou oculta o trecho da base legal para leitura rápida.');
   }
   portariaBtn.dataset.helpKey = helpKey;
   portariaBtn.dataset.portariaSourceKey = entry.portariaSourceKey || DEFAULT_PORTARIA_SOURCE_KEY;
