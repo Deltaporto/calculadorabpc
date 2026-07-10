@@ -95,3 +95,7 @@
 ## 2026-03-10 - Tooltips on Enabled Disclosure Widgets
 **Learning:** When a disclosure widget (like a button expanding legal excerpts) has its disabled state clearly explained via a tooltip, removing the tooltip entirely when enabled leaves users without guidance on its exact action.
 **Action:** Ensure that disclosure widgets have descriptive `title` attributes in both disabled and enabled states to clarify their function.
+
+## 2026-03-11 - Dynamic Tooltips for Disclosure Widgets
+**Learning:** For interactive disclosure widgets or toggle buttons, avoid static, generic `title` attributes (e.g., 'Expande ou oculta...'). Instead, dynamically update the `title` text to describe the exact next action based on the current state (e.g., 'Expande...' when hidden, 'Oculta...' when visible).
+**Action:** When a toggle element's state changes, dynamically set the `title` attribute to reflect the action the user will perform on the next interaction.
