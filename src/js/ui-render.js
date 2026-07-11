@@ -116,8 +116,13 @@ function ensureRefs() {
     decItem: getById('decItem'),
     textoSection: getById('textoSection')
   };
-  const ambTabs = [...document.querySelectorAll('.amb-tab')];
-  refs.ambTabMap = new Map(ambTabs.map(tab => [+tab.dataset.a, tab]));
+  // ⚡ Optimization: Replace array spread and .map() with native for-loop and getElementsByClassName
+  // to avoid intermediate array allocations and reduce GC pressure during UI initialization
+  refs.ambTabMap = new Map();
+  const ambTabs = document.getElementsByClassName('amb-tab');
+  for (let i = 0; i < ambTabs.length; i++) {
+    refs.ambTabMap.set(+ambTabs[i].dataset.a, ambTabs[i]);
+  }
   cachedRefs = refs;
   return refs;
 }
