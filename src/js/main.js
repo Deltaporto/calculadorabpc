@@ -501,7 +501,7 @@ function closeSimHelpPopover() {
   if (excerptBtn) {
     excerptBtn.textContent = 'Ver base legal (trecho)';
     excerptBtn.setAttribute('aria-expanded', 'false');
-    excerptBtn.removeAttribute('title');
+    excerptBtn.setAttribute('title', 'Expande ou oculta o trecho da base legal para leitura rápida.');
   }
   if (!popover) return;
   popover.classList.add('hidden');
