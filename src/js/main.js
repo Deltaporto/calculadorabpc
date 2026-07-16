@@ -501,7 +501,11 @@ function closeSimHelpPopover() {
   if (excerptBtn) {
     excerptBtn.textContent = 'Ver base legal (trecho)';
     excerptBtn.setAttribute('aria-expanded', 'false');
-    excerptBtn.removeAttribute('title');
+    if (excerptBtn.disabled) {
+      excerptBtn.setAttribute('title', 'Não há trecho legal específico disponível para este item.');
+    } else {
+      excerptBtn.setAttribute('title', 'Expandir o trecho da base legal para leitura rápida.');
+    }
   }
   if (!popover) return;
   popover.classList.add('hidden');
@@ -590,7 +594,7 @@ function openSimHelpPopover(helpKey, trigger) {
   if (!entry.legalExcerpt) {
     excerptBtn.setAttribute('title', 'Não há trecho legal específico disponível para este item.');
   } else {
-    excerptBtn.setAttribute('title', 'Expande ou oculta o trecho da base legal para leitura rápida.');
+    excerptBtn.setAttribute('title', 'Expandir o trecho da base legal para leitura rápida.');
   }
   portariaBtn.dataset.helpKey = helpKey;
   portariaBtn.dataset.portariaSourceKey = entry.portariaSourceKey || DEFAULT_PORTARIA_SOURCE_KEY;
@@ -2269,6 +2273,7 @@ function initSimHelpPopover() {
     const hidden = excerptEl.classList.toggle('hidden');
     excerptBtn.textContent = hidden ? 'Ver base legal (trecho)' : 'Ocultar base legal';
     excerptBtn.setAttribute('aria-expanded', String(!hidden));
+    excerptBtn.setAttribute('title', hidden ? 'Expandir o trecho da base legal para leitura rápida.' : 'Ocultar o trecho da base legal para leitura rápida.');
     if (activeSimHelpKey) scheduleSimHelpPopoverPosition();
   });
   portariaBtn.addEventListener('click', () => {
