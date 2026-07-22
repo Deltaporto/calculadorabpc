@@ -501,7 +501,11 @@ function closeSimHelpPopover() {
   if (excerptBtn) {
     excerptBtn.textContent = 'Ver base legal (trecho)';
     excerptBtn.setAttribute('aria-expanded', 'false');
-    excerptBtn.removeAttribute('title');
+    if (excerptBtn.disabled) {
+      excerptBtn.setAttribute('title', 'Não há trecho legal específico disponível para este item.');
+    } else {
+      excerptBtn.setAttribute('title', 'Expandir o trecho da base legal para leitura rápida.');
+    }
   }
   if (!popover) return;
   popover.classList.add('hidden');
