@@ -1,21 +1,30 @@
 export function initStaticRatingA11yLabels(labels) {
-  document.querySelectorAll('.jc-q-btn, .amb-tab').forEach(btn => {
+  // ⚡ Optimization: Avoid querySelectorAll allocations and forEach callbacks
+  const ratingBtns = document.querySelectorAll('.jc-q-btn, .amb-tab');
+  for (let i = 0; i < ratingBtns.length; i++) {
+    const btn = ratingBtns[i];
     const value = +(btn.dataset.value ?? btn.dataset.a);
     if (labels[value]) {
       btn.setAttribute('aria-label', labels[value]);
       btn.setAttribute('title', labels[value]);
     }
     btn.setAttribute('aria-pressed', btn.classList.contains('active'));
-  });
-  document.querySelectorAll('.jc-seg-btn').forEach(btn => {
+  }
+
+  const segBtns = document.getElementsByClassName('jc-seg-btn');
+  for (let i = 0; i < segBtns.length; i++) {
+    const btn = segBtns[i];
     btn.setAttribute('aria-pressed', btn.classList.contains('active'));
-  });
-  document.querySelectorAll('.sim-help-btn, .sim-help-close, .portaria-close-btn').forEach(btn => {
+  }
+
+  const helpBtns = document.querySelectorAll('.sim-help-btn, .sim-help-close, .portaria-close-btn');
+  for (let i = 0; i < helpBtns.length; i++) {
+    const btn = helpBtns[i];
     const ariaLabel = btn.getAttribute('aria-label');
     if (ariaLabel && !btn.hasAttribute('title')) {
       btn.setAttribute('title', ariaLabel);
     }
-  });
+  }
 }
 
 export function initKeyboardNav() {

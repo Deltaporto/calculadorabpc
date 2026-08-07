@@ -1,8 +1,9 @@
 export function createDomainState(domains) {
   const state = {};
-  domains.forEach(d => {
-    state[d.id] = 0;
-  });
+  // ⚡ Optimization: Native for-loop to avoid Array.prototype.forEach callback allocation overhead
+  for (let i = 0; i < domains.length; i++) {
+    state[domains[i].id] = 0;
+  }
   return state;
 }
 

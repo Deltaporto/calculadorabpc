@@ -46,7 +46,9 @@ function ensureRefs() {
     const nodes = [];
     if (container) {
       container.replaceChildren();
-      parts.forEach(p => {
+      // ⚡ Optimization: Native for-loop to avoid Array.prototype.forEach callback allocation overhead
+      for (let i = 0; i < parts.length; i++) {
+        const p = parts[i];
         let node;
         if (p.type === 'text') {
           node = document.createTextNode(p.content);
@@ -58,7 +60,7 @@ function ensureRefs() {
            container.appendChild(node);
            nodes.push(node);
         }
-      });
+      }
     }
     return nodes;
   };

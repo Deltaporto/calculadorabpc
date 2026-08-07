@@ -102,14 +102,16 @@ export function bindJudicialControlEvents({
     clearJudicialTextArea();
   }, renderJudicialControl, notifyInteraction);
 
-  JC_CORPO_RECLASS_DOMAINS.forEach(id => {
+  // ⚡ Optimization: Native for-loop to avoid Array.prototype.forEach callback allocation overhead
+  for (let i = 0; i < JC_CORPO_RECLASS_DOMAINS.length; i++) {
+    const id = JC_CORPO_RECLASS_DOMAINS[i];
     bindQGroup(`jcCorpo${id.toUpperCase()}Buttons`, value => {
       if (!judicialControl.adminBase || judicialControl.med.corpoKeepAdmin !== false || judicialControl.med.corpoChangeReason !== 'dominio_max') return;
       judicialControl.med.corpoAdminDomains[id] = value;
       judicialControl.med.corpoAlertReductionConfirmed = false;
       clearJudicialTextArea();
     }, renderJudicialControl, notifyInteraction);
-  });
+  }
 
   document.getElementById('jcCorpoReasonSelect').addEventListener('change', e => {
     if (!judicialControl.adminBase || judicialControl.med.corpoKeepAdmin !== false) return;
@@ -139,14 +141,16 @@ export function bindJudicialControlEvents({
     clearJudicialTextArea();
   }, renderJudicialControl, notifyInteraction);
 
-  JC_ATIV_RECLASS_DOMAINS.forEach(id => {
+  // ⚡ Optimization: Native for-loop to avoid Array.prototype.forEach callback allocation overhead
+  for (let i = 0; i < JC_ATIV_RECLASS_DOMAINS.length; i++) {
+    const id = JC_ATIV_RECLASS_DOMAINS[i];
     bindQGroup(`jcAtiv${id.toUpperCase()}Buttons`, value => {
       if (!judicialControl.adminBase || judicialControl.med.hasAtivMed !== true || judicialControl.med.ativMode !== 'completa') return;
       judicialControl.med.ativMedDomains[id] = value;
       judicialControl.med.ativMedComputed = computeAtivFromDomains(judicialControl.med.ativMedDomains);
       clearJudicialTextArea();
     }, renderJudicialControl, notifyInteraction);
-  });
+  }
 
   bindSegmented('jcAtivModeButtons', value => {
     if (!judicialControl.adminBase || judicialControl.med.hasAtivMed !== true) return;

@@ -578,11 +578,12 @@ function openSimHelpPopover(helpKey, trigger) {
   titleEl.textContent = entry.title;
   summaryEl.textContent = entry.summary;
   const listFragment = document.createDocumentFragment();
-  entry.bullets.forEach(item => {
+  // ⚡ Optimization: Native for-loop to avoid Array.prototype.forEach callback allocation overhead
+  for (let i = 0; i < entry.bullets.length; i++) {
     const li = document.createElement('li');
-    li.textContent = item;
+    li.textContent = entry.bullets[i];
     listFragment.appendChild(li);
-  });
+  }
   listEl.replaceChildren(listFragment);
   sourceEl.textContent = `Base legal: ${entry.source}`;
   excerptEl.textContent = entry.legalExcerpt || '';
@@ -765,14 +766,16 @@ function openPadraoDecisionDialog(context) {
     { label: 'Domínios manuais elegíveis: ', val: context.manuallyFilledEligible.length },
     { label: 'Não aplicáveis por corte etário: ', val: context.skippedByAgeCut }
   ];
-  summaryLines.forEach(line => {
+  // ⚡ Optimization: Native for-loop to avoid Array.prototype.forEach callback allocation overhead
+  for (let i = 0; i < summaryLines.length; i++) {
+    const line = summaryLines[i];
     const div = document.createElement('div');
     const strong = document.createElement('strong');
     strong.textContent = line.label;
     div.appendChild(strong);
     div.appendChild(document.createTextNode(String(line.val)));
     summaryFragment.appendChild(div);
-  });
+  }
   summaryEl.replaceChildren(summaryFragment);
 
   preserveBtn.disabled = hasOnlyManual;
@@ -818,8 +821,13 @@ async function handleLimpar() {
     confirmTone: 'danger'
   });
   if (!confirmed) return;
-  Object.keys(state).forEach(k => state[k] = 0);
-  Object.keys(childDomainBackup).forEach(k => delete childDomainBackup[k]);
+  // ⚡ Optimization: Native for-loops to avoid Array.prototype.forEach callback allocation overhead
+  const stateKeys = Object.keys(state);
+  for (let i = 0; i < stateKeys.length; i++) state[stateKeys[i]] = 0;
+
+  const childKeys = Object.keys(childDomainBackup);
+  for (let i = 0; i < childKeys.length; i++) delete childDomainBackup[childKeys[i]];
+
   userFilledDomains.clear();
   progDesfav = false; estrMaior = false; impedimento = false;
   crianca = false; idadeValor = 15; idadeUnidade = 'anos'; idadeMeses = CHILD_AGE_LIMIT_MONTHS;
@@ -1115,14 +1123,16 @@ function getMedPendingItems(corpoFlow, ativContext) {
           items.push({ label: 'preencha a justificativa médica do modo simples', targetId: 'jcAtivMedJustification' });
         }
       } else if (m.ativMode === 'completa') {
-        JC_ATIV_RECLASS_DOMAINS.forEach(id => {
+        // ⚡ Optimization: Native for-loop to avoid Array.prototype.forEach callback allocation overhead
+        for (let i = 0; i < JC_ATIV_RECLASS_DOMAINS.length; i++) {
+          const id = JC_ATIV_RECLASS_DOMAINS[i];
           if (m.ativMedDomains[id] == null) {
             items.push({
               label: `preencha ${id.toUpperCase()} em Atividades e Participação`,
               targetId: `jcAtiv${id.toUpperCase()}Buttons`
             });
           }
-        });
+        }
       }
     }
   }
@@ -2104,9 +2114,11 @@ function initPortariaModal() {
   if (openTextBtn) {
     openTextBtn.addEventListener('click', () => openModal(DEFAULT_PORTARIA_SOURCE_KEY));
   }
-  modal.querySelectorAll('[data-portaria-close]').forEach(btn => {
-    btn.addEventListener('click', closeModal);
-  });
+  // ⚡ Optimization: Native for-loop to avoid Array.prototype.forEach callback allocation overhead
+  const portariaCloseBtns = modal.querySelectorAll('[data-portaria-close]');
+  for (let i = 0; i < portariaCloseBtns.length; i++) {
+    portariaCloseBtns[i].addEventListener('click', closeModal);
+  }
   modal.addEventListener('click', event => {
     if (event.target === modal) closeModal();
   });
@@ -2153,9 +2165,11 @@ function initPadraoModal() {
 
   preserveBtn.addEventListener('click', () => applyChoice('preserve'));
   overwriteBtn.addEventListener('click', () => applyChoice('overwrite'));
-  modal.querySelectorAll('[data-padrao-close]').forEach(btn => {
-    btn.addEventListener('click', closeModal);
-  });
+  // ⚡ Optimization: Native for-loop to avoid Array.prototype.forEach callback allocation overhead
+  const padraoCloseBtns = modal.querySelectorAll('[data-padrao-close]');
+  for (let i = 0; i < padraoCloseBtns.length; i++) {
+    padraoCloseBtns[i].addEventListener('click', closeModal);
+  }
   modal.addEventListener('click', event => {
     if (event.target === modal) closeModal();
   });
@@ -2203,9 +2217,11 @@ function initConfirmModal() {
 
   cancelBtn.addEventListener('click', () => closeModal(false));
   confirmBtn.addEventListener('click', () => closeModal(true));
-  modal.querySelectorAll('[data-confirm-close]').forEach(btn => {
-    btn.addEventListener('click', () => closeModal(false));
-  });
+  // ⚡ Optimization: Native for-loop to avoid Array.prototype.forEach callback allocation overhead
+  const confirmCloseBtns = modal.querySelectorAll('[data-confirm-close]');
+  for (let i = 0; i < confirmCloseBtns.length; i++) {
+    confirmCloseBtns[i].addEventListener('click', () => closeModal(false));
+  }
   modal.addEventListener('click', event => {
     if (event.target === modal) closeModal(false);
   });
@@ -2326,7 +2342,9 @@ function initCachedElements() {
 // UX auto-select for readonly generated textareas
 function initAutoSelectTextareas() {
   const textareas = [textoPadrao, textoControleJudicial];
-  textareas.forEach(ta => {
+  // ⚡ Optimization: Native for-loop to avoid Array.prototype.forEach callback allocation overhead
+  for (let i = 0; i < textareas.length; i++) {
+    const ta = textareas[i];
     if (ta) {
       const handleSelect = function() {
         this.select();
@@ -2334,7 +2352,7 @@ function initAutoSelectTextareas() {
       ta.addEventListener('click', handleSelect);
       ta.addEventListener('focus', handleSelect);
     }
-  });
+  }
 }
 
 bindAppEvents({
