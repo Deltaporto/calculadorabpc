@@ -95,3 +95,6 @@
 ## 2026-03-10 - Tooltips on Enabled Disclosure Widgets
 **Learning:** When a disclosure widget (like a button expanding legal excerpts) has its disabled state clearly explained via a tooltip, removing the tooltip entirely when enabled leaves users without guidance on its exact action.
 **Action:** Ensure that disclosure widgets have descriptive `title` attributes in both disabled and enabled states to clarify their function.
+## 2025-02-18 - Avoid redundant ARIA labels on inputs with visible labels
+**Learning:** Adding `aria-label` to form inputs (like checkboxes) that are already wrapped in `<label>` elements with visible descriptive text is an anti-pattern. The native `<label>` automatically provides the accessible name. Supplying a redundant `aria-label` that exactly duplicates the visible text is unnecessary, overrides native behavior, and can cause double-reading bugs in certain screen readers.
+**Action:** Only use `aria-label` on inputs or buttons that are entirely visual (e.g., icon-only toggles) and lack an explicit visible text description. Always rely on native `<label>` elements first.
