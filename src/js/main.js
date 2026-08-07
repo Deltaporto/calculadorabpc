@@ -1944,7 +1944,14 @@ async function handleClearComp() {
 
 function getAutoQualifiedChildDomains() {
   if (!crianca) return [];
-  return ATIV_DOMAINS.filter(d => idadeMeses < d.cut);
+  // ⚡ Optimization: Native for-loop to avoid Array.prototype.filter callback allocation overhead
+  const filtered = [];
+  for (let i = 0; i < ATIV_DOMAINS.length; i++) {
+    if (idadeMeses < ATIV_DOMAINS[i].cut) {
+      filtered.push(ATIV_DOMAINS[i]);
+    }
+  }
+  return filtered;
 }
 
 function updateChildAutoSummary() {
