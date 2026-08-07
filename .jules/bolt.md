@@ -1,3 +1,6 @@
+## 2026-05-18 - [Avoid Map initialization with array spreads in DOM NodeMaps]
+**Learning:** Initializing a `Map` directly from a NodeList by combining array spread (`[...document.querySelectorAll(...)]`) and Array callback mapping (`.map()`) allocates intermediate array structures in memory and incurs execution overhead.
+**Action:** Always prefer native `getElementsByClassName` with a native `for` loop combined with `Map.prototype.set()` when pre-building dictionaries of DOM nodes, mitigating layout allocation overhead and reducing intermediate garbage collections.
 
 ## 2025-05-19 - [DOM Query Set Tracking Optimization]
 **Learning:** Attempting to cache global `document.querySelectorAll` NodeLists directly (like caching `.jc-q-btn` arrays) leads to memory leaks from strong references and stale arrays if DOM elements detach.
