@@ -131,26 +131,32 @@ export function resolveCorpoJudFlow({
   }
 
   if (med.corpoChangeReason === 'dominio_max') {
-    const filledDomains = corpoDomainIds.filter(id => med.corpoAdminDomains[id] != null);
-    if (!filledDomains.length) {
-      return { ready: false, q: null, reason: 'No motivo "Domínio administrativo b1–b8 mais grave", informe ao menos um domínio b1 a b8.', mode: 'pending' };
-    }
-    // ⚡ Optimization: Native for-loop to avoid Array.prototype.reduce callback allocation overhead
     let q = 0;
     let domainsText = '';
-    for (let i = 0; i < filledDomains.length; i++) {
-      const id = filledDomains[i];
-      const val = med.corpoAdminDomains[id];
-      if (val > q) q = val;
+    let hasDomains = false;
 
-      // ⚡ Optimization: Native for-loop to avoid intermediate array allocation and .map callback overhead
-      const formattedDomain = `${id.toUpperCase()}=${qLabels[val]}`;
-      if (i === 0) {
-        domainsText = formattedDomain;
-      } else {
-        domainsText += ' · ' + formattedDomain;
+    // ⚡ Optimization: Single pass native for-loop to avoid intermediate array allocation from .filter()
+    for (let i = 0; i < corpoDomainIds.length; i++) {
+      const id = corpoDomainIds[i];
+      const val = med.corpoAdminDomains[id];
+
+      if (val != null) {
+        if (val > q) q = val;
+
+        const formattedDomain = `${id.toUpperCase()}=${qLabels[val]}`;
+        if (!hasDomains) {
+          domainsText = formattedDomain;
+          hasDomains = true;
+        } else {
+          domainsText += ' · ' + formattedDomain;
+        }
       }
     }
+
+    if (!hasDomains) {
+      return { ready: false, q: null, reason: 'No motivo "Domínio administrativo b1–b8 mais grave", informe ao menos um domínio b1 a b8.', mode: 'pending' };
+    }
+
     return {
       ready: true,
       q,
