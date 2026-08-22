@@ -18,6 +18,22 @@ export function initStaticRatingA11yLabels(labels) {
   });
 }
 
+export function initDetailsTitleToggle() {
+  const detailsElements = document.querySelectorAll('details');
+  for (let i = 0; i < detailsElements.length; i++) {
+    const details = detailsElements[i];
+    const summary = details.querySelector('summary');
+    if (!summary) continue;
+
+    const updateTitle = () => {
+      summary.setAttribute('title', details.open ? 'Ocultar...' : 'Expandir...');
+    };
+
+    updateTitle();
+    details.addEventListener('toggle', updateTitle);
+  }
+}
+
 export function initKeyboardNav() {
   // ⚡ Optimization: Avoid allocating NodeLists on every keystroke by iterating HTMLCollection directly
   const getEnabledButtons = (group) => {
