@@ -1661,7 +1661,10 @@ function renderJudicialControl() {
     for (let i = 0; i < TEXTO_BTNS_CONFIG.length; i++) {
       const el = document.getElementById(TEXTO_BTNS_CONFIG[i].id);
       if (el) {
-        if (!el.disabled) el.disabled = true;
+        if (!el.disabled) {
+          el.disabled = true;
+          el.setAttribute('aria-disabled', 'true');
+        }
         const expectedTitle = 'A triagem probatória precisa ser concluída antes de gerar a minuta.';
         if (el.getAttribute('title') !== expectedTitle) el.setAttribute('title', expectedTitle);
       }
@@ -1817,7 +1820,10 @@ function renderJudicialControl() {
     const el = document.getElementById(b.id);
     if (el) {
       const isTextoDisabled = !triage.ready;
-      if (el.disabled !== isTextoDisabled) el.disabled = isTextoDisabled;
+      if (el.disabled !== isTextoDisabled) {
+        el.disabled = isTextoDisabled;
+        el.setAttribute('aria-disabled', String(isTextoDisabled));
+      }
       const expectedTitle = triage.ready ? b.title : 'A triagem probatória precisa ser concluída antes de gerar a minuta.';
       if (el.getAttribute('title') !== expectedTitle) el.setAttribute('title', expectedTitle);
     }
