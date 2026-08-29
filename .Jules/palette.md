@@ -95,3 +95,7 @@
 ## 2026-03-10 - Tooltips on Enabled Disclosure Widgets
 **Learning:** When a disclosure widget (like a button expanding legal excerpts) has its disabled state clearly explained via a tooltip, removing the tooltip entirely when enabled leaves users without guidance on its exact action.
 **Action:** Ensure that disclosure widgets have descriptive `title` attributes in both disabled and enabled states to clarify their function.
+
+## 2026-03-11 - Tooltips on native options
+**Learning:** Adding `title` attributes that merely mirror the `textContent` of an element provides little UX value and can act as an accessibility anti-pattern by causing screen readers to announce text twice. While useful for intentionally truncated text or disabled options, it is redundant for short, fully visible choices.
+**Action:** Only apply `title` attributes (tooltips) when they provide additional context, explain a disabled state, or reveal text that is actively truncated by UI constraints. Do not blindly synchronize `title` and `textContent` across all options.

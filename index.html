@@ -146,8 +146,8 @@
           <label for="inputIdade">Idade:</label>
           <input type="number" id="inputIdade" min="0" max="15" step="1" value="15" inputmode="numeric">
           <select id="inputIdadeUnidade" aria-label="Unidade de tempo">
-            <option value="anos" selected>anos</option>
-            <option value="meses">meses</option>
+            <option value="anos" title="anos" selected>anos</option>
+            <option value="meses" title="meses">meses</option>
           </select>
           <strong id="faixaEtaria" class="idade-status" role="status" aria-live="polite"></strong>
         </span>
@@ -533,11 +533,11 @@
               <div class="jc-ativ-mode-block hidden" id="jcCorpoChangeWrap">
                 <label class="jc-field-title" for="jcCorpoReasonSelect">Motivo da alteração (seleção única)</label>
                 <select id="jcCorpoReasonSelect" class="jc-select" aria-required="true">
-                  <option value="">Selecione o motivo</option>
-                  <option value="estruturas">Estruturas do corpo mais graves (não reconhecidas pelo INSS)</option>
-                  <option value="prognostico">Prognóstico desfavorável (não reconhecido pelo INSS)</option>
-                  <option value="dominio_max">Domínio administrativo b1–b8 mais grave</option>
-                  <option value="rebaixamento">Rebaixamento por prova superveniente</option>
+                  <option value="" title="Selecione o motivo">Selecione o motivo</option>
+                  <option value="estruturas" title="Estruturas do corpo mais graves (não reconhecidas pelo INSS)">Estruturas do corpo mais graves (não reconhecidas pelo INSS)</option>
+                  <option value="prognostico" title="Prognóstico desfavorável (não reconhecido pelo INSS)">Prognóstico desfavorável (não reconhecido pelo INSS)</option>
+                  <option value="dominio_max" title="Domínio administrativo b1–b8 mais grave">Domínio administrativo b1–b8 mais grave</option>
+                  <option value="rebaixamento" title="Rebaixamento por prova superveniente">Rebaixamento por prova superveniente</option>
                 </select>
                 <p class="jc-field-helper" id="jcCorpoReasonHint"></p>
                 <div class="jc-ativ-mode-block hidden" id="jcCorpoDomainWrap">
