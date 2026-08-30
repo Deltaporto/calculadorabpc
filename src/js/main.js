@@ -759,20 +759,19 @@ function openPadraoDecisionDialog(context) {
     : `Foram encontrados ${context.manuallyFilledEligible.length} domínios elegíveis já preenchidos manualmente.`;
 
   const summaryFragment = document.createDocumentFragment();
-  const summaryLines = [
-    { label: 'Atualizações preservando preenchidos: ', val: context.entriesPreserve.length },
-    { label: 'Atualizações sobrescrevendo preenchidos: ', val: context.entriesOverwrite.length },
-    { label: 'Domínios manuais elegíveis: ', val: context.manuallyFilledEligible.length },
-    { label: 'Não aplicáveis por corte etário: ', val: context.skippedByAgeCut }
-  ];
-  summaryLines.forEach(line => {
+  // ⚡ Optimization: Eliminates intermediate array allocation and callback dispatch in DOM rendering hot path
+  const appendSummaryLine = (label, val) => {
     const div = document.createElement('div');
     const strong = document.createElement('strong');
-    strong.textContent = line.label;
+    strong.textContent = label;
     div.appendChild(strong);
-    div.appendChild(document.createTextNode(String(line.val)));
+    div.appendChild(document.createTextNode(String(val)));
     summaryFragment.appendChild(div);
-  });
+  };
+  appendSummaryLine('Atualizações preservando preenchidos: ', context.entriesPreserve.length);
+  appendSummaryLine('Atualizações sobrescrevendo preenchidos: ', context.entriesOverwrite.length);
+  appendSummaryLine('Domínios manuais elegíveis: ', context.manuallyFilledEligible.length);
+  appendSummaryLine('Não aplicáveis por corte etário: ', context.skippedByAgeCut);
   summaryEl.replaceChildren(summaryFragment);
 
   preserveBtn.disabled = hasOnlyManual;
