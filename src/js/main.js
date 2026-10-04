@@ -1545,7 +1545,7 @@ function renderJudicialControl() {
       if (expectedTitle) {
         opt.setAttribute('title', expectedTitle);
       } else {
-        opt.removeAttribute('title');
+        opt.setAttribute('title', opt.textContent);
       }
     }
   }
