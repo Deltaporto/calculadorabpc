@@ -1,4 +1,7 @@
 export function buildDomainRows(container, domains, labels, names, domainHelpKeys = {}) {
+  // ⚡ Optimization: Batch DOM insertions using DocumentFragment to prevent triggering multiple costly browser reflows and repaints during UI initialization
+  const fragment = document.createDocumentFragment();
+
   const scale = document.createElement('div');
   scale.className = 'note-scale-row';
 
@@ -14,7 +17,7 @@ export function buildDomainRows(container, domains, labels, names, domainHelpKey
     noteScale.appendChild(span);
   }
   scale.appendChild(noteScale);
-  container.appendChild(scale);
+  fragment.appendChild(scale);
 
   for (let i = 0; i < domains.length; i++) {
     const d = domains[i];
@@ -80,8 +83,10 @@ export function buildDomainRows(container, domains, labels, names, domainHelpKey
     }
 
     row.appendChild(buttonsDiv);
-    container.appendChild(row);
+    fragment.appendChild(row);
   }
+
+  container.appendChild(fragment);
 }
 
 export function buildTabelaGrid(container, labels, names, ambTab, tabelaConclusivaFn) {
