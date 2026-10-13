@@ -1,3 +1,13 @@
+// ⚡ Optimization: Debounce helper for high-frequency events
+function debounce(func, wait) {
+  let timeout;
+  return function(...args) {
+    const context = this;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(context, args), wait);
+  };
+}
+
 export function bindAppEvents({
   onDomainButtonClick,
   onToggleProg,
@@ -44,9 +54,13 @@ export function bindAppEvents({
   document.getElementById('toggleMenor16').addEventListener('change', e => {
     onToggleMenor16(e.target.checked);
   });
+
+  // ⚡ Optimization: Debounce onInputIdade to avoid main thread blocking and layout thrashing during typing
+  const debouncedInputIdade = debounce(onInputIdade, 300);
   document.getElementById('inputIdade').addEventListener('input', () => {
-    onInputIdade();
+    debouncedInputIdade();
   });
+
   document.getElementById('inputIdadeUnidade').addEventListener('change', e => {
     onChangeIdadeUnidade(e.target.value);
   });
