@@ -1540,12 +1540,14 @@ function renderJudicialControl() {
     const shouldBeDisabled = isCorpoReasonBlocked(opt.value);
     if (opt.disabled !== shouldBeDisabled) opt.disabled = shouldBeDisabled;
 
-    const expectedTitle = shouldBeDisabled ? getCorpoReasonBlockedMessage(opt.value) : (JC_CORPO_REASON_LABELS[opt.value] || '');
-    if (opt.getAttribute('title') !== expectedTitle) {
-      if (expectedTitle) {
+    if (shouldBeDisabled) {
+      const expectedTitle = getCorpoReasonBlockedMessage(opt.value);
+      if (opt.getAttribute('title') !== expectedTitle) {
         opt.setAttribute('title', expectedTitle);
-      } else {
-        opt.setAttribute('title', opt.textContent);
+      }
+    } else {
+      if (opt.hasAttribute('title')) {
+        opt.removeAttribute('title');
       }
     }
   }
