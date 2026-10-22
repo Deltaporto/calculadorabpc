@@ -2272,6 +2272,7 @@ function initSimHelpPopover() {
   excerptBtn.addEventListener('click', () => {
     const hidden = excerptEl.classList.toggle('hidden');
     excerptBtn.textContent = hidden ? 'Ver base legal (trecho)' : 'Ocultar base legal';
+    excerptBtn.setAttribute('title', hidden ? 'Expandir o trecho da base legal para leitura rápida.' : 'Ocultar o trecho da base legal.');
     excerptBtn.setAttribute('aria-expanded', String(!hidden));
     excerptBtn.setAttribute('title', hidden ? 'Expandir o trecho da base legal para leitura rápida.' : 'Ocultar o trecho da base legal.');
     if (activeSimHelpKey) scheduleSimHelpPopoverPosition();
