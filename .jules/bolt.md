@@ -77,3 +77,7 @@ Instead, a significantly safer optimization is removing global queries like `doc
 ## 2026-05-18 - [Avoid NodeList and Array allocations in high-frequency event listeners]
 **Learning:** In global, high-frequency event listeners (like application-wide `keydown` for roving tabindex), continuously calling `querySelectorAll()` or manipulating resulting NodeLists with array-like operations (`Array.prototype.indexOf.call()`, `.forEach`) causes severe, measurable GC pressure and callback allocation overhead on every keystroke.
 **Action:** Replaced `querySelectorAll('button:not([disabled])')` with a faster native query (`getElementsByTagName('button')` returning an HTMLCollection) combined with a single manual native `for` loop to filter state. Eliminated all `.forEach` callbacks in favor of standard `for` loops in hot path event handlers to maximize keyboard navigation responsiveness.
+
+## 2026-05-18 - [Optimize Map initialization from DOM collection]
+**Learning:** When initializing a `Map` from a collection of DOM elements, using `querySelectorAll` with the array spread operator (`[...]`) and `.map()` allocates two unnecessary intermediate arrays, creating redundant Garbage Collection (GC) pressure.
+**Action:** Use a native `for` loop with `Map.prototype.set()` alongside a live `HTMLCollection` (like `getElementsByClassName`) to initialize `Map` objects from DOM elements directly, eliminating intermediate array allocation overhead.
