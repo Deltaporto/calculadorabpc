@@ -89,6 +89,7 @@ test('Server Security', async (t) => {
          try {
             const res = await makeRequest('/index.html');
             assert.strictEqual(res.statusCode, 200);
+            assert.ok(res.headers['content-security-policy'].includes("form-action 'none'"), 'CSP should include form-action none');
         } catch (e) {
              assert.fail('Server is not reachable: ' + e.message);
         }
