@@ -77,3 +77,11 @@ Instead, a significantly safer optimization is removing global queries like `doc
 ## 2026-05-18 - [Avoid NodeList and Array allocations in high-frequency event listeners]
 **Learning:** In global, high-frequency event listeners (like application-wide `keydown` for roving tabindex), continuously calling `querySelectorAll()` or manipulating resulting NodeLists with array-like operations (`Array.prototype.indexOf.call()`, `.forEach`) causes severe, measurable GC pressure and callback allocation overhead on every keystroke.
 **Action:** Replaced `querySelectorAll('button:not([disabled])')` with a faster native query (`getElementsByTagName('button')` returning an HTMLCollection) combined with a single manual native `for` loop to filter state. Eliminated all `.forEach` callbacks in favor of standard `for` loops in hot path event handlers to maximize keyboard navigation responsiveness.
+
+## 2026-05-18 - Ensure Comments Accompany Code Optimizations
+**Learning:** When submitting performance optimizations (like replacing Array spreads with live HTMLCollections) as the 'Bolt' persona, it is imperative to include inline comments explaining the intent and benefit of the change. Reviewers treat optimizations lacking explanations as incomplete or potential regressions.
+**Action:** Always include a concise, descriptive comment (e.g., `// ⚡ Optimization: Replace array spread...`) immediately preceding or adjacent to the optimized code block to clearly communicate the performance rationale to other developers and reviewers.
+
+## 2026-05-18 - Distinguish Hot Paths from Cold Paths
+**Learning:** Optimizing DOM querying and collection mapping on code paths that execute only once per page load (e.g., UI initialization functions) provides no measurable performance impact and borders on micro-optimization. The focus must remain on high-frequency rendering hot paths or global event listeners.
+**Action:** Before optimizing a pattern (like replacing `.querySelectorAll` with `.getElementsByClassName`), verify the frequency of its execution path. Avoid applying complex loop optimizations to cold initialization routines unless specifically instructed.
