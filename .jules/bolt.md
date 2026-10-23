@@ -77,3 +77,7 @@ Instead, a significantly safer optimization is removing global queries like `doc
 ## 2026-05-18 - [Avoid NodeList and Array allocations in high-frequency event listeners]
 **Learning:** In global, high-frequency event listeners (like application-wide `keydown` for roving tabindex), continuously calling `querySelectorAll()` or manipulating resulting NodeLists with array-like operations (`Array.prototype.indexOf.call()`, `.forEach`) causes severe, measurable GC pressure and callback allocation overhead on every keystroke.
 **Action:** Replaced `querySelectorAll('button:not([disabled])')` with a faster native query (`getElementsByTagName('button')` returning an HTMLCollection) combined with a single manual native `for` loop to filter state. Eliminated all `.forEach` callbacks in favor of standard `for` loops in hot path event handlers to maximize keyboard navigation responsiveness.
+
+## 2026-10-23 - DocumentFragment Batching in High-Frequency DOM Builders
+**Learning:** Iteratively appending dynamically created child elements (like rows and scales in `buildDomainRows`) directly to a live DOM container triggers repeated browser reflows and repaints, severely impacting rendering performance.
+**Action:** Always use a `DocumentFragment` to batch DOM insertions when dynamically creating and appending multiple elements in loops. Append all children to the fragment first, then append the single fragment to the live DOM container to avoid triggering multiple layout calculations.
