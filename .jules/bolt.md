@@ -77,3 +77,7 @@ Instead, a significantly safer optimization is removing global queries like `doc
 ## 2026-05-18 - [Avoid NodeList and Array allocations in high-frequency event listeners]
 **Learning:** In global, high-frequency event listeners (like application-wide `keydown` for roving tabindex), continuously calling `querySelectorAll()` or manipulating resulting NodeLists with array-like operations (`Array.prototype.indexOf.call()`, `.forEach`) causes severe, measurable GC pressure and callback allocation overhead on every keystroke.
 **Action:** Replaced `querySelectorAll('button:not([disabled])')` with a faster native query (`getElementsByTagName('button')` returning an HTMLCollection) combined with a single manual native `for` loop to filter state. Eliminated all `.forEach` callbacks in favor of standard `for` loops in hot path event handlers to maximize keyboard navigation responsiveness.
+
+## 2023-10-28 - Eliminate Array Allocation in Dynamic String Building
+**Learning:** Using `.filter()` to pre-process domain items before mapping their outputs (e.g. string rendering inside `resolveCorpoJudFlow`) creates unnecessary intermediate array allocations that produce measurable GC pressure on hot paths.
+**Action:** Replace `.filter()` array methods with a single native `for` loop that iterates the original array, processes conditions inline, computes intermediate mathematical values (e.g. `max`), and concatenates strings simultaneously (Loop fusion).
