@@ -967,7 +967,7 @@ function isTextEntryElement(el) {
   if (el.tagName === 'TEXTAREA') return true;
   if (el.tagName !== 'INPUT') return false;
   const type = (el.getAttribute('type') || 'text').toLowerCase();
-  return ['text', 'search', 'email', 'url', 'tel', 'password', 'number'].includes(type);
+  return type === 'text' || type === 'search' || type === 'email' || type === 'url' || type === 'tel' || type === 'password' || type === 'number';
 }
 
 function focusJudicialTarget(targetId, options = {}) {
@@ -1213,7 +1213,7 @@ function renderModeVisibility(options = {}) {
 }
 
 function setUIMode(mode, options = {}) {
-  if (!['simulador', 'controle', 'fluxograma'].includes(mode)) return;
+  if (mode !== 'simulador' && mode !== 'controle' && mode !== 'fluxograma') return;
   if (uiMode === mode) {
     renderModeVisibility({ preserveAccordionState: true, ...options });
     if (mode === 'controle' && options.scrollToJudicial) scrollToJudicialControlSection();
@@ -1607,7 +1607,7 @@ function renderJudicialControl() {
     if (ativNotApplicableNote.textContent !== '') ativNotApplicableNote.textContent = '';
   } else {
     if (hasAtivHint.textContent !== 'Se “Sim”, escolha o modo de requalificação abaixo.') hasAtivHint.textContent = 'Se “Sim”, escolha o modo de requalificação abaixo.';
-    const showAtivContextNote = ['sem_impedimento_lp', 'corpo_nl', 'verificacao_adm_positiva'].includes(ativContext.code);
+    const showAtivContextNote = ativContext.code === 'sem_impedimento_lp' || ativContext.code === 'corpo_nl' || ativContext.code === 'verificacao_adm_positiva';
     const noteText = showAtivContextNote ? ativContext.reason : '';
     if (ativNotApplicableNote.textContent !== noteText) ativNotApplicableNote.textContent = noteText;
     if (ativNotApplicableNote.classList.contains('hidden') === showAtivContextNote) ativNotApplicableNote.classList.toggle('hidden', !showAtivContextNote);

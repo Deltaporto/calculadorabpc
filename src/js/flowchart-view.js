@@ -41,7 +41,7 @@ export function initFlowchartView() {
 
   const setActiveStep = (step, options = {}) => {
     const { syncHash = false, focusCard = false } = options;
-    const nextStep = ['all', '1', '2', '3', '4', '5', '6'].includes(step) ? step : getDefaultStep();
+    const nextStep = (step === 'all' || step === '1' || step === '2' || step === '3' || step === '4' || step === '5' || step === '6') ? step : getDefaultStep();
     const focusMode = nextStep !== 'all';
 
     section.classList.toggle('flowchart-has-focus', focusMode);
