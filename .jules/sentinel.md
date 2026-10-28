@@ -26,3 +26,7 @@
 **Vulnerability:** The local dev server (`scripts/serve.js`) relied solely on `path.normalize()` for resolving relative paths without replacing backslashes with forward slashes first. While Node.js `path` modules adapt to the host OS, a POSIX system won't interpret encoded backslashes (`%5C`) as path separators during `path.normalize()`. This bypasses simple `startsWith` directory allowlist checks later on, as the path is treated as a single long filename (e.g., `/src/..\..\..\etc\passwd`). When finally joined and passed to file system APIs, it causes directory traversal.
 **Learning:** Naively decoding and normalizing file paths on POSIX environments using `path.normalize()` is insufficient against payloads specifically using backslashes (`\`) for directory traversal.
 **Prevention:** Always manually replace backslashes with forward slashes immediately after URL decoding, prior to passing paths to `path.normalize()` or running validation logic.
+## 2025-06-27 - [HIGH] Fix unsafe-inline CSP violation in docs
+**Vulnerability:** The `docs/manual.html` page relied on an inline `<style>` block for its styling, which required an insecure `'unsafe-inline'` directive in its Content-Security-Policy (CSP) `style-src` header.
+**Learning:** Using inline styles inherently weakens CSP by requiring `'unsafe-inline'`, exposing the page to potential Cross-Site Scripting (XSS) via CSS injection.
+**Prevention:** Always externalize CSS into separate `.css` files and link them via `<link>` tags. This allows strict CSP enforcement without the `'unsafe-inline'` directive.
