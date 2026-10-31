@@ -99,3 +99,7 @@
 ## 2026-03-11 - Tooltips on native options
 **Learning:** Adding `title` attributes that merely mirror the `textContent` of an element provides little UX value and can act as an accessibility anti-pattern by causing screen readers to announce text twice. While useful for intentionally truncated text or disabled options, it is redundant for short, fully visible choices.
 **Action:** Only apply `title` attributes (tooltips) when they provide additional context, explain a disabled state, or reveal text that is actively truncated by UI constraints. Do not blindly synchronize `title` and `textContent` across all options.
+
+## 2024-03-24 - Interactive buttons triggering modals missing aria-controls and aria-expanded
+**Learning:** Found multiple `<button>` elements with `aria-haspopup="dialog"`. When these buttons open a dialog, they should have an `aria-controls="[dialog_id]"` attribute that points to the dialog they open, and an `aria-expanded="false"` attribute that conveys their default state, ensuring assistive technologies can correctly announce their relationship and state.
+**Action:** Always ensure disclosure buttons opening modals implement `aria-controls="[target-id]"` and dynamically or statically set `aria-expanded` (such as `aria-expanded="false"`) based on the default visibility of the controlled content.
