@@ -99,3 +99,6 @@
 ## 2026-03-11 - Tooltips on native options
 **Learning:** Adding `title` attributes that merely mirror the `textContent` of an element provides little UX value and can act as an accessibility anti-pattern by causing screen readers to announce text twice. While useful for intentionally truncated text or disabled options, it is redundant for short, fully visible choices.
 **Action:** Only apply `title` attributes (tooltips) when they provide additional context, explain a disabled state, or reveal text that is actively truncated by UI constraints. Do not blindly synchronize `title` and `textContent` across all options.
+## 2023-11-01 - Redundant ARIA disabled state
+**Learning:** Setting both the native `disabled` attribute and `aria-disabled="true"` on the same HTML element is an ARIA anti-pattern. Assistive technologies natively understand the `disabled` attribute, and adding `aria-disabled` causes them to announce the state twice, leading to poor auditory UX.
+**Action:** Always check if an element supports the native `disabled` attribute (like `<button>`, `<input>`, `<select>`, `<option>`) before applying `aria-disabled`. Use `aria-disabled` only on non-semantic elements (like `<div>` or `<span>` styled as buttons) that cannot accept the native attribute.

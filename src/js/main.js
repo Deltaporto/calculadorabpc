@@ -590,7 +590,6 @@ function openSimHelpPopover(helpKey, trigger) {
   excerptBtn.textContent = 'Ver base legal (trecho)';
   excerptBtn.setAttribute('aria-expanded', 'false');
   excerptBtn.disabled = !entry.legalExcerpt;
-  excerptBtn.setAttribute('aria-disabled', String(!entry.legalExcerpt));
   if (!entry.legalExcerpt) {
     excerptBtn.setAttribute('title', 'Não há trecho legal específico disponível para este item.');
   } else {
@@ -776,7 +775,6 @@ function openPadraoDecisionDialog(context) {
   summaryEl.replaceChildren(summaryFragment);
 
   preserveBtn.disabled = hasOnlyManual;
-  preserveBtn.setAttribute('aria-disabled', String(hasOnlyManual));
   preserveBtn.title = hasOnlyManual ? 'Não há domínios vazios elegíveis para atualização sem sobrescrita.' : 'Preserva os preenchimentos manuais e aplica o padrão apenas aos domínios vazios.';
 
   if (typeof modal.showModal === 'function') {
